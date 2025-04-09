@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to The Marts Motors</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--background-color);
+      color: var(--text-color);
+      position: relative;
+    }
+
+    :root {
+      --background-color: #e3f2fd; /* Light background */
+      --text-color: #333; /* Text for light theme */
+      --primary-color: #0288d1; /* Vibrant blue */
+      --secondary-color: #ff6f00; /* Bright orange */
+    }
+
+    [data-theme="dark"] {
+      --background-color: #1e1e1e; /* Dark theme background */
+      --text-color: #f5f5f5; /* Light text for dark theme */
+      --primary-color: #bb86fc; /* Purple accent */
+      --secondary-color: #ff6f00; /* Bright orange */
+    }
+
+    /* Background Watermark */
+    body::before {
+      content: "THE MARTS";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 150px;
+      font-weight: bold;
+      color: rgba(10, 7, 160, 0.1); /* Slightly more visible */
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Welcome Container */
+    .welcome-container {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); /* Dark overlay */
+      z-index: 0;
+    }
+
+    .welcome-container > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 150px; /* Increased size */
+      height: auto;
+      object-fit: contain; /* Ensures the logo maintains its aspect ratio */
+      z-index: 2; /* Ensures it stays above other elements */
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)); /* Adds a shadow for better visibility */
+    }
+
+    .welcome-text {
+      font-size: 48px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      animation: slideDown 1.5s ease-out;
+      background: linear-gradient(to right, #ff6f00, #0288d1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      color: #ff6f00; /* Bright orange */
+      margin-bottom: 20px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .description {
+      font-size: 18px;
+      color: #0288d1; /* Vibrant blue */
+      margin-bottom: 30px;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .get-started-btn {
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      color: #fff;
+      background-color: var(--primary-color);
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .get-started-btn:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #fff;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      color: var(--secondary-color);
+    }
+
+    .social-icons {
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      margin: 0 10px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: var(--secondary-color);
+    }
+
+    @media (max-width: 600px) {
+      .welcome-text {
+        font-size: 32px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .description {
+        font-size: 16px;
+      }
+
+      .get-started-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Theme toggle functionality
+      const themeToggle = document.querySelector(".theme-toggle");
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
+      });
+    });
+
+    function navigateToMainPage() {
+      // Navigate to the next page
+      window.location.href = "main.html"; // Replace with your actual main page path
+    }
+  </script>
+</head>
+<body>
+  <div class="welcome-container">
+    <img src="images/logo.jpg" alt="The Marts Motors Logo" class="logo">
+    <button class="theme-toggle">🌙</button>
+    <div class="welcome-text">Welcome to The Marts Motors</div>
+    <div class="subtitle">Your journey to the perfect ride starts here.</div>
+    <div class="description">Find your perfect car with ease and style!</div>
+    <button class="get-started-btn" onclick="navigateToMainPage()">Get Started</button>
+    <div class="social-icons">
+      <a href="https://facebook.com" target="_blank">Facebook</a>
+      <a href="https://twitter.com" target="_blank">X</a>
+      <a href="https://instagram.com" target="_blank">Instagram</a>
+    </div>
+  </div>
+</body>
+</html>

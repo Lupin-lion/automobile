@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page | The Marts Motors</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff; /* Cool light blue background */
+      color: #333;
+      position: relative;
+    }
+
+    /* Background text styling */
+    body::before {
+      content: "THE MARTS";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 150px; /* Adjust size as needed */
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.05); /* Almost invisible */
+      z-index: -1; /* Push it behind all other content */
+      white-space: nowrap;
+      pointer-events: none; /* Prevent interaction */
+    }
+
+    header {
+      background-color: #4caf50; /* Friendly green */
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #ff6347; /* Accent color */
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .section-button {
+      padding: 10px 20px;
+      background-color: #4caf50; /* Friendly green */
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .section-button:hover {
+      background-color: #ff6347; /* Accent color */
+    }
+
+    .content-section {
+      display: none; /* Hidden by default */
+      margin-top: 30px;
+    }
+
+    .content-section.active {
+      display: block; /* Show when active */
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 300px; /* Fixed width */
+      height: 200px; /* Fixed height */
+      object-fit: cover; /* Maintain aspect ratio */
+    }
+
+    .product-card .details {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .product-card .details h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .product-card .details .price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #4caf50; /* Friendly green for price */
+      margin-bottom: 10px;
+    }
+
+    .product-card .details .contact-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #0288d1; /* Vibrant blue */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .product-card .details .contact-btn:hover {
+      background-color: #026aa7; /* Darker blue on hover */
+    }
+
+    footer {
+      background-color: #4caf50; /* Friendly green */
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+
+    .contact-icon {
+      width: 40px; /* Adjust the size to your preference */
+      height: 40px; /* Maintain a square aspect ratio */
+      object-fit: contain; /* Ensure the image fits within the box without distortion */
+      margin-right: 10px; /* Add spacing between the icon and text */
+      transition: transform 0.3s ease; /* Add a hover effect */
+    }
+
+    .contact-list a:hover .contact-icon {
+      transform: scale(1.1); /* Slightly enlarge the icon on hover */
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Handle section buttons
+      const buttons = document.querySelectorAll(".section-button");
+      const sections = document.querySelectorAll(".content-section");
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          const sectionId = button.getAttribute("data-section");
+          const section = document.getElementById(sectionId);
+
+          // Hide all sections except the clicked one
+          sections.forEach(sec => {
+            if (sec !== section) {
+              sec.classList.remove("active");
+            }
+          });
+
+          // Toggle visibility of the clicked section
+          section.classList.toggle("active");
+        });
+      });
+
+      // Filtering functionality
+      const products = [
+        { type: "car", title: "Toyota Corolla 2020", price: "$15,000", image: "images/toyota.jpg" },
+        { type: "car", title: "Ford Mustang 2018", price: "$25,000", image: "images/ford.jpg" },
+        { type: "bike", title: "Yamaha R15", price: "$5,000", image: "images/yamaha.jpg" },
+        { type: "bike", title: "Suzuki Hayabusa", price: "$18,000", image: "images/suzuki.jpg" }
+      ];
+
+      const filterSelect = document.getElementById("filter");
+      const productGrid = document.querySelector(".product-grid");
+
+      filterSelect.addEventListener("change", () => {
+        const filterValue = filterSelect.value;
+        productGrid.innerHTML = ""; // Clear current items
+
+        const filteredProducts = products.filter(product => filterValue === "all" || product.type === filterValue);
+
+        filteredProducts.forEach(product => {
+          const productCard = `
+            <div class="product-card">
+              <img src="${product.image}" alt="${product.title}">
+              <div class="details">
+                <h3>${product.title}</h3>
+                <p class="price">${product.price}</p>
+              </div>
+            </div>
+          `;
+          productGrid.innerHTML += productCard;
+        });
+      });
+
+      // Display all products by default
+      filterSelect.dispatchEvent(new Event("change"));
+    });
+
+    function navigateToWelcomePage() {
+      window.location.href = "index.html"; // Replace with the actual path to your welcome page
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="logo">The Marts Motors</div>
+    <nav>
+      <ul>
+        <li><a href="#" onclick="navigateToWelcomePage()">Home</a></li>
+        <li><a href="#">Create Profile</a></li>
+        <li><a href="#">Log In</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="button-container">
+      <button class="section-button" data-section="listings">Listings</button>
+      <button class="section-button" data-section="profile">Profile</button>
+      <button class="section-button" data-section="about">About</button>
+      <button class="section-button" data-section="contact">Contact Us</button>
+    </div>
+
+    <!-- Listings Section -->
+    <div id="listings" class="content-section">
+      <h2>Available Cars and Bikes</h2>
+      <div class="filter-container">
+        <label for="filter">Filter:</label>
+        <select id="filter">
+          <option value="all">All</option>
+          <option value="car">Cars</option>
+          <option value="bike">Bikes</option>
+        </select>
+      </div>
+      <div class="product-grid">
+        <!-- Products will be dynamically rendered here -->
+      </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profile" class="content-section">
+      <h2>User Profile</h2>
+      <p>Manage your profile and activity here.</p>
+    </div>
+
+    <!-- About Section -->
+    <div id="about" class="content-section">
+      <h2>About The Marts Motors</h2>
+      <p>
+        Welcome to <strong>The Marts Motors</strong>, your trusted partner in the world of automobiles. Whether you're searching for your dream car, a sleek bike, or looking to sell your vehicle, we’re here to make the process seamless, secure, and enjoyable.
+      </p>
+      <p>
+        At <strong>The Marts Motors</strong>, we’re more than just a marketplace—we’re a community of automotive enthusiasts who share a passion for excellence and innovation. Our platform is designed to connect buyers and sellers effortlessly, ensuring every transaction is smooth and rewarding.
+      </p>
+      <h3>Why Choose The Marts Motors?</h3>
+      <ul>
+        <li><strong>Extensive Selection:</strong> From luxury cars to sporty bikes, we offer a wide range of vehicles to suit every taste and budget.</li>
+        <li><strong>Secure Transactions:</strong> Your safety is our priority. We provide a secure platform for buying and selling vehicles with confidence.</li>
+        <li><strong>Easy-to-Use Interface:</strong> Our intuitive design makes it simple to browse, filter, and connect with sellers or buyers.</li>
+        <li><strong>Community-Driven:</strong> Join a thriving network of car and bike enthusiasts who share your passion.</li>
+      </ul>
+      <h3>Our Mission</h3>
+      <p>
+        At <strong>The Marts Motors</strong>, our mission is to revolutionize the automotive marketplace by bridging the gap between buyers and sellers. We aim to empower our users with the tools and resources they need to make informed decisions and drive away with confidence.
+      </p>
+      <p>
+        Whether you're buying your first car, upgrading to a premium bike, or selling a vehicle you’ve cherished, <strong>The Marts Motors</strong> is here to make the journey smooth, exciting, and rewarding. Let’s drive the future together!
+      </p>
+    </div>
+
+    <!-- Contact Us Section -->
+    <div id="contact" class="content-section">
+      <h2>Contact Us</h2>
+      <ul class="contact-list">
+        <li>
+          <a href="https://wa.me/254799582173" target="_blank">
+            <img src="images/app.png" alt="WhatsApp" class="contact-icon">
+            WhatsApp
+          </a>
+        </li>
+        <li>
+          <a href="mailto:themartswriters@gmail.com">
+            <img src="images/message.png" alt="Email" class="contact-icon">
+            Email
+          </a>
+        </li>
+        <li>
+          <a href="https://gracetech-eng.github.io/themarts/" target="_blank">
+            <img src="images/website.png" alt="The Marts Web" class="contact-icon">
+            The Marts Web
+          </a>
+        </li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <p>The Marts Motors © 2025 | Connect and Share</p>
+  </footer>
+</body>
+</html>
