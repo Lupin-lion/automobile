@@ -77,11 +77,11 @@
       position: absolute;
       top: 20px;
       left: 20px;
-      width: 150px; /* Increased size */
+      width: 150px; /* Default size */
       height: auto;
-      object-fit: contain; /* Ensures the logo maintains its aspect ratio */
-      z-index: 2; /* Ensures it stays above other elements */
-      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5)); /* Adds a shadow for better visibility */
+      object-fit: contain;
+      z-index: 2;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
     }
 
     .welcome-text {
@@ -97,34 +97,14 @@
 
     .subtitle {
       font-size: 24px;
-      color: #ff6f00; /* Bright orange */
+      color: #ff6f00;
       margin-bottom: 20px;
       animation: fadeIn 2s ease-in-out;
     }
 
-    @keyframes slideDown {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
     .description {
       font-size: 18px;
-      color: #0288d1; /* Vibrant blue */
+      color: #0288d1;
       margin-bottom: 30px;
       animation: fadeIn 2s ease-in-out;
     }
@@ -180,28 +160,36 @@
       color: var(--secondary-color);
     }
 
+    /* Media Queries for Mobile */
     @media (max-width: 600px) {
       .welcome-text {
-        font-size: 32px;
+        font-size: 28px;
       }
 
       .subtitle {
-        font-size: 18px;
+        font-size: 16px;
       }
 
       .description {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .get-started-btn {
-        padding: 12px 30px;
-        font-size: 16px;
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+
+      .logo {
+        width: 100px;
+      }
+
+      .social-icons a {
+        font-size: 14px;
       }
     }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Theme toggle functionality
       const themeToggle = document.querySelector(".theme-toggle");
       themeToggle.addEventListener("click", () => {
         const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
@@ -212,8 +200,7 @@
     });
 
     function navigateToMainPage() {
-      // Navigate to the next page
-      window.location.href = "main.html"; // Replace with your actual main page path
+      window.location.href = "main.html";
     }
   </script>
 </head>

@@ -178,6 +178,24 @@
     .contact-list a:hover .contact-icon {
       transform: scale(1.1); /* Slightly enlarge the icon on hover */
     }
+
+    /* Media Queries for Mobile */
+    @media (max-width: 600px) {
+      .product-card img {
+        width: 100%; /* Make images responsive */
+        height: auto;
+      }
+
+      .section-button {
+        font-size: 14px; /* Adjust button size for smaller screens */
+        padding: 8px 15px;
+      }
+
+      .contact-icon {
+        width: 30px; /* Smaller icons for mobile */
+        height: 30px;
+      }
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -204,10 +222,10 @@
 
       // Filtering functionality
       const products = [
-        { type: "car", title: "Toyota Corolla 2020", price: "$15,000", image: "images/toyota.jpg" },
-        { type: "car", title: "Ford Mustang 2018", price: "$25,000", image: "images/ford.jpg" },
-        { type: "bike", title: "Yamaha R15", price: "$5,000", image: "images/yamaha.jpg" },
-        { type: "bike", title: "Suzuki Hayabusa", price: "$18,000", image: "images/suzuki.jpg" }
+        { type: "car", title: "Toyota Corolla 2020", price: "$15,000", image: "images/toyota.jpg", contact: "https://wa.me/1234567890" },
+        { type: "car", title: "Ford Mustang 2018", price: "$25,000", image: "images/ford.jpg", contact: "https://wa.me/1234567891" },
+        { type: "bike", title: "Yamaha R15", price: "$5,000", image: "images/yamaha.jpg", contact: "https://wa.me/1234567892" },
+        { type: "bike", title: "Suzuki Hayabusa", price: "$18,000", image: "images/suzuki.jpg", contact: "https://wa.me/1234567893" }
       ];
 
       const filterSelect = document.getElementById("filter");
@@ -226,6 +244,7 @@
               <div class="details">
                 <h3>${product.title}</h3>
                 <p class="price">${product.price}</p>
+                <a href="${product.contact}" target="_blank" class="contact-btn">Contact Owner</a>
               </div>
             </div>
           `;
