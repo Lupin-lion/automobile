@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to The Marts Motors - Your ultimate destination for finding the perfect car or bike.">
+  <meta name="keywords" content="cars, bikes, automobiles, buy cars, sell cars, The Marts Motors">
+  <meta name="author" content="The Marts Motors">
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
   <title>Welcome to The Marts Motors</title>
   <style>
     /* General Styles */
@@ -15,16 +19,20 @@
       position: relative;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     :root {
-      --background-color: #e3f2fd; /* Light background */
+      --background-color: #f0f8ff; /* Light background */
       --text-color: #333; /* Text for light theme */
       --primary-color: #0288d1; /* Vibrant blue */
       --secondary-color: #ff6f00; /* Bright orange */
     }
 
     [data-theme="dark"] {
-      --background-color: #1e1e1e; /* Dark theme background */
-      --text-color: #f5f5f5; /* Light text for dark theme */
+      --background-color: #121212; /* Dark theme background */
+      --text-color: #e0e0e0; /* Light text for dark theme */
       --primary-color: #bb86fc; /* Purple accent */
       --secondary-color: #ff6f00; /* Bright orange */
     }
@@ -38,20 +46,20 @@
       transform: translate(-50%, -50%);
       font-size: 150px;
       font-weight: bold;
-      color: rgba(10, 7, 160, 0.1); /* Slightly more visible */
+      color: rgba(0, 0, 0, 0.05); /* Subtle watermark */
       z-index: -1;
       pointer-events: none;
     }
 
     /* Welcome Container */
     .welcome-container {
+      background: var(--background-color);
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       color: var(--text-color);
       position: relative;
       overflow: hidden;
@@ -87,26 +95,20 @@
     .welcome-text {
       font-size: 48px;
       font-weight: 700;
-      color: #fff;
+      color: var(--primary-color);
       margin-bottom: 10px;
-      animation: slideDown 1.5s ease-out;
-      background: linear-gradient(to right, #ff6f00, #0288d1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
       font-size: 24px;
-      color: #ff6f00;
+      color: var(--secondary-color);
       margin-bottom: 20px;
-      animation: fadeIn 2s ease-in-out;
     }
 
     .description {
       font-size: 18px;
-      color: #0288d1;
+      color: var(--primary-color);
       margin-bottom: 30px;
-      animation: fadeIn 2s ease-in-out;
     }
 
     .get-started-btn {
@@ -120,6 +122,19 @@
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
 
     .get-started-btn:hover {
@@ -135,7 +150,7 @@
       background: none;
       border: none;
       font-size: 28px;
-      color: #fff;
+      color: var(--text-color);
       cursor: pointer;
       transition: color 0.3s ease;
     }
@@ -150,13 +165,111 @@
 
     .social-icons a {
       margin: 0 10px;
-      color: #fff;
+      color: var(--text-color);
       text-decoration: none;
       font-size: 18px;
       transition: color 0.3s ease;
     }
 
     .social-icons a:hover {
+      color: var(--secondary-color);
+    }
+
+    .loading-spinner {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 9999;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .cta {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .cta p {
+      font-size: 20px;
+      color: var(--text-color);
+      margin-bottom: 10px;
+    }
+
+    .explore-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--secondary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .explore-btn:hover {
+      background-color: #ff8c00;
+    }
+
+    .testimonials {
+      margin-top: 30px;
+      font-size: 16px;
+      color: var(--text-color);
+      text-align: center;
+    }
+
+    .testimonials h3 {
+      font-size: 20px;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .countdown {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--text-color);
+    }
+
+    .countdown h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .countdown p {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Footer Styles */
+    .welcome-footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: var(--text-color);
+      font-size: 14px;
+    }
+
+    .welcome-footer .social-icons a {
+      margin: 0 10px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .welcome-footer .social-icons a:hover {
       color: var(--secondary-color);
     }
 
@@ -187,6 +300,17 @@
         font-size: 14px;
       }
     }
+
+    .background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.5; /* Adjust transparency */
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -197,26 +321,68 @@
         document.documentElement.setAttribute("data-theme", newTheme);
         themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
       });
+
+      document.querySelector(".loading-spinner").style.display = "none";
+      startCountdown();
     });
 
     function navigateToMainPage() {
       window.location.href = "main.html";
     }
+
+    function startCountdown() {
+      const eventDate = new Date("2025-12-31T23:59:59").getTime();
+
+      setInterval(() => {
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+
+        if (distance > 0) {
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          document.getElementById("timer").textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        } else {
+          document.getElementById("timer").textContent = "Event has started!";
+        }
+      }, 1000);
+    }
   </script>
 </head>
 <body>
   <div class="welcome-container">
+    <video autoplay muted loop class="background-video">
+      <source src="videos/background.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
     <img src="images/logo.jpg" alt="The Marts Motors Logo" class="logo">
     <button class="theme-toggle">🌙</button>
     <div class="welcome-text">Welcome to The Marts Motors</div>
     <div class="subtitle">Your journey to the perfect ride starts here.</div>
     <div class="description">Find your perfect car with ease and style!</div>
-    <button class="get-started-btn" onclick="navigateToMainPage()">Get Started</button>
+    <button class="get-started-btn" onclick="navigateToMainPage()" aria-label="Get Started">Get Started</button>
+    <div class="countdown">
+      <h3>Upcoming Event</h3>
+      <p id="timer">Loading...</p>
+    </div>
     <div class="social-icons">
       <a href="https://facebook.com" target="_blank">Facebook</a>
       <a href="https://twitter.com" target="_blank">X</a>
       <a href="https://instagram.com" target="_blank">Instagram</a>
     </div>
+    <div class="cta">
+      <p>Ready to find your perfect ride?</p>
+      <button class="explore-btn" onclick="navigateToMainPage()">Explore Now</button>
+    </div>
+    <div class="testimonials">
+      <h3>What Our Users Say</h3>
+      <p>"A seamless and enjoyable experience. Highly recommend!" - Kino</p>
+      <p>"The Marts Motors helped me find my dream car in no time!" - Coyotito</p>
+    </div>
   </div>
+  
+  <div class="loading-spinner"></div>
 </body>
 </html>
