@@ -80,6 +80,18 @@
       color: var(--secondary-color);
     }
 
+    .theme-toggle-tooltip {
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      display: none;
+    }
+
     main {
       max-width: 1200px;
       margin: 20px auto;
@@ -121,6 +133,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
+      margin: 20px;
     }
 
     .product-card {
@@ -387,6 +400,40 @@
     .back-to-top:hover {
       background-color: var(--secondary-color);
     }
+
+    .search-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #search-bar {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    #search-bar:focus {
+      border-color: var(--primary-color);
+    }
+
+    #search-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #search-button:hover {
+      background-color: var(--secondary-color);
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -570,11 +617,70 @@
       backToTopButton.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
+
+      // Search Functionality
+      const searchBar = document.getElementById("search-bar");
+      const searchButton = document.getElementById("search-button");
+
+      searchButton.addEventListener("click", () => {
+        const spinner = document.querySelector(".loading-spinner");
+        spinner.style.display = "block"; // Show loading spinner
+        setTimeout(() => {
+          const query = searchBar.value.toLowerCase();
+          const filteredProducts = products.filter(product =>
+            product.make.toLowerCase().includes(query) ||
+            product.model.toLowerCase().includes(query) ||
+            product.price.toString().includes(query)
+          );
+          renderProducts(filteredProducts);
+          spinner.style.display = "none"; // Hide loading spinner
+        }, 1000); // Simulate loading delay
+      });
+
+      searchBar.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        const products = productGrid.querySelectorAll(".product-card");
+
+        products.forEach((product) => {
+          const title = product.querySelector("h3").textContent.toLowerCase();
+          if (title.includes(query)) {
+            product.style.display = "block";
+          } else {
+            product.style.display = "none";
+          }
+        });
+      });
+
+      document.getElementById("clear-search").addEventListener("click", () => {
+        document.getElementById("search-bar").value = ""; // Clear the search bar
+        renderProducts(products); // Reset the product grid to show all products
+      });
+
+      const featuredProducts = products.slice(0, 2); // Example: First two products as featured
+      const featuredGrid = document.getElementById("featured-products");
+
+      featuredProducts.forEach(product => {
+        const featuredCard = `
+          <div class="product-card">
+            <img src="${product.image}" alt="${product.make} ${product.model}">
+            <div class="details">
+              <h3>${product.make} ${product.model}</h3>
+              <p class="price">$${product.price.toLocaleString()}</p>
+              <p class="year">Year: ${product.year}</p>
+            </div>
+          </div>
+        `;
+        featuredGrid.innerHTML += featuredCard;
+      });
     });
 
     function navigateToWelcomePage() {
       window.location.href = "index.html"; // Replace with the actual path to your welcome page
     }
+
+    document.getElementById("scroll-to-listings").addEventListener("click", () => {
+      document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
+    });
   </script>
 </head>
 <body>
@@ -589,9 +695,20 @@
       </ul>
     </nav>
     <button class="theme-toggle">🌙</button>
+    <div id="theme-tooltip" class="theme-toggle-tooltip">Toggle Dark Mode</div>
   </header>
 
   <main>
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search by make, model, or price..." aria-label="Search">
+      <button id="search-button">Search</button>
+      <button id="clear-search" style="margin-left: 10px;">Clear</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner"></div>
+
     <div class="button-container">
       <button class="section-button" data-section="listings">Listings</button>
       <button class="section-button" data-section="profile">Profile</button>
@@ -682,6 +799,14 @@
       </div>
     </div>
 
+    <!-- Featured Section -->
+    <div class="featured-section">
+      <h2>Featured Products</h2>
+      <div class="product-grid" id="featured-products">
+        <!-- Featured products will be dynamically rendered here -->
+      </div>
+    </div>
+
     <!-- Profile Section -->
     <div id="profile" class="content-section">
       <h2>User Profile</h2>
@@ -737,6 +862,7 @@
         </li>
       </ul>
     </div>
+    <button id="scroll-to-listings" style="margin-top: 10px;">Go to Listings</button>
   </main>
 
   <footer>
