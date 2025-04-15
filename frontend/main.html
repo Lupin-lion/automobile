@@ -806,7 +806,7 @@
         spinner.style.display = "block"; // Show loading spinner
         setTimeout(() => {
           const query = searchBar.value.toLowerCase();
-          filteredProducts = products.filter(product =>
+          const filteredProducts = products.filter(product =>
             product.make.toLowerCase().includes(query) ||
             product.model.toLowerCase().includes(query) ||
             product.price.toString().includes(query)
@@ -820,7 +820,7 @@
   
       searchBar.addEventListener("input", (e) => {
         const query = e.target.value.toLowerCase();
-        filteredProducts = products.filter(product =>
+        const filteredProducts = products.filter(product =>
           product.make.toLowerCase().includes(query) ||
           product.model.toLowerCase().includes(query) ||
           product.price.toString().includes(query)
