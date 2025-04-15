@@ -80,6 +80,18 @@
       color: var(--secondary-color);
     }
 
+    .theme-toggle-tooltip {
+      position: absolute;
+      top: 50px;
+      right: 20px;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      display: none;
+    }
+
     main {
       max-width: 1200px;
       margin: 20px auto;
@@ -121,6 +133,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
+      margin: 20px;
     }
 
     .product-card {
@@ -387,37 +400,63 @@
     .back-to-top:hover {
       background-color: var(--secondary-color);
     }
+
+    .search-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    #search-bar {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    #search-bar:focus {
+      border-color: var(--primary-color);
+    }
+
+    #search-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    #search-button:hover {
+      background-color: var(--secondary-color);
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       // Handle section buttons
       const buttons = document.querySelectorAll(".section-button");
       const sections = document.querySelectorAll(".content-section");
-
+  
       buttons.forEach(button => {
         button.addEventListener("click", () => {
           const sectionId = button.getAttribute("data-section");
           const section = document.getElementById(sectionId);
-
-          // Hide all sections except the clicked one
+  
           sections.forEach(sec => {
             if (sec !== section) {
               sec.classList.remove("active");
             }
           });
-
-          // Toggle visibility of the clicked section
+  
           section.classList.toggle("active");
         });
       });
-
-      const products = [
-        { type: "car", make: "toyota", model: "Corolla", price: 15000, origin: "foreign", year: 2020, image: "images/toyota.jpg", contact: "https://wa.me/1234567890" },
-        { type: "car", make: "ford", model: "Mustang", price: 25000, origin: "foreign", year: 2018, image: "images/ford.jpg", contact: "https://wa.me/1234567891" },
-        { type: "bike", make: "yamaha", model: "R15", price: 5000, origin: "local", year: 2015, image: "images/yamaha.jpg", contact: "https://wa.me/1234567892" },
-        { type: "bike", make: "suzuki", model: "Hayabusa", price: 18000, origin: "foreign", year: 2010, image: "images/suzuki.jpg", contact: "https://wa.me/1234567893" }
-      ];
-
+  
+      // Initialize variables
       const filterType = document.getElementById("filter-type");
       const filterPrice = document.getElementById("filter-price");
       const filterMake = document.getElementById("filter-make");
@@ -425,37 +464,223 @@
       const filterYear = document.getElementById("filter-year");
       const sortOptions = document.getElementById("sort-options");
       const productGrid = document.querySelector(".product-grid");
-
+  
       let currentPage = 1;
       const itemsPerPage = 2;
+      let products = []; // Will store fetched products
       let filteredProducts = [];
-
+  
+      // Authentication state
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+  
+      // Update navigation based on authentication state
+      const createProfileLink = document.getElementById('create-profile-link');
+      const loginLink = document.getElementById('login-link');
+      const logoutLink = document.getElementById('logout-link');
+      const createListingLink = document.getElementById('create-listing-link');
+      const createListingSection = document.getElementById('create-listing');
+  
+      if (token && user) {
+        createProfileLink.style.display = 'none';
+        loginLink.style.display = 'none';
+        logoutLink.style.display = 'inline';
+        createListingLink.style.display = 'inline';
+        createListingSection.style.display = 'block'; // Show Create Listing section
+        document.getElementById('profile-title').textContent = 'User Profile';
+        document.getElementById('user-info').style.display = 'block';
+        document.getElementById('auth-forms').style.display = 'none';
+        document.getElementById('username').textContent = user.username;
+        document.getElementById('user-email').textContent = user.email;
+      } else {
+        createProfileLink.style.display = 'inline';
+        loginLink.style.display = 'inline';
+        logoutLink.style.display = 'none';
+        createListingLink.style.display = 'none';
+        createListingSection.style.display = 'none'; // Hide Create Listing section
+      }
+  
+      // Logout functionality
+      logoutLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.reload();
+      });
+  
+      // Toggle between login and register forms
+      document.getElementById('show-register').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('register-form').style.display = 'block';
+      });
+  
+      document.getElementById('show-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('register-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+      });
+  
+      // Handle registration
+      document.getElementById('register-form-element').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const messageElement = document.getElementById('register-message');
+  
+        try {
+          const response = await fetch('http://localhost:5000/api/users/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, email, password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            messageElement.style.color = 'green';
+            messageElement.textContent = data.message;
+            setTimeout(() => {
+              document.getElementById('register-form').style.display = 'none';
+              document.getElementById('login-form').style.display = 'block';
+            }, 2000);
+          } else {
+            messageElement.style.color = 'red';
+            messageElement.textContent = data.message || 'Error registering user';
+          }
+        } catch (error) {
+          messageElement.style.color = 'red';
+          messageElement.textContent = 'Error connecting to the server';
+        }
+      });
+  
+      // Handle login
+      document.getElementById('login-form-element').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const messageElement = document.getElementById('login-message');
+  
+        try {
+          const response = await fetch('https://automobile-backend.onrender.com/api/users/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            window.location.reload();
+          } else {
+            messageElement.style.color = 'red';
+            messageElement.textContent = data.message || 'Error logging in';
+          }
+        } catch (error) {
+          messageElement.style.color = 'red';
+          messageElement.textContent = 'Error connecting to the server';
+        }
+      });
+  
+      // Handle create listing
+      document.getElementById('create-listing-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const type = document.getElementById('vehicle-type').value;
+        const make = document.getElementById('vehicle-make').value;
+        const model = document.getElementById('vehicle-model').value;
+        const price = parseInt(document.getElementById('vehicle-price').value);
+        const origin = document.getElementById('vehicle-origin').value;
+        const year = parseInt(document.getElementById('vehicle-year').value);
+        const image = document.getElementById('vehicle-image').value;
+        const contact = document.getElementById('vehicle-contact').value;
+        const featured = document.getElementById('vehicle-featured').checked;
+        const messageElement = document.getElementById('create-listing-message');
+  
+        try {
+          const response = await fetch('https://automobile-backend.onrender.com/api/vehicles', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ type, make, model, price, origin, year, image, contact, featured }),
+          });
+          const data = await response.json();
+          if (response.ok) {
+            messageElement.style.color = 'green';
+            messageElement.textContent = 'Vehicle created successfully';
+            fetchProducts(); // Refresh the product list
+            fetchFeaturedProducts(); // Refresh featured products
+            document.getElementById('create-listing-form').reset();
+          } else {
+            messageElement.style.color = 'red';
+            messageElement.textContent = data.message || 'Error creating vehicle';
+          }
+        } catch (error) {
+          messageElement.style.color = 'red';
+          messageElement.textContent = 'Error connecting to the server';
+        }
+      });
+  
+      // Show Create Listing section when link is clicked
+      createListingLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        sections.forEach(sec => sec.classList.remove('active'));
+        document.getElementById('create-listing').classList.add('active');
+      });
+  
+      // Fetch products from the backend
+      async function fetchProducts() {
+        const spinner = document.getElementById("loading-spinner");
+        spinner.style.display = "block"; // Show spinner
+  
+        try {
+          const response = await fetch('https://automobile-backend.onrender.com/api/vehicles');
+          if (!response.ok) {
+            throw new Error('Failed to fetch vehicles');
+          }
+          products = await response.json();
+          filteredProducts = [...products]; // Initialize filtered products
+          currentPage = 1; // Reset to the first page
+          document.getElementById("page-info").textContent = `Page ${currentPage}`;
+          renderProducts(paginateProducts(filteredProducts));
+        } catch (error) {
+          console.error('Error fetching vehicles:', error);
+          productGrid.innerHTML = '<p style="text-align: center; color: red;">Error loading vehicles. Please try again later.</p>';
+        } finally {
+          spinner.style.display = "none"; // Hide spinner
+        }
+      }
+  
       function paginateProducts(products) {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return products.slice(startIndex, endIndex);
       }
-
+  
       document.querySelectorAll(".page-btn").forEach(button => {
         button.addEventListener("click", () => {
           const direction = button.getAttribute("data-page");
           const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-
+  
           if (direction === "prev" && currentPage > 1) {
             currentPage--;
           } else if (direction === "next" && currentPage < totalPages) {
             currentPage++;
           }
-
+  
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
         });
       });
-
+  
       function renderProducts(products) {
         const noResults = document.getElementById("no-results");
         productGrid.innerHTML = ""; // Clear current items
-
+  
         if (products.length === 0) {
           noResults.style.display = "block"; // Show "No results" message
         } else {
@@ -463,13 +688,13 @@
           products.forEach(product => {
             const productCard = `
               <div class="product-card">
-                <img src="${product.image}" alt="${product.make} ${product.model}">
+                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.make} ${product.model}">
                 <div class="details">
                   <h3>${product.make} ${product.model}</h3>
                   <p class="price">$${product.price.toLocaleString()}</p>
                   <p class="year">Year: ${product.year}</p>
                   <p class="origin">Origin: ${product.origin.charAt(0).toUpperCase() + product.origin.slice(1)}</p>
-                  <a href="${product.contact}" target="_blank" class="contact-btn" aria-label="Contact the owner via WhatsApp">Contact Owner</a>
+                  <a href="${product.contact || '#'}" target="_blank" class="contact-btn" aria-label="Contact the owner via WhatsApp">Contact Owner</a>
                 </div>
               </div>
             `;
@@ -477,19 +702,19 @@
           });
         }
       }
-
+  
       // Update filterProducts to use pagination
       function filterProducts() {
         const spinner = document.getElementById("loading-spinner");
         spinner.style.display = "block"; // Show spinner
-
+  
         setTimeout(() => {
           const typeValue = filterType.value;
           const priceValue = filterPrice.value;
           const makeValue = filterMake.value;
           const originValue = filterOrigin.value;
           const yearValue = filterYear.value;
-
+  
           filteredProducts = products.filter(product => {
             const matchesType = typeValue === "all" || product.type === typeValue;
             const matchesPrice =
@@ -497,28 +722,28 @@
               (priceValue === "low" && product.price < 10000) ||
               (priceValue === "medium" && product.price >= 10000 && product.price <= 20000) ||
               (priceValue === "high" && product.price > 20000);
-            const matchesMake = makeValue === "all" || product.make === makeValue;
+            const matchesMake = makeValue === "all" || product.make.toLowerCase() === makeValue;
             const matchesOrigin = originValue === "all" || product.origin === originValue;
             const matchesYear = yearValue === "all" || product.year.toString() === yearValue;
-
+  
             return matchesType && matchesPrice && matchesMake && matchesOrigin && matchesYear;
           });
-
+  
           currentPage = 1; // Reset to the first page
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
-
+  
           spinner.style.display = "none"; // Hide spinner
         }, 500); // Simulate loading delay
       }
-
+  
       // Add event listeners to all filters
       filterType.addEventListener("change", filterProducts);
       filterPrice.addEventListener("change", filterProducts);
       filterMake.addEventListener("change", filterProducts);
       filterOrigin.addEventListener("change", filterProducts);
       filterYear.addEventListener("change", filterProducts);
-
+  
       // Reset filters functionality
       document.getElementById("reset-filters").addEventListener("click", () => {
         filterType.value = "all";
@@ -528,11 +753,11 @@
         filterYear.value = "all";
         filterProducts(); // Reapply filters
       });
-
+  
       // Sort functionality
       sortOptions.addEventListener("change", () => {
         const sortValue = sortOptions.value;
-
+  
         if (sortValue === "price-asc") {
           filteredProducts.sort((a, b) => a.price - b.price);
         } else if (sortValue === "price-desc") {
@@ -542,13 +767,14 @@
         } else if (sortValue === "year-desc") {
           filteredProducts.sort((a, b) => b.year - a.year);
         }
-
+  
         renderProducts(paginateProducts(filteredProducts));
       });
-
-      // Display all products by default
-      filterProducts();
-
+  
+      // Fetch and display all products on page load
+      fetchProducts();
+  
+      // Theme toggle
       const themeToggle = document.querySelector(".theme-toggle");
       themeToggle.addEventListener("click", () => {
         const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
@@ -556,9 +782,9 @@
         document.documentElement.setAttribute("data-theme", newTheme);
         themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
       });
-
+  
+      // Back to top button
       const backToTopButton = document.getElementById("back-to-top");
-
       window.addEventListener("scroll", () => {
         if (window.scrollY > 200) {
           backToTopButton.style.display = "block";
@@ -566,16 +792,179 @@
           backToTopButton.style.display = "none";
         }
       });
-
+  
       backToTopButton.addEventListener("click", () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
+  
+      // Search Functionality
+      const searchBar = document.getElementById("search-bar");
+      const searchButton = document.getElementById("search-button");
+  
+      searchButton.addEventListener("click", () => {
+        const spinner = document.querySelector(".loading-spinner");
+        spinner.style.display = "block"; // Show loading spinner
+        setTimeout(() => {
+          const query = searchBar.value.toLowerCase();
+          filteredProducts = products.filter(product =>
+            product.make.toLowerCase().includes(query) ||
+            product.model.toLowerCase().includes(query) ||
+            product.price.toString().includes(query)
+          );
+          currentPage = 1;
+          document.getElementById("page-info").textContent = `Page ${currentPage}`;
+          renderProducts(paginateProducts(filteredProducts));
+          spinner.style.display = "none"; // Hide loading spinner
+        }, 1000); // Simulate loading delay
+      });
+  
+      searchBar.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase();
+        filteredProducts = products.filter(product =>
+          product.make.toLowerCase().includes(query) ||
+          product.model.toLowerCase().includes(query) ||
+          product.price.toString().includes(query)
+        );
+        currentPage = 1;
+        document.getElementById("page-info").textContent = `Page ${currentPage}`;
+        renderProducts(paginateProducts(filteredProducts));
+      });
+  
+      document.getElementById("clear-search").addEventListener("click", () => {
+        document.getElementById("search-bar").value = ""; // Clear the search bar
+        filteredProducts = [...products]; // Reset filtered products
+        currentPage = 1;
+        document.getElementById("page-info").textContent = `Page ${currentPage}`;
+        renderProducts(paginateProducts(filteredProducts));
+      });
+  
+      // Featured Products
+      const featuredGrid = document.getElementById("featured-products");
+      async function fetchFeaturedProducts() {
+        try {
+          const response = await fetch('https://automobile-backend.onrender.com/api/vehicles');
+          const vehicles = await response.json();
+          const featuredProducts = vehicles.filter(vehicle => vehicle.featured).slice(0, 2); // Get first 2 featured products
+          featuredGrid.innerHTML = "";
+          featuredProducts.forEach(product => {
+            const featuredCard = `
+              <div class="product-card">
+                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.make} ${product.model}">
+                <div class="details">
+                  <h3>${product.make} ${product.model}</h3>
+                  <p class="price">$${product.price.toLocaleString()}</p>
+                  <p class="year">Year: ${product.year}</p>
+                </div>
+              </div>
+            `;
+            featuredGrid.innerHTML += featuredCard;
+          });
+        } catch (error) {
+          console.error('Error fetching featured products:', error);
+          featuredGrid.innerHTML = '<p style="text-align: center; color: red;">Error loading featured products.</p>';
+        }
+      }
+  
+      fetchFeaturedProducts();
+    });
+  
+    function navigateToWelcomePage() {
+      window.location.href = "index.html";
+    }
+  
+    document.getElementById("scroll-to-listings").addEventListener("click", () => {
+      document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
     });
 
-    function navigateToWelcomePage() {
-      window.location.href = "index.html"; // Replace with the actual path to your welcome page
-    }
+    // Fetch data from the backend API
+    fetch('http://localhost:5000/api/vehicles')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Vehicles:', data);
+        // Update the frontend with the fetched data
+        const vehicleList = document.getElementById('vehicle-list');
+        data.forEach(vehicle => {
+          const listItem = document.createElement('li');
+          listItem.textContent = `${vehicle.make} ${vehicle.model} - $${vehicle.price}`;
+          vehicleList.appendChild(listItem);
+        });
+      })
+      .catch(error => console.error('Error fetching vehicles:', error));
+
+    const token = localStorage.getItem('token');
+
+    fetch('http://localhost:5000/api/vehicles', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch vehicles');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Vehicles:', data);
+        const featuredProducts = document.getElementById('featured-products');
+        featuredProducts.innerHTML = ''; // Clear previous content
+        data.forEach(vehicle => {
+          const product = document.createElement('div');
+          product.textContent = `${vehicle.make} ${vehicle.model} - $${vehicle.price}`;
+          featuredProducts.appendChild(product);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching vehicles:', error);
+        const featuredProducts = document.getElementById('featured-products');
+        featuredProducts.textContent = 'Error loading featured products.';
+      });
   </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Authentication state
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Update navigation and profile section
+    const createProfileLink = document.getElementById('create-profile-link');
+    const loginLink = document.getElementById('login-link');
+    const logoutLink = document.getElementById('logout-link');
+    const createListingLink = document.getElementById('create-listing-link');
+    const createListingSection = document.getElementById('create-listing');
+    const authForms = document.getElementById('auth-forms');
+    const userInfo = document.getElementById('user-info');
+
+    if (token && user) {
+      createProfileLink.style.display = 'none';
+      loginLink.style.display = 'none';
+      logoutLink.style.display = 'inline';
+      createListingLink.style.display = 'inline';
+      createListingSection.style.display = 'block';
+      authForms.style.display = 'none'; // Hide auth forms
+      userInfo.style.display = 'block'; // Show user info
+      document.getElementById('profile-title').textContent = 'User Profile';
+      document.getElementById('username').textContent = user.username;
+      document.getElementById('user-email').textContent = user.email;
+    } else {
+      createProfileLink.style.display = 'inline';
+      loginLink.style.display = 'inline';
+      logoutLink.style.display = 'none';
+      createListingLink.style.display = 'none';
+      createListingSection.style.display = 'none';
+      authForms.style.display = 'block';
+      userInfo.style.display = 'none';
+    }
+
+    // Logout functionality
+    logoutLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.reload();
+    });
+  });
+</script>
 </head>
 <body>
   <header>
@@ -583,15 +972,28 @@
     <nav>
       <ul>
         <li><a href="#" onclick="navigateToWelcomePage()">Home</a></li>
-        <li><a href="#">Create Profile</a></li>
-        <li><a href="#">Log In</a></li>
-        <li><a href="#">Contact Us</a></li>
+        <li><a href="#" id="create-profile-link">Create Profile</a></li>
+        <li><a href="#" id="login-link">Log In</a></li>
+        <li><a href="#" id="create-listing-link" style="display: none;">Create Listing</a></li>
+        <li><a href="#" id="logout-link" style="display: none;">Log Out</a></li>
+        <li><a href="#" onclick="document.getElementById('contact').classList.add('active')">Contact Us</a></li>
       </ul>
     </nav>
     <button class="theme-toggle">🌙</button>
+    <div id="theme-tooltip" class="theme-toggle-tooltip">Toggle Dark Mode</div>
   </header>
 
   <main>
+    <!-- Search Bar -->
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search by make, model, or price..." aria-label="Search">
+      <button id="search-button">Search</button>
+      <button id="clear-search" style="margin-left: 10px;">Clear</button>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner"></div>
+
     <div class="button-container">
       <button class="section-button" data-section="listings">Listings</button>
       <button class="section-button" data-section="profile">Profile</button>
@@ -682,11 +1084,110 @@
       </div>
     </div>
 
-    <!-- Profile Section -->
-    <div id="profile" class="content-section">
-      <h2>User Profile</h2>
-      <p>Manage your profile and activity here.</p>
+    <!-- Featured Section -->
+    <div class="featured-section">
+      <h2>Featured Products</h2>
+      <div class="product-grid" id="featured-products">
+        <!-- Featured products will be dynamically rendered here -->
+      </div>
     </div>
+
+   <!-- Profile Section -->
+<div id="profile" class="content-section">
+  <h2 id="profile-title">User Profile</h2>
+  <div id="user-info" style="display: none;">
+    <p>Welcome, <span id="username"></span>!</p>
+    <p>Email: <span id="user-email"></span></p>
+  </div>
+  <div id="auth-forms">
+    <div id="register-form" style="display: none;">
+      <h3>Register</h3>
+      <form id="register-form-element">
+        <div class="filter-group">
+          <label for="register-username">Username:</label>
+          <input type="text" id="register-username" required>
+        </div>
+        <div class="filter-group">
+          <label for="register-email">Email:</label>
+          <input type="email" id="register-email" required>
+        </div>
+        <div class="filter-group">
+          <label for="register-password">Password:</label>
+          <input type="password" id="register-password" required>
+        </div>
+        <button type="submit" class="section-button">Register</button>
+      </form>
+      <p id="register-message"></p>
+      <p>Already have an account? <a href="#" id="show-login">Log In</a></p>
+    </div>
+    <div id="login-form">
+      <h3>Log In</h3>
+      <form id="login-form-element">
+        <div class="filter-group">
+          <label for="login-email">Email:</label>
+          <input type="email" id="login-email" required>
+        </div>
+        <div class="filter-group">
+          <label for="login-password">Password:</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <button type="submit" class="section-button">Log In</button>
+      </form>
+      <p id="login-message"></p>
+      <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
+    </div>
+  </div>
+</div>
+<!-- Create Listing Section -->
+<div id="create-listing" class="content-section" style="display: none;">
+  <h2>Create a New Listing</h2>
+  <form id="create-listing-form">
+    <div class="filter-group">
+      <label for="vehicle-type">Type:</label>
+      <select id="vehicle-type" required>
+        <option value="car">Car</option>
+        <option value="bike">Bike</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-make">Make:</label>
+      <input type="text" id="vehicle-make" required>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-model">Model:</label>
+      <input type="text" id="vehicle-model" required>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-price">Price:</label>
+      <input type="number" id="vehicle-price" required>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-origin">Origin:</label>
+      <select id="vehicle-origin" required>
+        <option value="foreign">Foreign</option>
+        <option value="local">Local</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-year">Year:</label>
+      <input type="number" id="vehicle-year" required>
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-image">Image URL:</label>
+      <input type="text" id="vehicle-image">
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-contact">Contact URL:</label>
+      <input type="text" id="vehicle-contact">
+    </div>
+    <div class="filter-group">
+      <label for="vehicle-featured">Featured:</label>
+      <input type="checkbox" id="vehicle-featured">
+    </div>
+    <button type="submit" class="section-button">Create Listing</button>
+  </form>
+  <p id="create-listing-message"></p>
+</div>
 
     <!-- About Section -->
     <div id="about" class="content-section">
@@ -737,6 +1238,8 @@
         </li>
       </ul>
     </div>
+    <button id="scroll-to-listings" style="margin-top: 10px;">Go to Listings</button>
+    <ul id="vehicle-list"></ul>
   </main>
 
   <footer>
