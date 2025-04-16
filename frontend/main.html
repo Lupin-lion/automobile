@@ -885,6 +885,29 @@
       const searchButton = document.getElementById("search-button");
       const clearSearchButton = document.getElementById("clear-search");
 
+      if (!searchBar) {
+        console.error('Search bar not found in DOM. Ensure the element with id="search-bar" exists.');
+      }
+
+      if (!searchButton) {
+        console.error('Search button not found in DOM. Ensure the element with id="search-button" exists.');
+      }
+
+      if (!clearSearchButton) {
+        console.error('Clear search button not found in DOM. Ensure the element with id="clear-search" exists.');
+      } else {
+        clearSearchButton.addEventListener("click", () => {
+          if (searchBar) {
+            searchBar.value = ""; // Clear the search bar
+            filteredProducts = [...products]; // Reset filtered products
+            currentPage = 1;
+            document.getElementById("page-info").textContent = `Page ${currentPage}`;
+            renderProducts(paginateProducts(filteredProducts));
+            clearSearchButton.classList.add('active'); // This should now work
+          }
+        });
+      }
+
       if (searchButton) {
         searchButton.addEventListener("click", () => {
           const spinner = document.querySelector(".loading-spinner");
@@ -916,19 +939,6 @@
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
         });
-      }
-
-      if (clearSearchButton) {
-        clearSearchButton.addEventListener("click", () => {
-          if (searchBar) searchBar.value = ""; // Clear the search bar
-          filteredProducts = [...products]; // Reset filtered products
-          currentPage = 1;
-          document.getElementById("page-info").textContent = `Page ${currentPage}`;
-          renderProducts(paginateProducts(filteredProducts));
-          clearSearchButton.classList.add('active'); // Safely add the class
-        });
-      } else {
-        console.error('Clear search button not found');
       }
 
       // Featured Products
@@ -1241,19 +1251,19 @@
       <ul class="contact-list">
         <li>
           <a href="https://wa.me/254799582173" target="_blank">
-            <img src="images/app.png" alt="WhatsApp" class="contact-icon">
+            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7" alt="WhatsApp" class="contact-icon">
             WhatsApp
           </a>
         </li>
         <li>
           <a href="mailto:themartswriters@gmail.com">
-            <img src="images/message.png" alt="Email" class="contact-icon">
+            <img src="https://images.unsplash.com/photo-1596526131083-5a2a1283dd02" alt="Email" class="contact-icon">
             Email
           </a>
         </li>
         <li>
           <a href="https://gracetech-eng.github.io/themarts/" target="_blank">
-            <img src="images/website.png" alt="The Marts Web" class="contact-icon">
+            <img src="https://images.unsplash.com/photo-1626785774573-4b7b86f7d90f" alt="The Marts Web" class="contact-icon">
             The Marts Web
           </a>
         </li>
