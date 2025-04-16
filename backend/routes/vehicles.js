@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-// Mock data with image URLs
+// Mock data with verified Unsplash image URLs (optimized with width and height)
 const vehicles = [
   {
     id: 1,
@@ -11,7 +11,7 @@ const vehicles = [
     price: 15000,
     origin: 'foreign',
     year: 2018,
-    image: 'https://images.unsplash.com/photo-1600585154347-7b7f9e1b3f5b', // Toyota Camry
+    image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=300&h=200&fit=crop',
     contact: 'https://wa.me/254799582173',
     featured: true
   },
@@ -23,7 +23,7 @@ const vehicles = [
     price: 25000,
     origin: 'foreign',
     year: 2020,
-    image: 'https://images.unsplash.com/photo-1616423841125-8d0e3d7a4e5f', // Ford Mustang
+    image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=300&h=200&fit=crop',
     contact: 'https://wa.me/254799582173',
     featured: true
   },
@@ -35,7 +35,7 @@ const vehicles = [
     price: 12000,
     origin: 'foreign',
     year: 2019,
-    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc', // Yamaha R1
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=300&h=200&fit=crop',
     contact: 'https://wa.me/254799582173',
     featured: false
   },
@@ -47,7 +47,7 @@ const vehicles = [
     price: 9000,
     origin: 'foreign',
     year: 2015,
-    image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87', // Suzuki GSX-R
+    image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=300&h=200&fit=crop',
     contact: 'https://wa.me/254799582173',
     featured: false
   },
@@ -59,13 +59,12 @@ const vehicles = [
     price: 12000,
     origin: 'local',
     year: 2015,
-    image: 'https://images.unsplash.com/photo-1600585154347-7b7f9e1b3f5b', // Toyota Corolla (same as Camry for now)
+    image: 'https://images.unsplash.com/photo-1600585154347-7b7f9e1b3f5b?w=300&h=200&fit=crop',
     contact: 'https://wa.me/254799582173',
     featured: false
   }
 ];
 
-// In-memory storage for vehicles (append new ones here)
 let vehicleList = [...vehicles];
 
 router.get('/', (req, res) => {
