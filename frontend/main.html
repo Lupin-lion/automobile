@@ -6,7 +6,6 @@
   <meta name="description" content="Explore cars and bikes on The Marts Motors.">
   <meta name="keywords" content="cars, bikes, automobiles, buy cars, sell cars, The Marts Motors">
   <meta name="author" content="The Marts Motors">
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
   <title>Main Page | The Marts Motors</title>
   <style>
     /* General Styles */
@@ -718,7 +717,7 @@
           products.forEach(product => {
             const productCard = `
               <div class="product-card">
-                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.make} ${product.model}">
+                <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.make} ${product.model}">
                 <div class="details">
                   <h3>${product.make} ${product.model}</h3>
                   <p class="price">$${product.price.toLocaleString()}</p>
@@ -881,7 +880,7 @@
           currentPage = 1;
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
-          clearSearchButton.classList.add('active'); // Add active class if needed
+          clearSearchButton.classList.add('active'); // Safely add the class
         });
       } else {
         console.error('Clear search button not found');
@@ -902,7 +901,7 @@
           featuredProducts.forEach(product => {
             const featuredCard = `
               <div class="product-card">
-                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.make} ${product.model}">
+                <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.make} ${product.model}">
                 <div class="details">
                   <h3>${product.make} ${product.model}</h3>
                   <p class="price">$${product.price.toLocaleString()}</p>
