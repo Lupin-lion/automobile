@@ -7,10 +7,11 @@
   <meta name="keywords" content="cars, bikes, automobiles, buy cars, sell cars, The Marts Motors">
   <meta name="author" content="The Marts Motors">
   <title>Main Page | The Marts Motors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* General Styles */
     body {
-      font-family: 'Poppins', Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
       padding: 0;
       background: var(--background-color);
@@ -19,17 +20,21 @@
     }
 
     :root {
-      --background-color: #f0f8ff; /* Light background */
-      --text-color: #333; /* Text for light theme */
-      --primary-color: #0288d1; /* Vibrant blue */
-      --secondary-color: #ff6f00; /* Bright orange */
+      --background-color: #f4f7fb;
+      --text-color: #2d3748;
+      --primary-color: #1a73e8;
+      --secondary-color: #f59e0b;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
     }
 
     [data-theme="dark"] {
-      --background-color: #121212; /* Dark theme background */
-      --text-color: #e0e0e0; /* Light text for dark theme */
-      --primary-color: #bb86fc; /* Purple accent */
-      --secondary-color: #ff6f00; /* Bright orange */
+      --background-color: #1a202c;
+      --text-color: #e2e8f0;
+      --primary-color: #63b3ed;
+      --secondary-color: #f6ad55;
+      --card-bg: #2d3748;
+      --border-color: #4a5568;
     }
 
     header {
@@ -39,37 +44,46 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .logo {
       font-size: 24px;
-      font-weight: bold;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
 
     nav ul {
       list-style: none;
       display: flex;
-      gap: 15px;
+      gap: 20px;
       margin: 0;
       padding: 0;
+      align-items: center;
     }
 
     nav ul li a {
       color: #fff;
       text-decoration: none;
       font-size: 16px;
-      cursor: pointer;
-      transition: color 0.3s ease;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     nav ul li a:hover {
-      color: var(--secondary-color);
+      background-color: var(--secondary-color);
+      color: #fff;
     }
 
     .theme-toggle {
       background: none;
       border: none;
-      font-size: 28px;
+      font-size: 24px;
       color: #fff;
       cursor: pointer;
       transition: color 0.3s ease;
@@ -79,86 +93,73 @@
       color: var(--secondary-color);
     }
 
-    .theme-toggle-tooltip {
-      position: absolute;
-      top: 50px;
-      right: 20px;
-      background-color: #333;
+    .notification-bell {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 24px;
       color: #fff;
-      padding: 5px 10px;
-      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .notification-bell .badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background-color: #f44336;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
       font-size: 12px;
-      display: none;
+      font-weight: bold;
     }
 
     main {
       max-width: 1200px;
-      margin: 20px auto;
-      padding: 0 20px;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-
-    .section-button {
-      padding: 10px 20px;
-      background-color: #4caf50; /* Friendly green */
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-
-    .section-button:hover {
-      background-color: #ff6347; /* Accent color */
-    }
-
-    .section-button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
+      margin: 0 auto;
+      padding: 20px;
     }
 
     .content-section {
-      display: none; /* Hidden by default */
-      margin-top: 30px;
+      display: none;
+      margin-top: 20px;
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .content-section.active {
-      display: block; /* Show when active */
+      display: block;
     }
 
     .featured-section {
-      display: none; /* Hidden by default */
+      display: none;
       margin: 20px 0;
     }
 
     .featured-section.active {
-      display: block; /* Show when active */
+      display: block;
     }
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
-      margin: 20px;
+      margin: 20px 0;
     }
 
     .product-card {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       overflow: hidden;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border-color);
     }
 
     .product-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     }
 
     .product-card img {
@@ -175,12 +176,13 @@
     .product-card .details h3 {
       margin: 0 0 10px;
       font-size: 20px;
+      font-weight: 600;
       color: var(--text-color);
     }
 
     .product-card .details .price {
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 500;
       color: var(--primary-color);
       margin-bottom: 10px;
     }
@@ -193,19 +195,19 @@
       text-decoration: none;
       border-radius: 5px;
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 500;
       transition: background-color 0.3s ease;
     }
 
     .product-card .details .contact-btn:hover {
-      background-color: #e65c00;
+      background-color: #d97706;
     }
 
     .interactions {
       display: flex;
       justify-content: space-around;
       padding: 10px;
-      border-top: 1px solid #eee;
+      border-top: 1px solid var(--border-color);
     }
 
     .interaction-btn {
@@ -217,6 +219,7 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      transition: color 0.3s ease;
     }
 
     .interaction-btn:hover {
@@ -238,7 +241,7 @@
 
     .page-btn {
       padding: 10px 20px;
-      background-color: #4caf50; /* Friendly green */
+      background-color: var(--primary-color);
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -248,12 +251,12 @@
     }
 
     .page-btn:hover {
-      background-color: #ff6347; /* Accent color */
+      background-color: var(--secondary-color);
     }
 
     #page-info {
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 500;
     }
 
     footer {
@@ -277,9 +280,8 @@
     }
 
     .reset-btn {
-      margin-top: 10px;
       padding: 10px 20px;
-      background-color: #ff6f00;
+      background-color: var(--secondary-color);
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -289,23 +291,23 @@
     }
 
     .reset-btn:hover {
-      background-color: #e65c00;
+      background-color: #d97706;
     }
 
     .filter-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      margin-bottom: 30px;
-      background-color: #f9f9f9;
+      gap: 15px;
+      margin-bottom: 20px;
+      background-color: var(--card-bg);
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     .filter-row {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       justify-content: space-between;
     }
 
@@ -317,7 +319,7 @@
 
     .filter-group label {
       font-size: 14px;
-      font-weight: bold;
+      font-weight: 500;
       margin-bottom: 5px;
       color: var(--text-color);
     }
@@ -326,7 +328,7 @@
     .filter-group input {
       padding: 10px;
       font-size: 14px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border-color);
       border-radius: 5px;
       background-color: #fff;
       color: var(--text-color);
@@ -358,145 +360,164 @@
     }
 
     @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    @media (max-width: 600px) {
-      .product-card img {
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      background: var(--card-bg);
+      padding: 10px;
+      border-radius: 50px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    #search-bar {
+      width: 50%;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 50px 0 0 50px;
+      outline: none;
+      background: #f1f5f9;
+      color: var(--text-color);
+    }
+
+    #search-bar:focus {
+      background: #fff;
+      box-shadow: inset 0 0 0 2px var(--primary-color);
+    }
+
+    #search-button, #clear-search {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #search-button {
+      border-radius: 0 50px 50px 0;
+    }
+
+    #clear-search {
+      margin-left: 10px;
+      border-radius: 50px;
+    }
+
+    #search-button:hover, #clear-search:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .messages-container {
+      margin-top: 20px;
+    }
+
+    .message-thread {
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 0;
+    }
+
+    .message-thread p {
+      margin: 5px 0;
+    }
+
+    .message-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .message-form input, .message-form select {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      flex: 1;
+    }
+
+    .message-form button {
+      padding: 10px 20px;
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message-form button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .search-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      #search-bar {
         width: 100%;
-        height: auto;
+        border-radius: 50px;
       }
 
-      .section-button {
-        font-size: 14px;
-        padding: 8px 15px;
-      }
-
-      .contact-icon {
-        width: 30px;
-        height: 30px;
-      }
-
-      nav ul li a {
-        font-size: 14px;
-      }
-
-      .filter-container {
-        grid-template-columns: 1fr;
-      }
-
-      .product-card {
-        margin: 0 auto;
-      }
-
-      .product-card img {
-        height: auto;
+      #search-button {
+        border-radius: 50px;
       }
 
       .filter-row {
         flex-direction: column;
-        gap: 15px;
-      }
-
-      .filter-actions {
-        justify-content: center;
+        gap: 10px;
       }
 
       .interactions {
         flex-wrap: wrap;
         gap: 10px;
       }
-    }
 
-    .back-to-top {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 15px;
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      font-size: 18px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
-    }
-
-    .back-to-top:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .search-container {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    #search-bar {
-      width: 60%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
-
-    #search-bar:focus {
-      border-color: var(--primary-color);
-    }
-
-    #search-button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-
-    #search-button:hover {
-      background-color: var(--secondary-color);
+      .message-form {
+        flex-direction: column;
+      }
     }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // Handle section buttons
-      const buttons = document.querySelectorAll(".section-button");
+      // Handle section navigation
       const sections = document.querySelectorAll(".content-section");
       const featuredSection = document.querySelector(".featured-section");
       const authForms = document.getElementById('auth-forms');
       const userInfo = document.getElementById('user-info');
+      const navLinks = document.querySelectorAll("nav ul li a[data-section]");
 
-      buttons.forEach(button => {
-        button.addEventListener("click", () => {
-          const sectionId = button.getAttribute("data-section");
+      navLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const sectionId = link.getAttribute("data-section");
           const section = document.getElementById(sectionId);
 
-          // Toggle sections
-          sections.forEach(sec => {
-            if (sec !== section) {
-              sec.classList.remove("active");
-            }
-          });
+          sections.forEach(sec => sec.classList.remove("active"));
+          section.classList.add("active");
 
-          section.classList.toggle("active");
-
-          // Show/hide featured section based on Listings
           if (sectionId === "listings" && section.classList.contains("active")) {
             featuredSection.classList.add("active");
           } else {
             featuredSection.classList.remove("active");
           }
 
-          // Show/hide auth forms based on Profile section and auth state
           const token = localStorage.getItem('token');
           if (sectionId === "profile" && section.classList.contains("active")) {
             if (!token) {
@@ -510,6 +531,8 @@
             authForms.style.display = 'none';
             userInfo.style.display = 'none';
           }
+
+          window.scrollTo({ top: section.offsetTop - 80, behavior: "smooth" });
         });
       });
 
@@ -536,14 +559,20 @@
       const loginLink = document.getElementById('login-link');
       const logoutLink = document.getElementById('logout-link');
       const createListingLink = document.getElementById('create-listing-link');
+      const messagesLink = document.getElementById('messages-link');
       const createListingSection = document.getElementById('create-listing');
+      const messagesSection = document.getElementById('messages');
+      const notificationBell = document.getElementById('notification-bell');
 
       if (token && user) {
         createProfileLink.style.display = 'none';
         loginLink.style.display = 'none';
         logoutLink.style.display = 'inline';
         createListingLink.style.display = 'inline';
+        messagesLink.style.display = 'inline';
         createListingSection.style.display = 'block';
+        messagesSection.style.display = 'block';
+        notificationBell.style.display = 'inline';
         authForms.style.display = 'none';
         userInfo.style.display = 'block';
         document.getElementById('profile-title').textContent = 'User Profile';
@@ -554,7 +583,10 @@
         loginLink.style.display = 'inline';
         logoutLink.style.display = 'none';
         createListingLink.style.display = 'none';
+        messagesLink.style.display = 'none';
         createListingSection.style.display = 'none';
+        messagesSection.style.display = 'none';
+        notificationBell.style.display = 'none';
         authForms.style.display = 'block';
         userInfo.style.display = 'none';
       }
@@ -632,8 +664,6 @@
             if (registerButton) registerButton.disabled = false;
           }
         });
-      } else {
-        console.error('Register form not found');
       }
 
       // Handle login
@@ -678,8 +708,6 @@
             if (loginButton) loginButton.disabled = false;
           }
         });
-      } else {
-        console.error('Login form not found');
       }
 
       // Handle create listing
@@ -722,18 +750,6 @@
             messageElement.style.color = 'red';
             messageElement.textContent = 'Error connecting to the server: ' + error.message;
           }
-        });
-      }
-
-      // Show Create Listing section when link is clicked
-      if (createListingLink) {
-        createListingLink.addEventListener('click', (e) => {
-          e.preventDefault();
-          sections.forEach(sec => sec.classList.remove("active"));
-          document.getElementById('create-listing').classList.add('active');
-          featuredSection.classList.remove("active");
-          authForms.style.display = 'none';
-          userInfo.style.display = 'none';
         });
       }
 
@@ -805,7 +821,6 @@
         } else {
           if (noResults) noResults.style.display = "none";
           products.forEach(product => {
-            // Load interaction counts from localStorage
             const likeKey = `like_${product.id}`;
             const commentKey = `comment_${product.id}`;
             const repostKey = `repost_${product.id}`;
@@ -818,7 +833,7 @@
 
             const productCard = `
               <div class="product-card">
-                <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.make} ${product.model}">
+                <img src="${product.image}" alt="${product.make} ${product.model}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
                 <div class="details">
                   <h3>${product.make} ${product.model}</h3>
                   <p class="price">$${product.price.toLocaleString()}</p>
@@ -845,7 +860,6 @@
             if (productGrid) productGrid.innerHTML += productCard;
           });
 
-          // Add event listeners for interaction buttons
           document.querySelectorAll('.like-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
               const id = btn.getAttribute('data-id');
@@ -865,7 +879,7 @@
               count++;
               localStorage.setItem(key, count);
               btn.querySelector('.interaction-count').textContent = count;
-              alert('Comment feature coming soon!'); // Placeholder for comment functionality
+              alert('Comment feature coming soon!');
             });
           });
 
@@ -888,7 +902,7 @@
               count++;
               localStorage.setItem(key, count);
               btn.querySelector('.interaction-count').textContent = count;
-              alert('Share feature coming soon!'); // Placeholder for share functionality
+              alert('Share feature coming soon!');
             });
           });
         }
@@ -975,35 +989,20 @@
         });
       }
 
-      const backToTopButton = document.getElementById("back-to-top");
-      if (backToTopButton) {
-        window.addEventListener("scroll", () => {
-          if (window.scrollY > 200) {
-            backToTopButton.style.display = "block";
-          } else {
-            backToTopButton.style.display = "none";
-          }
-        });
-
-        backToTopButton.addEventListener("click", () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      }
-
       const searchBar = document.getElementById("search-bar");
       const searchButton = document.getElementById("search-button");
       const clearSearchButton = document.getElementById("clear-search");
 
       if (!searchBar) {
-        console.error('Search bar not found in DOM. Ensure the element with id="search-bar" exists.');
+        console.error('Search bar not found in DOM.');
       }
 
       if (!searchButton) {
-        console.error('Search button not found in DOM. Ensure the element with id="search-button" exists.');
+        console.error('Search button not found in DOM.');
       }
 
       if (!clearSearchButton) {
-        console.error('Clear search button not found in DOM. Ensure the element with id="clear-search" exists.');
+        console.error('Clear search button not found in DOM.');
       } else {
         clearSearchButton.addEventListener("click", () => {
           if (searchBar) {
@@ -1064,7 +1063,7 @@
           featuredProducts.forEach(product => {
             const featuredCard = `
               <div class="product-card">
-                <img src="${product.image || 'https://via.placeholder.com/300x200'}" alt="${product.make} ${product.model}">
+                <img src="${product.image}" alt="${product.make} ${product.model}" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
                 <div class="details">
                   <h3>${product.make} ${product.model}</h3>
                   <p class="price">$${product.price.toLocaleString()}</p>
@@ -1082,11 +1081,129 @@
 
       fetchFeaturedProducts();
 
-      const scrollToListingsButton = document.getElementById("scroll-to-listings");
-      if (scrollToListingsButton) {
-        scrollToListingsButton.addEventListener("click", () => {
-          document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
+      // Messages and Notifications
+      const messageThreads = document.getElementById('message-threads');
+      const messageForm = document.getElementById('message-form');
+      const notificationBell = document.getElementById('notification-bell');
+      const notificationCount = document.getElementById('notification-count');
+
+      // Populate recipient dropdown with registered users
+      async function populateRecipients() {
+        const recipientSelect = document.getElementById('message-recipient');
+        if (!recipientSelect || !user) return;
+
+        try {
+          const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users');
+          if (!response.ok) {
+            throw new Error('Failed to fetch users');
+          }
+          const users = await response.json();
+          recipientSelect.innerHTML = '<option value="">Select a recipient</option>';
+          users.forEach(u => {
+            if (u.email !== user.email) {
+              const option = document.createElement('option');
+              option.value = u.email;
+              option.textContent = u.username;
+              recipientSelect.appendChild(option);
+            }
+          });
+        } catch (error) {
+          console.error('Error fetching users:', error);
+        }
+      }
+
+      async function fetchMessages() {
+        if (!user) return;
+        try {
+          const response = await fetch(`https://automobile-backend-dcd22d288ee3.herokuapp.com/api/messages?userEmail=${user.email}`);
+          const messages = await response.json();
+          renderMessages(messages);
+          updateNotifications(messages);
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+          if (messageThreads) {
+            messageThreads.innerHTML = '<p style="color: red;">Error loading messages.</p>';
+          }
+        }
+      }
+
+      function renderMessages(messages) {
+        if (!messageThreads) return;
+        messageThreads.innerHTML = '';
+        messages.forEach(msg => {
+          const messageElement = `
+            <div class="message-thread">
+              <p><strong>${msg.sender === user.email ? 'You' : msg.sender}:</strong> ${msg.content}</p>
+              <p style="font-size: 12px; color: #666;">${new Date(msg.timestamp).toLocaleString()}</p>
+            </div>
+          `;
+          messageThreads.innerHTML += messageElement;
         });
+      }
+
+      function updateNotifications(messages) {
+        if (!user || !notificationCount) return;
+        const unreadMessages = messages.filter(msg => msg.recipient === user.email && !localStorage.getItem(`read_${msg.id}`));
+        const unreadCount = unreadMessages.length;
+        notificationCount.textContent = unreadCount;
+        notificationCount.style.display = unreadCount > 0 ? 'inline' : 'none';
+
+        if (unreadCount > 0) {
+          notificationBell.addEventListener('click', () => {
+            sections.forEach(sec => sec.classList.remove("active"));
+            document.getElementById('messages').classList.add('active');
+            featuredSection.classList.remove("active");
+            authForms.style.display = 'none';
+            userInfo.style.display = 'none';
+            unreadMessages.forEach(msg => {
+              localStorage.setItem(`read_${msg.id}`, 'true');
+            });
+            notificationCount.textContent = '0';
+            notificationCount.style.display = 'none';
+          }, { once: true });
+        }
+      }
+
+      if (messageForm) {
+        messageForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          if (!user) {
+            alert('Please log in to send messages.');
+            return;
+          }
+          const recipient = document.getElementById('message-recipient').value;
+          const content = document.getElementById('message-content').value;
+
+          if (!recipient || !content) {
+            alert('Please select a recipient and enter a message.');
+            return;
+          }
+
+          try {
+            const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/messages', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ sender: user.email, recipient, content }),
+            });
+            if (response.ok) {
+              document.getElementById('message-content').value = '';
+              fetchMessages();
+            } else {
+              alert('Error sending message.');
+            }
+          } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Error sending message.');
+          }
+        });
+      }
+
+      if (token && user) {
+        fetchMessages();
+        populateRecipients();
+        setInterval(fetchMessages, 30000); // Poll for new messages every 30 seconds
       }
 
       const listingsSection = document.getElementById("listings");
@@ -1107,15 +1224,22 @@
     <nav>
       <ul>
         <li><a href="#" onclick="navigateToWelcomePage()">Home</a></li>
-        <li><a href="#" id="create-profile-link">Create Profile</a></li>
+        <li><a href="#" data-section="listings">Listings</a></li>
+        <li><a href="#" data-section="profile" id="create-profile-link">Profile</a></li>
         <li><a href="#" id="login-link">Log In</a></li>
-        <li><a href="#" id="create-listing-link" style="display: none;">Create Listing</a></li>
+        <li><a href="#" data-section="create-listing" id="create-listing-link" style="display: none;">Create Listing</a></li>
+        <li><a href="#" data-section="messages" id="messages-link" style="display: none;">Messages</a></li>
         <li><a href="#" id="logout-link" style="display: none;">Log Out</a></li>
-        <li><a href="#" onclick="document.getElementById('contact').classList.add('active')">Contact Us</a></li>
+        <li><a href="#" data-section="about">About</a></li>
+        <li><a href="#" data-section="contact">Contact Us</a></li>
       </ul>
     </nav>
-    <button class="theme-toggle">🌙</button>
-    <div id="theme-tooltip" class="theme-toggle-tooltip">Toggle Dark Mode</div>
+    <div>
+      <button class="notification-bell" id="notification-bell" style="display: none;">
+        🔔 <span class="badge" id="notification-count" style="display: none;">0</span>
+      </button>
+      <button class="theme-toggle">🌙</button>
+    </div>
   </header>
 
   <main>
@@ -1123,10 +1247,10 @@
     <div class="search-container">
       <input type="text" id="search-bar" placeholder="Search by make, model, or price..." aria-label="Search">
       <button id="search-button">Search</button>
-      <button id="clear-search" style="margin-left: 10px;">Clear</button>
+      <button id="clear-search">Clear</button>
     </div>
 
-    <!-- Featured Section (Moved Here) -->
+    <!-- Featured Section -->
     <div class="featured-section">
       <h2>Featured Products</h2>
       <div class="product-grid" id="featured-products">
@@ -1136,13 +1260,6 @@
 
     <!-- Loading Spinner -->
     <div class="loading-spinner"></div>
-
-    <div class="button-container">
-      <button class="section-button" data-section="listings">Listings</button>
-      <button class="section-button" data-section="profile">Profile</button>
-      <button class="section-button" data-section="about">About</button>
-      <button class="section-button" data-section="contact">Contact Us</button>
-    </div>
 
     <!-- Listings Section -->
     <div id="listings" class="content-section">
@@ -1233,7 +1350,7 @@
       <div id="user-info" style="display: none;">
         <p>Welcome, <span id="username"></span>!</p>
         <p>Email: <span id="user-email"></span></p>
-        <button id="create-listing-button" class="section-button">Create a New Listing</button>
+        <button id="create-listing-button" class="reset-btn">Create a New Listing</button>
       </div>
       <div id="auth-forms">
         <div id="register-form" style="display: none;">
@@ -1251,7 +1368,7 @@
               <label for="register-password">Password:</label>
               <input type="password" id="register-password" name="register-password" required>
             </div>
-            <button type="submit" class="section-button">Register</button>
+            <button type="submit" class="reset-btn">Register</button>
           </form>
           <p id="register-message"></p>
           <p>Already have an account? <a href="#" id="show-login">Log In</a></p>
@@ -1267,7 +1384,7 @@
               <label for="login-password">Password:</label>
               <input type="password" id="login-password" name="login-password" required>
             </div>
-            <button type="submit" class="section-button">Log In</button>
+            <button type="submit" class="reset-btn">Log In</button>
           </form>
           <p id="login-message"></p>
           <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
@@ -1321,9 +1438,25 @@
           <label for="vehicle-featured">Featured:</label>
           <input type="checkbox" id="vehicle-featured">
         </div>
-        <button type="submit" class="section-button">Create Listing</button>
+        <button type="submit" class="reset-btn">Create Listing</button>
       </form>
       <p id="create-listing-message"></p>
+    </div>
+
+    <!-- Messages Section -->
+    <div id="messages" class="content-section" style="display: none;">
+      <h2>Messages</h2>
+      <div class="messages-container">
+        <div id="message-threads"></div>
+        <form id="message-form" class="message-form">
+          <select id="message-recipient" required>
+            <option value="">Select a recipient</option>
+            <!-- Recipients will be populated dynamically -->
+          </select>
+          <input type="text" id="message-content" placeholder="Type your message..." required>
+          <button type="submit">Send</button>
+        </form>
+      </div>
     </div>
 
     <!-- About Section -->
@@ -1375,13 +1508,11 @@
         </li>
       </ul>
     </div>
-    <button id="scroll-to-listings" style="margin-top: 10px;">Go to Listings</button>
   </main>
 
   <footer>
     <p>The Marts Motors © 2025 | Connect and Share</p>
   </footer>
   <div id="loading-spinner" class="loading-spinner" style="display: none;"></div>
-  <button id="back-to-top" class="back-to-top" style="display: none;">↑</button>
 </body>
 </html>
