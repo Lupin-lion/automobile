@@ -440,22 +440,22 @@
       // Handle section buttons
       const buttons = document.querySelectorAll(".section-button");
       const sections = document.querySelectorAll(".content-section");
-  
+
       buttons.forEach(button => {
         button.addEventListener("click", () => {
           const sectionId = button.getAttribute("data-section");
           const section = document.getElementById(sectionId);
-  
+
           sections.forEach(sec => {
             if (sec !== section) {
               sec.classList.remove("active");
             }
           });
-  
+
           section.classList.toggle("active");
         });
       });
-  
+
       // Initialize variables
       const filterType = document.getElementById("filter-type");
       const filterPrice = document.getElementById("filter-price");
@@ -464,32 +464,34 @@
       const filterYear = document.getElementById("filter-year");
       const sortOptions = document.getElementById("sort-options");
       const productGrid = document.querySelector(".product-grid");
-  
+
       let currentPage = 1;
       const itemsPerPage = 2;
       let products = []; // Will store fetched products
       let filteredProducts = [];
-  
+
       // Authentication state
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user'));
-  
+
       // Update navigation based on authentication state
       const createProfileLink = document.getElementById('create-profile-link');
       const loginLink = document.getElementById('login-link');
       const logoutLink = document.getElementById('logout-link');
       const createListingLink = document.getElementById('create-listing-link');
       const createListingSection = document.getElementById('create-listing');
-  
+      const authForms = document.getElementById('auth-forms');
+      const userInfo = document.getElementById('user-info');
+
       if (token && user) {
         createProfileLink.style.display = 'none';
         loginLink.style.display = 'none';
         logoutLink.style.display = 'inline';
         createListingLink.style.display = 'inline';
         createListingSection.style.display = 'block'; // Show Create Listing section
+        authForms.style.display = 'none'; // Hide auth forms
+        userInfo.style.display = 'block'; // Show user info
         document.getElementById('profile-title').textContent = 'User Profile';
-        document.getElementById('user-info').style.display = 'block';
-        document.getElementById('auth-forms').style.display = 'none';
         document.getElementById('username').textContent = user.username;
         document.getElementById('user-email').textContent = user.email;
       } else {
@@ -498,145 +500,171 @@
         logoutLink.style.display = 'none';
         createListingLink.style.display = 'none';
         createListingSection.style.display = 'none'; // Hide Create Listing section
+        authForms.style.display = 'block';
+        userInfo.style.display = 'none';
       }
-  
+
       // Logout functionality
-      logoutLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.reload();
-      });
-  
+      if (logoutLink) {
+        logoutLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.reload();
+        });
+      }
+
       // Toggle between login and register forms
-      document.getElementById('show-register').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('login-form').style.display = 'none';
-        document.getElementById('register-form').style.display = 'block';
-      });
-  
-      document.getElementById('show-login').addEventListener('click', (e) => {
-        e.preventDefault();
-        document.getElementById('register-form').style.display = 'none';
-        document.getElementById('login-form').style.display = 'block';
-      });
-  
+      const showRegisterLink = document.getElementById('show-register');
+      const showLoginLink = document.getElementById('show-login');
+
+      if (showRegisterLink) {
+        showRegisterLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('login-form').style.display = 'none';
+          document.getElementById('register-form').style.display = 'block';
+        });
+      }
+
+      if (showLoginLink) {
+        showLoginLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('register-form').style.display = 'none';
+          document.getElementById('login-form').style.display = 'block';
+        });
+      }
+
       // Handle registration
-      document.getElementById('register-form-element').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('register-username').value;
-        const email = document.getElementById('register-email').value;
-        const password = document.getElementById('register-password').value;
-        const messageElement = document.getElementById('register-message');
-  
-        try {
-          const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, email, password }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            messageElement.style.color = 'green';
-            messageElement.textContent = data.message;
-            setTimeout(() => {
-              document.getElementById('register-form').style.display = 'none';
-              document.getElementById('login-form').style.display = 'block';
-            }, 2000);
-          } else {
+      const registerForm = document.getElementById('register-form-element');
+      if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const username = document.getElementById('register-username').value;
+          const email = document.getElementById('register-email').value;
+          const password = document.getElementById('register-password').value;
+          const messageElement = document.getElementById('register-message');
+
+          try {
+            const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/register', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+              messageElement.style.color = 'green';
+              messageElement.textContent = data.message;
+              setTimeout(() => {
+                document.getElementById('register-form').style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+              }, 2000);
+            } else {
+              messageElement.style.color = 'red';
+              messageElement.textContent = data.message || 'Error registering user';
+            }
+          } catch (error) {
             messageElement.style.color = 'red';
-            messageElement.textContent = data.message || 'Error registering user';
+            messageElement.textContent = 'Error connecting to the server: ' + error.message;
           }
-        } catch (error) {
-          messageElement.style.color = 'red';
-          messageElement.textContent = 'Error connecting to the server';
-        }
-      });
-  
+        });
+      } else {
+        console.error('Register form not found');
+      }
+
       // Handle login
-      document.getElementById('login-form-element').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const messageElement = document.getElementById('login-message');
-  
-        try {
-          const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            window.location.reload();
-          } else {
+      const loginForm = document.getElementById('login-form-element');
+      if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+          const messageElement = document.getElementById('login-message');
+
+          try {
+            const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email, password }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+              localStorage.setItem('token', data.token);
+              localStorage.setItem('user', JSON.stringify(data.user));
+              window.location.reload();
+            } else {
+              messageElement.style.color = 'red';
+              messageElement.textContent = data.message || 'Error logging in';
+            }
+          } catch (error) {
             messageElement.style.color = 'red';
-            messageElement.textContent = data.message || 'Error logging in';
+            messageElement.textContent = 'Error connecting to the server: ' + error.message;
           }
-        } catch (error) {
-          messageElement.style.color = 'red';
-          messageElement.textContent = 'Error connecting to the server';
-        }
-      });
-  
+        });
+      } else {
+        console.error('Login form not found');
+      }
+
       // Handle create listing
-      document.getElementById('create-listing-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const type = document.getElementById('vehicle-type').value;
-        const make = document.getElementById('vehicle-make').value;
-        const model = document.getElementById('vehicle-model').value;
-        const price = parseInt(document.getElementById('vehicle-price').value);
-        const origin = document.getElementById('vehicle-origin').value;
-        const year = parseInt(document.getElementById('vehicle-year').value);
-        const image = document.getElementById('vehicle-image').value;
-        const contact = document.getElementById('vehicle-contact').value;
-        const featured = document.getElementById('vehicle-featured').checked;
-        const messageElement = document.getElementById('create-listing-message');
-  
-        try {
-          const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify({ type, make, model, price, origin, year, image, contact, featured }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            messageElement.style.color = 'green';
-            messageElement.textContent = 'Vehicle created successfully';
-            fetchProducts(); // Refresh the product list
-            fetchFeaturedProducts(); // Refresh featured products
-            document.getElementById('create-listing-form').reset();
-          } else {
+      const createListingForm = document.getElementById('create-listing-form');
+      if (createListingForm) {
+        createListingForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const type = document.getElementById('vehicle-type').value;
+          const make = document.getElementById('vehicle-make').value;
+          const model = document.getElementById('vehicle-model').value;
+          const price = parseInt(document.getElementById('vehicle-price').value);
+          const origin = document.getElementById('vehicle-origin').value;
+          const year = parseInt(document.getElementById('vehicle-year').value);
+          const image = document.getElementById('vehicle-image').value;
+          const contact = document.getElementById('vehicle-contact').value;
+          const featured = document.getElementById('vehicle-featured').checked;
+          const messageElement = document.getElementById('create-listing-message');
+
+          try {
+            const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+              },
+              body: JSON.stringify({ type, make, model, price, origin, year, image, contact, featured }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+              messageElement.style.color = 'green';
+              messageElement.textContent = 'Vehicle created successfully';
+              fetchProducts(); // Refresh the product list
+              fetchFeaturedProducts(); // Refresh featured products
+              createListingForm.reset();
+            } else {
+              messageElement.style.color = 'red';
+              messageElement.textContent = data.message || 'Error creating vehicle';
+            }
+          } catch (error) {
             messageElement.style.color = 'red';
-            messageElement.textContent = data.message || 'Error creating vehicle';
+            messageElement.textContent = 'Error connecting to the server: ' + error.message;
           }
-        } catch (error) {
-          messageElement.style.color = 'red';
-          messageElement.textContent = 'Error connecting to the server';
-        }
-      });
-  
+        });
+      }
+
       // Show Create Listing section when link is clicked
-      createListingLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        sections.forEach(sec => sec.classList.remove('active'));
-        document.getElementById('create-listing').classList.add('active');
-      });
-  
+      if (createListingLink) {
+        createListingLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          sections.forEach(sec => sec.classList.remove('active'));
+          document.getElementById('create-listing').classList.add('active');
+        });
+      }
+
       // Fetch products from the backend
       async function fetchProducts() {
         const spinner = document.getElementById("loading-spinner");
-        spinner.style.display = "block"; // Show spinner
-  
+        if (spinner) spinner.style.display = "block"; // Show spinner
+
         try {
           const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles');
           if (!response.ok) {
@@ -649,42 +677,44 @@
           renderProducts(paginateProducts(filteredProducts));
         } catch (error) {
           console.error('Error fetching vehicles:', error);
-          productGrid.innerHTML = '<p style="text-align: center; color: red;">Error loading vehicles. Please try again later.</p>';
+          if (productGrid) {
+            productGrid.innerHTML = '<p style="text-align: center; color: red;">Error loading vehicles. Please try again later.</p>';
+          }
         } finally {
-          spinner.style.display = "none"; // Hide spinner
+          if (spinner) spinner.style.display = "none"; // Hide spinner
         }
       }
-  
+
       function paginateProducts(products) {
         const startIndex = (currentPage - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return products.slice(startIndex, endIndex);
       }
-  
+
       document.querySelectorAll(".page-btn").forEach(button => {
         button.addEventListener("click", () => {
           const direction = button.getAttribute("data-page");
           const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  
+
           if (direction === "prev" && currentPage > 1) {
             currentPage--;
           } else if (direction === "next" && currentPage < totalPages) {
             currentPage++;
           }
-  
+
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
         });
       });
-  
+
       function renderProducts(products) {
         const noResults = document.getElementById("no-results");
-        productGrid.innerHTML = ""; // Clear current items
-  
+        if (productGrid) productGrid.innerHTML = ""; // Clear current items
+
         if (products.length === 0) {
-          noResults.style.display = "block"; // Show "No results" message
+          if (noResults) noResults.style.display = "block"; // Show "No results" message
         } else {
-          noResults.style.display = "none"; // Hide "No results" message
+          if (noResults) noResults.style.display = "none"; // Hide "No results" message
           products.forEach(product => {
             const productCard = `
               <div class="product-card">
@@ -698,23 +728,23 @@
                 </div>
               </div>
             `;
-            productGrid.innerHTML += productCard;
+            if (productGrid) productGrid.innerHTML += productCard;
           });
         }
       }
-  
+
       // Update filterProducts to use pagination
       function filterProducts() {
         const spinner = document.getElementById("loading-spinner");
-        spinner.style.display = "block"; // Show spinner
-  
+        if (spinner) spinner.style.display = "block"; // Show spinner
+
         setTimeout(() => {
           const typeValue = filterType.value;
           const priceValue = filterPrice.value;
           const makeValue = filterMake.value;
           const originValue = filterOrigin.value;
           const yearValue = filterYear.value;
-  
+
           filteredProducts = products.filter(product => {
             const matchesType = typeValue === "all" || product.type === typeValue;
             const matchesPrice =
@@ -725,87 +755,114 @@
             const matchesMake = makeValue === "all" || product.make.toLowerCase() === makeValue;
             const matchesOrigin = originValue === "all" || product.origin === originValue;
             const matchesYear = yearValue === "all" || product.year.toString() === yearValue;
-  
+
             return matchesType && matchesPrice && matchesMake && matchesOrigin && matchesYear;
           });
-  
+
           currentPage = 1; // Reset to the first page
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
-  
-          spinner.style.display = "none"; // Hide spinner
+
+          if (spinner) spinner.style.display = "none"; // Hide spinner
         }, 500); // Simulate loading delay
       }
-  
+
       // Add event listeners to all filters
-      filterType.addEventListener("change", filterProducts);
-      filterPrice.addEventListener("change", filterProducts);
-      filterMake.addEventListener("change", filterProducts);
-      filterOrigin.addEventListener("change", filterProducts);
-      filterYear.addEventListener("change", filterProducts);
-  
+      if (filterType) filterType.addEventListener("change", filterProducts);
+      if (filterPrice) filterPrice.addEventListener("change", filterProducts);
+      if (filterMake) filterMake.addEventListener("change", filterProducts);
+      if (filterOrigin) filterOrigin.addEventListener("change", filterProducts);
+      if (filterYear) filterYear.addEventListener("change", filterProducts);
+
       // Reset filters functionality
-      document.getElementById("reset-filters").addEventListener("click", () => {
-        filterType.value = "all";
-        filterPrice.value = "all";
-        filterMake.value = "all";
-        filterOrigin.value = "all";
-        filterYear.value = "all";
-        filterProducts(); // Reapply filters
-      });
-  
+      const resetFiltersButton = document.getElementById("reset-filters");
+      if (resetFiltersButton) {
+        resetFiltersButton.addEventListener("click", () => {
+          if (filterType) filterType.value = "all";
+          if (filterPrice) filterPrice.value = "all";
+          if (filterMake) filterMake.value = "all";
+          if (filterOrigin) filterOrigin.value = "all";
+          if (filterYear) filterYear.value = "all";
+          filterProducts(); // Reapply filters
+        });
+      }
+
       // Sort functionality
-      sortOptions.addEventListener("change", () => {
-        const sortValue = sortOptions.value;
-  
-        if (sortValue === "price-asc") {
-          filteredProducts.sort((a, b) => a.price - b.price);
-        } else if (sortValue === "price-desc") {
-          filteredProducts.sort((a, b) => b.price - a.price);
-        } else if (sortValue === "year-asc") {
-          filteredProducts.sort((a, b) => a.year - b.year);
-        } else if (sortValue === "year-desc") {
-          filteredProducts.sort((a, b) => b.year - a.year);
-        }
-  
-        renderProducts(paginateProducts(filteredProducts));
-      });
-  
+      if (sortOptions) {
+        sortOptions.addEventListener("change", () => {
+          const sortValue = sortOptions.value;
+
+          if (sortValue === "price-asc") {
+            filteredProducts.sort((a, b) => a.price - b.price);
+          } else if (sortValue === "price-desc") {
+            filteredProducts.sort((a, b) => b.price - a.price);
+          } else if (sortValue === "year-asc") {
+            filteredProducts.sort((a, b) => a.year - b.year);
+          } else if (sortValue === "year-desc") {
+            filteredProducts.sort((a, b) => b.year - a.year);
+          }
+
+          renderProducts(paginateProducts(filteredProducts));
+        });
+      }
+
       // Fetch and display all products on page load
       fetchProducts();
-  
+
       // Theme toggle
       const themeToggle = document.querySelector(".theme-toggle");
-      themeToggle.addEventListener("click", () => {
-        const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", newTheme);
-        themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
-      });
-  
+      if (themeToggle) {
+        themeToggle.addEventListener("click", () => {
+          const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", newTheme);
+          themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
+        });
+      }
+
       // Back to top button
       const backToTopButton = document.getElementById("back-to-top");
-      window.addEventListener("scroll", () => {
-        if (window.scrollY > 200) {
-          backToTopButton.style.display = "block";
-        } else {
-          backToTopButton.style.display = "none";
-        }
-      });
-  
-      backToTopButton.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
+      if (backToTopButton) {
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 200) {
+            backToTopButton.style.display = "block";
+          } else {
+            backToTopButton.style.display = "none";
+          }
+        });
+
+        backToTopButton.addEventListener("click", () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      }
 
       // Search Functionality
       const searchBar = document.getElementById("search-bar");
       const searchButton = document.getElementById("search-button");
+      const clearSearchButton = document.getElementById("clear-search");
 
-      searchButton.addEventListener("click", () => {
-        const spinner = document.querySelector(".loading-spinner");
-        spinner.style.display = "block"; // Show loading spinner
-        setTimeout(() => {
-          const query = searchBar.value.toLowerCase();
+      if (searchButton) {
+        searchButton.addEventListener("click", () => {
+          const spinner = document.querySelector(".loading-spinner");
+          if (spinner) spinner.style.display = "block"; // Show loading spinner
+          setTimeout(() => {
+            const query = searchBar.value.toLowerCase();
+            filteredProducts = products.filter(product =>
+              product.make.toLowerCase().includes(query) ||
+              product.model.toLowerCase().includes(query) ||
+              product.price.toString().includes(query)
+            );
+            currentPage = 1;
+            document.getElementById("page-info").textContent = `Page ${currentPage}`;
+            renderProducts(paginateProducts(filteredProducts));
+            if (spinner) spinner.style.display = "none"; // Hide loading spinner
+          }, 1000); // Simulate loading delay
+        });
+      }
+
+      if (searchBar) {
+        searchBar.addEventListener("input", (e) => {
+          const query = e.target.value.toLowerCase();
           filteredProducts = products.filter(product =>
             product.make.toLowerCase().includes(query) ||
             product.model.toLowerCase().includes(query) ||
@@ -814,35 +871,31 @@
           currentPage = 1;
           document.getElementById("page-info").textContent = `Page ${currentPage}`;
           renderProducts(paginateProducts(filteredProducts));
-          spinner.style.display = "none"; // Hide loading spinner
-        }, 1000); // Simulate loading delay
-      });
-  
-      searchBar.addEventListener("input", (e) => {
-        const query = e.target.value.toLowerCase();
-        filteredProducts = products.filter(product =>
-          product.make.toLowerCase().includes(query) ||
-          product.model.toLowerCase().includes(query) ||
-          product.price.toString().includes(query)
-        );
-        currentPage = 1;
-        document.getElementById("page-info").textContent = `Page ${currentPage}`;
-        renderProducts(paginateProducts(filteredProducts));
-      });
-  
-      document.getElementById("clear-search").addEventListener("click", () => {
-        document.getElementById("search-bar").value = ""; // Clear the search bar
-        filteredProducts = [...products]; // Reset filtered products
-        currentPage = 1;
-        document.getElementById("page-info").textContent = `Page ${currentPage}`;
-        renderProducts(paginateProducts(filteredProducts));
-      });
-  
+        });
+      }
+
+      if (clearSearchButton) {
+        clearSearchButton.addEventListener("click", () => {
+          if (searchBar) searchBar.value = ""; // Clear the search bar
+          filteredProducts = [...products]; // Reset filtered products
+          currentPage = 1;
+          document.getElementById("page-info").textContent = `Page ${currentPage}`;
+          renderProducts(paginateProducts(filteredProducts));
+          clearSearchButton.classList.add('active'); // Add active class if needed
+        });
+      } else {
+        console.error('Clear search button not found');
+      }
+
       // Featured Products
       const featuredGrid = document.getElementById("featured-products");
       async function fetchFeaturedProducts() {
+        if (!featuredGrid) return;
         try {
           const response = await fetch('https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles');
+          if (!response.ok) {
+            throw new Error('Failed to fetch featured products');
+          }
           const vehicles = await response.json();
           const featuredProducts = vehicles.filter(vehicle => vehicle.featured).slice(0, 2); // Get first 2 featured products
           featuredGrid.innerHTML = "";
@@ -864,63 +917,22 @@
           featuredGrid.innerHTML = '<p style="text-align: center; color: red;">Error loading featured products.</p>';
         }
       }
-  
+
       fetchFeaturedProducts();
+
+      // Scroll to listings
+      const scrollToListingsButton = document.getElementById("scroll-to-listings");
+      if (scrollToListingsButton) {
+        scrollToListingsButton.addEventListener("click", () => {
+          document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
+        });
+      }
     });
-  
+
     function navigateToWelcomePage() {
       window.location.href = "index.html";
     }
-  
-    document.getElementById("scroll-to-listings").addEventListener("click", () => {
-      document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
-    });
   </script>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // Authentication state
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    // Update navigation and profile section
-    const createProfileLink = document.getElementById('create-profile-link');
-    const loginLink = document.getElementById('login-link');
-    const logoutLink = document.getElementById('logout-link');
-    const createListingLink = document.getElementById('create-listing-link');
-    const createListingSection = document.getElementById('create-listing');
-    const authForms = document.getElementById('auth-forms');
-    const userInfo = document.getElementById('user-info');
-
-    if (token && user) {
-      createProfileLink.style.display = 'none';
-      loginLink.style.display = 'none';
-      logoutLink.style.display = 'inline';
-      createListingLink.style.display = 'inline';
-      createListingSection.style.display = 'block';
-      authForms.style.display = 'none'; // Hide auth forms
-      userInfo.style.display = 'block'; // Show user info
-      document.getElementById('profile-title').textContent = 'User Profile';
-      document.getElementById('username').textContent = user.username;
-      document.getElementById('user-email').textContent = user.email;
-    } else {
-      createProfileLink.style.display = 'inline';
-      loginLink.style.display = 'inline';
-      logoutLink.style.display = 'none';
-      createListingLink.style.display = 'none';
-      createListingSection.style.display = 'none';
-      authForms.style.display = 'block';
-      userInfo.style.display = 'none';
-    }
-
-    // Logout functionality
-    logoutLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.reload();
-    });
-  });
-</script>
 </head>
 <body>
   <header>
@@ -1048,102 +1060,103 @@
       </div>
     </div>
 
-   <!-- Profile Section -->
-<div id="profile" class="content-section">
-  <h2 id="profile-title">User Profile</h2>
-  <div id="user-info" style="display: none;">
-    <p>Welcome, <span id="username"></span>!</p>
-    <p>Email: <span id="user-email"></span></p>
-  </div>
-  <div id="auth-forms">
-    <div id="register-form" style="display: none;">
-      <h3>Register</h3>
-      <form id="register-form-element">
+    <!-- Profile Section -->
+    <div id="profile" class="content-section">
+      <h2 id="profile-title">User Profile</h2>
+      <div id="user-info" style="display: none;">
+        <p>Welcome, <span id="username"></span>!</p>
+        <p>Email: <span id="user-email"></span></p>
+      </div>
+      <div id="auth-forms">
+        <div id="register-form" style="display: none;">
+          <h3>Register</h3>
+          <form id="register-form-element">
+            <div class="filter-group">
+              <label for="register-username">Username:</label>
+              <input type="text" id="register-username" required>
+            </div>
+            <div class="filter-group">
+              <label for="register-email">Email:</label>
+              <input type="email" id="register-email" required>
+            </div>
+            <div class="filter-group">
+              <label for="register-password">Password:</label>
+              <input type="password" id="register-password" required>
+            </div>
+            <button type="submit" class="section-button">Register</button>
+          </form>
+          <p id="register-message"></p>
+          <p>Already have an account? <a href="#" id="show-login">Log In</a></p>
+        </div>
+        <div id="login-form">
+          <h3>Log In</h3>
+          <form id="login-form-element">
+            <div class="filter-group">
+              <label for="login-email">Email:</label>
+              <input type="email" id="login-email" required>
+            </div>
+            <div class="filter-group">
+              <label for="login-password">Password:</label>
+              <input type="password" id="login-password" required>
+            </div>
+            <button type="submit" class="section-button">Log In</button>
+          </form>
+          <p id="login-message"></p>
+          <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Listing Section -->
+    <div id="create-listing" class="content-section" style="display: none;">
+      <h2>Create a New Listing</h2>
+      <form id="create-listing-form">
         <div class="filter-group">
-          <label for="register-username">Username:</label>
-          <input type="text" id="register-username" required>
+          <label for="vehicle-type">Type:</label>
+          <select id="vehicle-type" required>
+            <option value="car">Car</option>
+            <option value="bike">Bike</option>
+          </select>
         </div>
         <div class="filter-group">
-          <label for="register-email">Email:</label>
-          <input type="email" id="register-email" required>
+          <label for="vehicle-make">Make:</label>
+          <input type="text" id="vehicle-make" required>
         </div>
         <div class="filter-group">
-          <label for="register-password">Password:</label>
-          <input type="password" id="register-password" required>
+          <label for="vehicle-model">Model:</label>
+          <input type="text" id="vehicle-model" required>
         </div>
-        <button type="submit" class="section-button">Register</button>
+        <div class="filter-group">
+          <label for="vehicle-price">Price:</label>
+          <input type="number" id="vehicle-price" required>
+        </div>
+        <div class="filter-group">
+          <label for="vehicle-origin">Origin:</label>
+          <select id="vehicle-origin" required>
+            <option value="foreign">Foreign</option>
+            <option value="local">Local</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="vehicle-year">Year:</label>
+          <input type="number" id="vehicle-year" required>
+        </div>
+        <div class="filter-group">
+          <label for="vehicle-image">Image URL:</label>
+          <input type="text" id="vehicle-image">
+        </div>
+        <div class="filter-group">
+          <label for="vehicle-contact">Contact URL:</label>
+          <input type="text" id="vehicle-contact">
+        </div>
+        <div class="filter-group">
+          <label for="vehicle-featured">Featured:</label>
+          <input type="checkbox" id="vehicle-featured">
+        </div>
+        <button type="submit" class="section-button">Create Listing</button>
       </form>
-      <p id="register-message"></p>
-      <p>Already have an account? <a href="#" id="show-login">Log In</a></p>
+      <p id="create-listing-message"></p>
     </div>
-    <div id="login-form">
-      <h3>Log In</h3>
-      <form id="login-form-element">
-        <div class="filter-group">
-          <label for="login-email">Email:</label>
-          <input type="email" id="login-email" required>
-        </div>
-        <div class="filter-group">
-          <label for="login-password">Password:</label>
-          <input type="password" id="login-password" required>
-        </div>
-        <button type="submit" class="section-button">Log In</button>
-      </form>
-      <p id="login-message"></p>
-      <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
-    </div>
-  </div>
-</div>
-<!-- Create Listing Section -->
-<div id="create-listing" class="content-section" style="display: none;">
-  <h2>Create a New Listing</h2>
-  <form id="create-listing-form">
-    <div class="filter-group">
-      <label for="vehicle-type">Type:</label>
-      <select id="vehicle-type" required>
-        <option value="car">Car</option>
-        <option value="bike">Bike</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-make">Make:</label>
-      <input type="text" id="vehicle-make" required>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-model">Model:</label>
-      <input type="text" id="vehicle-model" required>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-price">Price:</label>
-      <input type="number" id="vehicle-price" required>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-origin">Origin:</label>
-      <select id="vehicle-origin" required>
-        <option value="foreign">Foreign</option>
-        <option value="local">Local</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-year">Year:</label>
-      <input type="number" id="vehicle-year" required>
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-image">Image URL:</label>
-      <input type="text" id="vehicle-image">
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-contact">Contact URL:</label>
-      <input type="text" id="vehicle-contact">
-    </div>
-    <div class="filter-group">
-      <label for="vehicle-featured">Featured:</label>
-      <input type="checkbox" id="vehicle-featured">
-    </div>
-    <button type="submit" class="section-button">Create Listing</button>
-  </form>
-  <p id="create-listing-message"></p>
-</div>
 
     <!-- About Section -->
     <div id="about" class="content-section">
