@@ -101,7 +101,7 @@
             border-radius: 4px;
             font-size: 14px;
         }
-        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn, .message-form button, .connect-btn {
+        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn, .message-form button, .connect-btn, .delete-btn {
             padding: 10px;
             background-color: #4267B2;
             color: white;
@@ -111,8 +111,14 @@
             font-size: 14px;
             font-weight: 500;
         }
-        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover, .message-form button:hover, .connect-btn:hover {
+        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover, .message-form button:hover, .connect-btn:hover, .delete-btn:hover {
             background-color: #365899;
+        }
+        .delete-btn {
+            background-color: #d32f2f;
+        }
+        .delete-btn:hover {
+            background-color: #b71c1c;
         }
         .car-post {
             position: relative;
@@ -155,6 +161,10 @@
             font-weight: 600;
             color: #4267B2;
             cursor: pointer;
+        }
+        .car-post .post-header .verified-tick {
+            font-size: 14px;
+            margin-left: 5px;
         }
         .car-post .follow-btn {
             background-color: #4267B2;
@@ -234,6 +244,10 @@
         .comments .comment div strong {
             font-weight: 600;
         }
+        .comments .comment div .verified-tick {
+            font-size: 12px;
+            margin-left: 5px;
+        }
         .profile {
             text-align: left;
         }
@@ -269,6 +283,10 @@
             font-size: 24px;
             font-weight: 600;
             color: #1c1e21;
+        }
+        .profile .profile-header .verified-tick {
+            font-size: 18px;
+            margin-left: 5px;
         }
         .profile .profile-header .follow-btn, .connect-btn {
             background-color: #4267B2;
@@ -327,6 +345,10 @@
             font-weight: 500;
             color: #1c1e21;
         }
+        .profile .followers-list .follower .verified-tick {
+            font-size: 14px;
+            margin-left: 5px;
+        }
         .search-results {
             background: white;
             padding: 10px;
@@ -355,6 +377,10 @@
             font-size: 14px;
             font-weight: 500;
             color: #1c1e21;
+        }
+        .search-results .user .verified-tick {
+            font-size: 14px;
+            margin-left: 5px;
         }
         .about, .contact {
             line-height: 1.6;
@@ -427,6 +453,10 @@
             background: #4267B2;
             color: white;
         }
+        .messages .message div .verified-tick {
+            font-size: 12px;
+            margin-left: 5px;
+        }
         .notifications .notification {
             display: flex;
             align-items: center;
@@ -478,10 +508,8 @@
     </nav>
 
     <div class="container">
-        <!-- Error Section -->
         <div id="error"></div>
 
-        <!-- Login Section -->
         <div id="loginSection" class="section active">
             <div class="auth-form">
                 <h2>Login</h2>
@@ -497,7 +525,6 @@
             </div>
         </div>
 
-        <!-- Register Section -->
         <div id="registerSection" class="section">
             <div class="auth-form">
                 <button class="back-btn" onclick="showSection('loginSection')">Back</button>
@@ -523,14 +550,12 @@
             </div>
         </div>
 
-        <!-- Home Section -->
         <div id="homeSection" class="section">
             <div class="search-results" id="searchResults" style="display: none;"></div>
             <button class="create-post-btn" onclick="showSection('createPostSection')">Create Post</button>
             <div id="carListings"></div>
         </div>
 
-        <!-- Create Post Section -->
         <div id="createPostSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="post-form">
@@ -545,7 +570,6 @@
             </div>
         </div>
 
-        <!-- Profile Section -->
         <div id="profileSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="profile" id="userProfile">
@@ -577,7 +601,6 @@
             </div>
         </div>
 
-        <!-- Other User's Profile Section -->
         <div id="otherProfileSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="profile" id="otherUserProfile">
@@ -601,7 +624,6 @@
             </div>
         </div>
 
-        <!-- Messages Section -->
         <div id="messagesSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="messages">
@@ -618,7 +640,6 @@
             </div>
         </div>
 
-        <!-- Notifications Section -->
         <div id="notificationsSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="notifications">
@@ -627,7 +648,6 @@
             </div>
         </div>
 
-        <!-- About Section -->
         <div id="aboutSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="about">
@@ -637,7 +657,6 @@
             </div>
         </div>
 
-        <!-- Contact Section -->
         <div id="contactSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="contact">
@@ -651,7 +670,6 @@
     </div>
 
     <script>
-        // Attach navigation event listeners
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('homeLink').addEventListener('click', () => showSection('homeSection'));
             document.getElementById('profileLink').addEventListener('click', (e) => { e.preventDefault(); showSection('profileSection'); });
@@ -662,11 +680,10 @@
             document.getElementById('logoutLink').addEventListener('click', (e) => { e.preventDefault(); logout(); });
         });
 
-        const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
+        const API_BASE_URL = 'http://localhost:3000';
         let currentUser = null;
         let currentChatUserId = null;
 
-        // Helper functions
         function showSection(sectionId, userId = null) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -697,7 +714,6 @@
             document.getElementById('error').textContent = '';
         }
 
-        // Toggle password visibility
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
             const toggleText = input.nextElementSibling;
@@ -710,7 +726,6 @@
             }
         }
 
-        // Show/hide edit profile form
         function showEditProfileForm() {
             document.getElementById('editProfileForm').classList.add('active');
             document.querySelector('.profile-details').style.display = 'none';
@@ -724,7 +739,6 @@
             fetchUserProfile();
         }
 
-        // Initialize the app: Check for token and fetch user profile
         (async function initializeApp() {
             const token = localStorage.getItem('token');
             if (token) {
@@ -753,7 +767,6 @@
             }
         })();
 
-        // Handle Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearError();
@@ -785,7 +798,6 @@
             }
         });
 
-        // Handle Registration
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearError();
@@ -828,14 +840,12 @@
             }
         });
 
-        // Logout
         function logout() {
             localStorage.removeItem('token');
             currentUser = null;
             showSection('loginSection');
         }
 
-        // Fetch user profile
         async function fetchUserProfile(userId = null) {
             try {
                 const url = userId ? `${API_BASE_URL}/api/users/${userId}` : `${API_BASE_URL}/api/users/profile`;
@@ -859,8 +869,8 @@
                 const isFollowing = user.followers.includes(currentUser?._id || '');
 
                 if (userId) {
-                    document.getElementById('otherProfilePicture').src = user.profilePicture || '/default-profile.png';
-                    document.getElementById('otherProfileUsername').textContent = user.username || 'Unknown User';
+                    document.getElementById('otherProfilePicture').src = user.profilePicture || 'https://via.placeholder.com/120';
+                    document.getElementById('otherProfileUsername').innerHTML = `${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}`;
                     document.getElementById('otherProfileName').textContent = `${user.firstName} ${user.lastName}`;
                     document.getElementById('otherProfileGender').textContent = user.gender;
                     document.getElementById('otherProfileDob').textContent = new Date(user.dob).toLocaleDateString();
@@ -880,19 +890,19 @@
                         fetchMessages(user._id);
                     });
 
-                    // Fetch followers
                     const followersList = document.getElementById('otherFollowersList');
                     followersList.innerHTML = '<h3>Followers</h3>';
                     for (const followerId of user.followers) {
-                        const follower = await (await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
+                        const followerResponse = await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        })).json();
+                        });
+                        const follower = await followerResponse.json();
                         const followerDiv = document.createElement('div');
-                        followerDiv.classList.add('follower'); // Fixed: Changed 'class David.add' to 'classList.add'
+                        followerDiv.classList.add('follower');
                         followerDiv.dataset.user = follower._id;
                         followerDiv.innerHTML = `
-                            <img src="${follower.profilePicture || '/default-profile.png'}" alt="${follower.username || 'Unknown User'}">
-                            <span>${follower.username || 'Unknown User'}</span>
+                            <img src="${follower.profilePicture || 'https://via.placeholder.com/40'}" alt="${follower.username || 'Unknown User'}">
+                            <span>${follower.username || 'Unknown User'}${follower.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
                             showSection('otherProfileSection', follower._id);
@@ -900,27 +910,27 @@
                         followersList.appendChild(followerDiv);
                     }
                 } else {
-                    document.getElementById('profilePicture').src = user.profilePicture || '/default-profile.png';
-                    document.getElementById('profileUsername').textContent = user.username || 'Unknown User';
+                    document.getElementById('profilePicture').src = user.profilePicture || 'https://via.placeholder.com/120';
+                    document.getElementById('profileUsername').innerHTML = `${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}`;
                     document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
                     document.getElementById('profileGender').textContent = user.gender;
                     document.getElementById('profileDob').textContent = new Date(user.dob).toLocaleDateString();
                     document.getElementById('profileBio').textContent = user.bio || 'Not set';
                     document.getElementById('profileFollowersCount').textContent = user.followers.length;
 
-                    // Fetch followers
                     const followersList = document.getElementById('followersList');
                     followersList.innerHTML = '<h3>Followers</h3>';
                     for (const followerId of user.followers) {
-                        const follower = await (await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
+                        const followerResponse = await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                        })).json();
+                        });
+                        const follower = await followerResponse.json();
                         const followerDiv = document.createElement('div');
                         followerDiv.classList.add('follower');
                         followerDiv.dataset.user = follower._id;
                         followerDiv.innerHTML = `
-                            <img src="${follower.profilePicture || '/default-profile.png'}" alt="${follower.username || 'Unknown User'}">
-                            <span>${follower.username || 'Unknown User'}</span>
+                            <img src="${follower.profilePicture || 'https://via.placeholder.com/40'}" alt="${follower.username || 'Unknown User'}">
+                            <span>${follower.username || 'Unknown User'}${follower.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
                             showSection('otherProfileSection', follower._id);
@@ -933,7 +943,6 @@
             }
         }
 
-        // Handle profile update
         document.getElementById('editProfileFormSubmit').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearError();
@@ -971,7 +980,6 @@
             }
         });
 
-        // Fetch posts
         async function fetchPosts(searchTerm = '') {
             try {
                 const url = searchTerm ? `${API_BASE_URL}/api/posts/search/${searchTerm}` : `${API_BASE_URL}/api/posts`;
@@ -997,7 +1005,6 @@
             }
         }
 
-        // Display posts
         async function displayPosts(posts) {
             const listingsDiv = document.getElementById('carListings');
             if (!listingsDiv) {
@@ -1013,14 +1020,15 @@
             }
 
             for (const post of posts) {
-                const user = post.user || { profilePicture: '/default-profile.png', username: 'Unknown User', _id: '' }; // Fallback for null user
+                const user = post.user || { profilePicture: 'https://via.placeholder.com/40', username: 'Unknown User', _id: '', verified: false };
                 const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
+                const isOwnPost = currentUser && post.user && post.user._id === currentUser._id;
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
                     <div class="post-header">
-                        <img src="${user.profilePicture || '/default-profile.png'}" alt="${user.username || 'Unknown User'}" data-user="${user._id}">
-                        <span class="username" data-user="${user._id}">${user.username || 'Unknown User'}</span>
+                        <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}" data-user="${user._id}" />
+                        <span class="username" data-user="${user._id}">${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
                         <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'following' : ''}" data-user="${user._id}">
                             ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'Following' : 'Follow'}
                         </button>
@@ -1028,12 +1036,13 @@
                     <h3>${post.title}</h3>
                     <p><strong>Price:</strong> ${post.price}</p>
                     <p>${post.description}</p>
-                    <img src="${post.image}" alt="${post.title}">
+                    <img src="${post.image}" alt="${post.title}" />
                     <div class="actions">
                         <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
                             Like (${post.likes.length})
                         </button>
                         <button class="comment-btn" data-id="${post._id}">Comment (${post.comments.length})</button>
+                        ${isOwnPost ? `<button class="delete-btn" data-id="${post._id}">Delete</button>` : ''}
                     </div>
                     <div class="comments" id="comments-${post._id}" style="display: none;"></div>
                 `;
@@ -1042,18 +1051,33 @@
 
                 const commentsDiv = document.getElementById(`comments-${post._id}`);
                 for (const comment of post.comments) {
-                    const commenterResponse = await fetch(`${API_BASE_URL}/api/users/${comment.user}`, {
-                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    });
-                    const commenter = await commenterResponse.json();
-                    const commenterProfilePicture = commenter.profilePicture || '/default-profile.png';
+                    let commenter = { profilePicture: 'https://via.placeholder.com/32', username: 'Unknown User', verified: false };
+                    try {
+                        const commenterResponse = await fetch(`${API_BASE_URL}/api/users/${comment.user}`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        });
+                        if (!commenterResponse.ok) {
+                            if (commenterResponse.status === 401 || commenterResponse.status === 403) {
+                                localStorage.removeItem('token');
+                                showSection('loginSection');
+                                throw new Error('Session expired. Please log in again.');
+                            }
+                            throw new Error('Failed to fetch commenter data');
+                        }
+                        commenter = await commenterResponse.json();
+                    } catch (error) {
+                        console.error('Error fetching commenter:', error.message);
+                        displayError('Failed to load comment author. Using default user.');
+                    }
+
+                    const commenterProfilePicture = commenter.profilePicture || 'https://via.placeholder.com/32';
                     const commenterUsername = commenter.username || 'Unknown User';
                     const commentDiv = document.createElement('div');
                     commentDiv.classList.add('comment');
                     commentDiv.innerHTML = `
-                        <img src="${commenterProfilePicture}" alt="${commenterUsername}">
+                        <img src="${commenterProfilePicture}" alt="${commenterUsername}" />
                         <div>
-                            <strong>${commenterUsername}</strong>
+                            <strong>${commenterUsername}${commenter.verified ? '<span class="verified-tick">✅</span>' : ''}</strong>
                             <p>${comment.text}</p>
                         </div>
                     `;
@@ -1072,9 +1096,7 @@
             attachEventListeners();
         }
 
-        // Attach event listeners using delegation
         function attachEventListeners() {
-            // Like buttons
             document.getElementById('carListings').addEventListener('click', async (e) => {
                 if (e.target.classList.contains('like-btn')) {
                     console.log('Like button clicked, postId:', e.target.dataset.id);
@@ -1083,7 +1105,6 @@
                 }
             });
 
-            // Comment buttons
             document.getElementById('carListings').addEventListener('click', (e) => {
                 if (e.target.classList.contains('comment-btn')) {
                     console.log('Comment button clicked, postId:', e.target.dataset.id);
@@ -1092,7 +1113,16 @@
                 }
             });
 
-            // Comment inputs
+            document.getElementById('carListings').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('delete-btn')) {
+                    console.log('Delete button clicked, postId:', e.target.dataset.id);
+                    const postId = e.target.dataset.id;
+                    if (confirm('Are you sure you want to delete this post?')) {
+                        await handleDelete(postId);
+                    }
+                }
+            });
+
             document.getElementById('carListings').addEventListener('keypress', async (e) => {
                 if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
                     console.log('Comment input Enter pressed, postId:', e.target.dataset.id);
@@ -1101,7 +1131,6 @@
                 }
             });
 
-            // Follow buttons
             document.getElementById('carListings').addEventListener('click', async (e) => {
                 if (e.target.classList.contains('follow-btn')) {
                     console.log('Follow button clicked, userId:', e.target.dataset.user);
@@ -1110,17 +1139,15 @@
                 }
             });
 
-            // Profile navigation
             document.getElementById('carListings').addEventListener('click', (e) => {
                 if (e.target.classList.contains('username') || (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('post-header'))) {
                     const userId = e.target.dataset.user;
-                    if (userId) { // Ensure userId exists before navigating
+                    if (userId) {
                         showSection('otherProfileSection', userId);
                     }
                 }
             });
 
-            // Follow button in other profile
             const otherProfileFollowBtn = document.getElementById('otherProfileFollowBtn');
             if (otherProfileFollowBtn) {
                 otherProfileFollowBtn.onclick = async () => {
@@ -1131,7 +1158,6 @@
             }
         }
 
-        // Handle post creation
         document.getElementById('carForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearError();
@@ -1176,7 +1202,6 @@
             }
         });
 
-        // Handle liking a post
         async function handleLike(postId) {
             console.log('handleLike called with postId:', postId);
             try {
@@ -1191,7 +1216,7 @@
                 const post = await response.json();
                 console.log('Like API response data:', post);
 
-                if (response.status === 401) {
+                if (response.status === 401 || response.status === 403) {
                     localStorage.removeItem('token');
                     showSection('loginSection');
                     throw new Error('Session expired. Please log in again.');
@@ -1205,17 +1230,50 @@
                 fetchNotifications();
             } catch (error) {
                 console.error('Error in handleLike:', error.message);
-                displayError(error.message);
+                if (error.message.includes('Failed to fetch')) {
+                    displayError('Unable to connect to the server. Please check your internet connection or try again later.');
+                } else {
+                    displayError(error.message);
+                }
             }
         }
 
-        // Toggle comments section
+        async function handleDelete(postId) {
+            console.log('handleDelete called with postId:', postId);
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to delete post');
+                }
+
+                fetchPosts();
+            } catch (error) {
+                console.error('Error in handleDelete:', error.message);
+                if (error.message.includes('Failed to fetch')) {
+                    displayError('Unable to connect to the server. Please check your internet connection or try again later.');
+                } else {
+                    displayError(error.message);
+                }
+            }
+        }
+
         function toggleComments(postId) {
             const commentsDiv = document.getElementById(`comments-${postId}`);
             commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Handle commenting
         async function handleComment(postId, input) {
             const text = input.value.trim();
             if (!text) return;
@@ -1254,7 +1312,6 @@
             }
         }
 
-        // Handle following a user
         async function handleFollow(userId) {
             if (!userId) {
                 displayError('Cannot follow: User ID is missing.');
@@ -1284,7 +1341,6 @@
                     throw new Error(data.error || 'Failed to follow/unfollow');
                 }
 
-                // Refresh current user data
                 const userResponse = await fetch(`${API_BASE_URL}/api/users/profile`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1293,7 +1349,6 @@
                 currentUser = await userResponse.json();
                 console.log('Updated currentUser after follow:', currentUser);
 
-                // Refresh the current view
                 if (document.getElementById('homeSection').classList.contains('active')) {
                     fetchPosts();
                 } else if (document.getElementById('profileSection').classList.contains('active')) {
@@ -1308,7 +1363,6 @@
             }
         }
 
-        // Search functionality
         document.getElementById('searchBar').addEventListener('input', async (e) => {
             const query = e.target.value.trim().toLowerCase();
 
@@ -1327,7 +1381,6 @@
                 return;
             }
 
-            // Search users
             try {
                 const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${query}`, {
                     headers: {
@@ -1349,8 +1402,8 @@
                 searchResults.style.display = 'block';
                 searchResults.innerHTML = users.map(user => `
                     <div class="user" data-user="${user._id}">
-                        <img src="${user.profilePicture || '/default-profile.png'}" alt="${user.username || 'Unknown User'}">
-                        <span>${user.username || 'Unknown User'}</span>
+                        <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}">
+                        <span>${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
                     </div>
                 `).join('');
 
@@ -1360,17 +1413,14 @@
                     });
                 });
 
-                // Search posts
                 fetchPosts(query);
             } catch (error) {
                 displayError(error.message);
             }
         });
 
-        // Fetch message threads
         async function fetchMessageThreads() {
             try {
-                // Fetch all users to build message threads
                 const response = await fetch(`${API_BASE_URL}/api/users/search/`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1401,7 +1451,6 @@
                             showSection('loginSection');
                             throw new Error('Session expired. Please log in again.');
                         }
-                        // Skip users with no messages or errors
                         continue;
                     }
 
@@ -1418,8 +1467,8 @@
                     threadDiv.classList.add('user');
                     threadDiv.dataset.user = userId;
                     threadDiv.innerHTML = `
-                        <img src="${thread.user.profilePicture || '/default-profile.png'}" alt="${thread.user.username || 'Unknown User'}">
-                        <span>${thread.user.username || 'Unknown User'}: ${thread.lastMessage.content}</span>
+                        <img src="${thread.user.profilePicture || 'https://via.placeholder.com/40'}" alt="${thread.user.username || 'Unknown User'}">
+                        <span>${thread.user.username || 'Unknown User'}${thread.user.verified ? '<span class="verified-tick">✅</span>' : ''}: ${thread.lastMessage.content}</span>
                     `;
                     threadDiv.addEventListener('click', () => {
                         currentChatUserId = userId;
@@ -1436,7 +1485,6 @@
             }
         }
 
-        // Fetch messages
         async function fetchMessages(userId) {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
@@ -1457,17 +1505,17 @@
                 const messages = await response.json();
 
                 const threadsDiv = document.getElementById('messageThreads');
-                const chatUser = messages.length > 0 ? (messages[0].receiver._id === userId ? messages[0].receiver : messages[0].sender) : { username: 'Unknown User' };
-                threadsDiv.innerHTML = `<h3>Conversation with ${chatUser.username || 'Unknown User'}</h3>`;
+                const chatUser = messages.length > 0 ? (messages[0].receiver._id === userId ? messages[0].receiver : messages[0].sender) : { username: 'Unknown User', verified: false };
+                threadsDiv.innerHTML = `<h3>Conversation with ${chatUser.username || 'Unknown User'}${chatUser.verified ? '<span class="verified-tick">✅</span>' : ''}</h3>`;
                 const messageThread = document.createElement('div');
                 messageThread.classList.add('message-thread');
                 messages.forEach(message => {
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('message', message.sender._id === currentUser._id ? 'sent' : 'received');
                     messageDiv.innerHTML = `
-                        <img src="${message.sender.profilePicture || '/default-profile.png'}" alt="${message.sender.username || 'Unknown User'}">
+                        <img src="${message.sender.profilePicture || 'https://via.placeholder.com/32'}" alt="${message.sender.username || 'Unknown User'}">
                         <div>
-                            <strong>${message.sender.username || 'Unknown User'}</strong>
+                            <strong>${message.sender.username || 'Unknown User'}${message.sender.verified ? '<span class="verified-tick">✅</span>' : ''}</strong>
                             <p>${message.content}</p>
                         </div>
                     `;
@@ -1483,7 +1531,6 @@
             }
         }
 
-        // Handle sending a message
         document.getElementById('messageForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             clearError();
@@ -1541,7 +1588,6 @@
             }
         });
 
-        // Fetch notifications
         async function fetchNotifications(showToSection = false) {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/notifications`, {
@@ -1582,29 +1628,37 @@
                         }
 
                         const notificationDiv = document.createElement('div');
-                        notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
-                        notificationDiv.dataset.id = notification._id;
+                        notificationDiv.classList.add('notification');
+                        if (!notification.read) {
+                            notificationDiv.classList.add('unread');
+                        }
                         notificationDiv.innerHTML = `
-                            <img src="${notification.fromUser.profilePicture || '/default-profile.png'}" alt="${notification.fromUser.username || 'Unknown User'}">
+                            <img src="${notification.fromUser.profilePicture || 'https://via.placeholder.com/40'}" alt="${notification.fromUser.username || 'Unknown User'}">
                             <span>${message}</span>
                         `;
                         notificationDiv.addEventListener('click', async () => {
-                            if (!notification.read) {
-                                await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
+                            try {
+                                const markReadResponse = await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
                                     method: 'PUT',
                                     headers: {
                                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                                     }
                                 });
-                                fetchNotifications(true);
-                            }
-                            if (notification.type === 'message') {
-                                currentChatUserId = notification.fromUser._id;
-                                showSection('messagesSection');
-                                fetchMessages(notification.fromUser._id);
-                            } else if (notification.post) {
-                                fetchPosts();
-                                showSection('homeSection');
+                                if (markReadResponse.ok) {
+                                    fetchNotifications(true);
+                                }
+                                if (notification.type === 'message') {
+                                    currentChatUserId = notification.fromUser._id;
+                                    showSection('messagesSection');
+                                    fetchMessages(notification.fromUser._id);
+                                } else if (notification.post) {
+                                    showSection('homeSection');
+                                    fetchPosts();
+                                } else if (notification.type === 'follow') {
+                                    showSection('otherProfileSection', notification.fromUser._id);
+                                }
+                            } catch (error) {
+                                displayError(error.message);
                             }
                         });
                         notificationList.appendChild(notificationDiv);
