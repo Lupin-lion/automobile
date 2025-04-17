@@ -24,6 +24,19 @@
         }
         nav h1 {
             font-size: 24px;
+            cursor: pointer;
+        }
+        nav .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        nav .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        nav .nav-links a:hover {
+            text-decoration: underline;
         }
         nav input {
             padding: 8px;
@@ -43,24 +56,24 @@
         .section.active {
             display: block;
         }
-        .post-form, .car-post, .about, .contact {
+        .auth-form, .post-form, .car-post, .profile, .about, .contact {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .post-form form {
+        .auth-form form, .post-form form {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-        .post-form input, .post-form textarea {
+        .auth-form input, .post-form input, .post-form textarea, .auth-form select {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-        .post-form button {
+        .auth-form button, .post-form button {
             padding: 10px;
             background-color: #1877f2;
             color: white;
@@ -68,7 +81,7 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .post-form button:hover {
+        .auth-form button:hover, .post-form button:hover {
             background-color: #145db2;
         }
         .car-post {
@@ -118,6 +131,10 @@
             background-color: #e4e6eb;
             color: black;
         }
+        .car-post .username {
+            cursor: pointer;
+            color: #1877f2;
+        }
         .comments {
             margin-top: 10px;
             padding-top: 10px;
@@ -136,6 +153,42 @@
             border-radius: 4px;
             margin-bottom: 5px;
         }
+        .profile {
+            text-align: center;
+        }
+        .profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .profile .follow-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .profile .follow-btn.following {
+            background-color: #e4e6eb;
+            color: black;
+        }
+        .search-results {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .search-results .user {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .search-results .user:last-child {
+            border-bottom: none;
+        }
         .about, .contact {
             line-height: 1.6;
         }
@@ -143,38 +196,96 @@
             color: #1877f2;
             text-decoration: none;
         }
+        #error {
+            color: red;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <h1>TheMarts</h1>
-        <input type="text" id="searchBar" placeholder="Search cars...">
+        <h1 onclick="showSection('homeSection')">TheMarts</h1>
+        <input type="text" id="searchBar" placeholder="Search users or cars...">
+        <div class="nav-links">
+            <a href="#" onclick="showSection('profileSection')">Profile</a>
+            <a href="#" onclick="showSection('aboutSection')">About</a>
+            <a href="#" onclick="showSection('contactSection')">Contact</a>
+            <a href="#" onclick="logout()">Logout</a>
+        </div>
     </nav>
 
     <div class="container">
-        <!-- Post Form Section -->
-        <div id="homeSection" class="section active">
+        <!-- Error Section -->
+        <div id="error"></div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="section active">
+            <div class="auth-form">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <input type="text" id="loginPhoneNumber" placeholder="Phone Number" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="#" onclick="showSection('registerSection')">Register</a></p>
+            </div>
+        </div>
+
+        <!-- Register Section -->
+        <div id="registerSection" class="section">
+            <div class="auth-form">
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <input type="text" id="regFirstName" placeholder="First Name" required>
+                    <input type="text" id="regLastName" placeholder="Last Name" required>
+                    <input type="text" id="regPhoneNumber" placeholder="Phone Number (e.g., +1234567890)" required>
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                    <input type="date" id="regDob" required>
+                    <select id="regGender" required>
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="#" onclick="showSection('loginSection')">Login</a></p>
+            </div>
+        </div>
+
+        <!-- Home Section -->
+        <div id="homeSection" class="section">
+            <div class="search-results" id="searchResults" style="display: none;"></div>
             <div class="post-form">
                 <h2>Post a Car for Sale</h2>
                 <form id="carForm">
                     <input type="text" id="carTitle" placeholder="Car Title (e.g., 2019 Toyota Camry)" required>
                     <input type="text" id="carPrice" placeholder="Price (e.g., $15,000)" required>
-                    <textarea id="carDescription" placeholder="Description (e.g., mileage, condition, features)" required></textarea>
+                    <textarea id="carDescription" placeholder="Description (e.g., mileage, condition)" required></textarea>
                     <input type="text" id="carImage" placeholder="Image URL (e.g., https://via.placeholder.com/300)" required>
                     <button type="submit">Post Car</button>
                 </form>
             </div>
-
-            <!-- Car Listings -->
             <div id="carListings"></div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profileSection" class="section">
+            <div class="profile" id="userProfile"></div>
+        </div>
+
+        <!-- Other User's Profile Section -->
+        <div id="otherProfileSection" class="section">
+            <div class="profile" id="otherUserProfile"></div>
         </div>
 
         <!-- About Section -->
         <div id="aboutSection" class="section">
             <div class="about">
                 <h2>About TheMarts</h2>
-                <p>TheMarts is a dedicated marketplace for automobile enthusiasts to buy, sell, and connect over their passion for cars. Our platform allows users to post their cars for sale, browse listings, comment, like, and follow other users. We aim to create a community where car lovers can share their vehicles and stories safely and easily.</p>
-                <p>Founded in 2025, TheMarts focuses exclusively on automobiles, ensuring a clutter-free experience with only car-related content. Join our growing community today!</p>
+                <p>TheMarts is a dedicated marketplace for automobile enthusiasts to buy, sell, and connect over their passion for cars. Our platform allows users to post their cars for sale, browse listings, comment, like, and follow other users. We focus exclusively on automobiles, ensuring a clutter-free experience with only car-related content.</p>
+                <p>Founded in 2025, TheMarts aims to create a community where car lovers can share their vehicles and stories safely and easily. Join us today!</p>
             </div>
         </div>
 
@@ -191,73 +302,223 @@
     </div>
 
     <script>
-        // Simulated user data (in a real app, this would come from a backend)
-        const currentUser = { id: 'user1', username: 'Current User' };
-        let users = JSON.parse(localStorage.getItem('users')) || {
-            'user1': { username: 'Current User', followers: [] },
-            'user2': { username: 'CarLover123', followers: [] }
-        };
-        let cars = JSON.parse(localStorage.getItem('cars')) || [];
-        let likes = JSON.parse(localStorage.getItem('likes')) || {};
-        let comments = JSON.parse(localStorage.getItem('comments')) || {};
+        const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
+        let currentUser = null;
 
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('users', JSON.stringify(users));
-            localStorage.setItem('cars', JSON.stringify(cars));
-            localStorage.setItem('likes', JSON.stringify(likes));
-            localStorage.setItem('comments', JSON.stringify(comments));
+        // Helper functions
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('error').textContent = '';
+            document.getElementById('searchBar').value = '';
+
+            if (sectionId === 'homeSection') {
+                fetchPosts();
+            } else if (sectionId === 'profileSection') {
+                fetchUserProfile();
+            }
         }
 
-        // Display car listings
-        function displayCars(searchTerm = '') {
+        function displayError(message) {
+            document.getElementById('error').textContent = message;
+        }
+
+        function clearError() {
+            document.getElementById('error').textContent = '';
+        }
+
+        // Check if user is logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+            showSection('homeSection');
+        } else {
+            showSection('loginSection');
+        }
+
+        // Handle Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const phoneNumber = document.getElementById('loginPhoneNumber').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phoneNumber, password })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                localStorage.setItem('token', data.token);
+                currentUser = data.user;
+                showSection('homeSection');
+                fetchPosts();
+            } catch (error) {
+                displayError(error.message);
+            }
+        });
+
+        // Handle Registration
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const phoneNumber = document.getElementById('regPhoneNumber').value;
+            const password = document.getElementById('regPassword').value;
+            const dob = document.getElementById('regDob').value;
+            const gender = document.getElementById('regGender').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        phoneNumber,
+                        password,
+                        dob,
+                        gender
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                localStorage.setItem('token', data.token);
+                currentUser = data.user;
+                showSection('homeSection');
+                fetchPosts();
+            } catch (error) {
+                displayError(error.message);
+            }
+        });
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            currentUser = null;
+            showSection('loginSection');
+        }
+
+        // Fetch user profile
+        async function fetchUserProfile(userId = null) {
+            try {
+                const url = userId ? `${API_BASE_URL}/api/users/${userId}` : `${API_BASE_URL}/api/users/profile`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const user = await response.json();
+                if (!response.ok) {
+                    throw new Error(user.error || 'Failed to fetch profile');
+                }
+
+                const profileDiv = userId ? document.getElementById('otherUserProfile') : document.getElementById('userProfile');
+                const isFollowing = user.followers.includes(currentUser._id);
+                profileDiv.innerHTML = `
+                    <img src="${user.profilePicture}" alt="${user.username}">
+                    <h2>${user.username}</h2>
+                    <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
+                    <p><strong>Gender:</strong> ${user.gender}</p>
+                    <p><strong>Date of Birth:</strong> ${new Date(user.dob).toLocaleDateString()}</p>
+                    <p><strong>Bio:</strong> ${user.bio || 'Not set'}</p>
+                    <p><strong>Followers:</strong> ${user.followers.length}</p>
+                    ${userId && userId !== currentUser._id ? `
+                        <button class="follow-btn ${isFollowing ? 'following' : ''}" data-user="${user._id}">
+                            ${isFollowing ? 'Following' : 'Follow'}
+                        </button>
+                    ` : ''}
+                `;
+
+                if (userId && userId !== currentUser._id) {
+                    document.querySelector('.follow-btn').addEventListener('click', handleFollow);
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        // Fetch posts
+        async function fetchPosts(searchTerm = '') {
+            try {
+                const url = searchTerm ? `${API_BASE_URL}/api/posts/search/${searchTerm}` : `${API_BASE_URL}/api/posts`;
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const posts = await response.json();
+                if (!response.ok) {
+                    throw new Error(posts.error || 'Failed to fetch posts');
+                }
+
+                displayPosts(posts);
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        // Display posts
+        function displayPosts(posts) {
             const listingsDiv = document.getElementById('carListings');
             listingsDiv.innerHTML = '';
 
-            const filteredCars = cars.filter(car => 
-                car.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                car.description.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-
-            filteredCars.forEach((car, index) => {
+            posts.forEach(post => {
+                const hasLiked = post.likes.includes(currentUser._id);
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
-                    <h3>${car.title}</h3>
-                    <p><strong>Price:</strong> ${car.price}</p>
-                    <img src="${car.image}" alt="${car.title}">
-                    <p>${car.description}</p>
-                    <p><strong>Posted by:</strong> ${users[car.userId].username}</p>
-                    <button class="follow-btn ${users[currentUser.id].followers.includes(car.userId) ? 'following' : ''}" data-user="${car.userId}">
-                        ${users[currentUser.id].followers.includes(car.userId) ? 'Following' : 'Follow'}
+                    <h3>${post.title}</h3>
+                    <p><strong>Price:</strong> ${post.price}</p>
+                    <img src="${post.image}" alt="${post.title}">
+                    <p>${post.description}</p>
+                    <p><strong>Posted by:</strong> <span class="username" data-user="${post.user._id}">${post.user.username}</span></p>
+                    <button class="follow-btn ${currentUser.following && currentUser.following.includes(post.user._id) ? 'following' : ''}" data-user="${post.user._id}">
+                        ${currentUser.following && currentUser.following.includes(post.user._id) ? 'Following' : 'Follow'}
                     </button>
                     <div class="actions">
-                        <button class="like-btn ${likes[`${currentUser.id}-${index}`] ? 'liked' : ''}" data-index="${index}">
-                            Like (${car.likes || 0})
+                        <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
+                            Like (${post.likes.length})
                         </button>
-                        <button class="comment-btn" data-index="${index}">Comment</button>
+                        <button class="comment-btn" data-id="${post._id}">Comment</button>
                     </div>
-                    <div class="comments" id="comments-${index}" style="display: none;">
-                        <input type="text" class="comment-input" placeholder="Write a comment..." data-index="${index}">
-                        <div class="comment-list" id="comment-list-${index}"></div>
+                    <div class="comments" id="comments-${post._id}" style="display: none;">
+                        <input type="text" class="comment-input" placeholder="Write a comment..." data-id="${post._id}">
+                        <div class="comment-list" id="comment-list-${post._id}"></div>
                     </div>
                 `;
 
                 listingsDiv.appendChild(carDiv);
 
-                // Display comments
-                const commentList = document.getElementById(`comment-list-${index}`);
-                if (comments[index]) {
-                    comments[index].forEach(comment => {
-                        const commentDiv = document.createElement('div');
-                        commentDiv.classList.add('comment');
-                        commentDiv.textContent = `${comment.username}: ${comment.text}`;
-                        commentList.appendChild(commentDiv);
-                    });
-                }
+                const commentList = document.getElementById(`comment-list-${post._id}`);
+                post.comments.forEach(comment => {
+                    const commentDiv = document.createElement('div');
+                    commentDiv.classList.add('comment');
+                    commentDiv.textContent = `${comment.username}: ${comment.text}`;
+                    commentList.appendChild(commentDiv);
+                });
             });
 
-            // Add event listeners for like, comment, and follow buttons
             document.querySelectorAll('.like-btn').forEach(btn => {
                 btn.addEventListener('click', handleLike);
             });
@@ -270,113 +531,191 @@
             document.querySelectorAll('.follow-btn').forEach(btn => {
                 btn.addEventListener('click', handleFollow);
             });
+            document.querySelectorAll('.username').forEach(span => {
+                span.addEventListener('click', () => {
+                    showSection('otherProfileSection');
+                    fetchUserProfile(span.dataset.user);
+                });
+            });
         }
 
-        // Handle form submission
-        document.getElementById('carForm').addEventListener('submit', (e) => {
+        // Handle post creation
+        document.getElementById('carForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            clearError();
+
             const title = document.getElementById('carTitle').value;
             const price = document.getElementById('carPrice').value;
             const description = document.getElementById('carDescription').value;
             const image = document.getElementById('carImage').value;
 
-            const newCar = {
-                title,
-                price,
-                description,
-                image,
-                userId: currentUser.id,
-                likes: 0,
-                timestamp: new Date().toISOString()
-            };
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ title, price, description, image })
+                });
 
-            cars.push(newCar);
-            saveData();
-            displayCars();
-            e.target.reset();
+                const post = await response.json();
+                if (!response.ok) {
+                    throw new Error(post.error || 'Failed to create post');
+                }
+
+                fetchPosts();
+                e.target.reset();
+            } catch (error) {
+                displayError(error.message);
+            }
         });
 
         // Handle liking a post
-        function handleLike(e) {
-            const index = e.target.dataset.index;
-            const likeKey = `${currentUser.id}-${index}`;
+        async function handleLike(e) {
+            const postId = e.target.dataset.id;
 
-            if (likes[likeKey]) {
-                cars[index].likes--;
-                delete likes[likeKey];
-            } else {
-                cars[index].likes++;
-                likes[likeKey] = true;
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const post = await response.json();
+                if (!response.ok) {
+                    throw new Error(post.error || 'Failed to like post');
+                }
+
+                fetchPosts();
+            } catch (error) {
+                displayError(error.message);
             }
-
-            saveData();
-            displayCars(document.getElementById('searchBar').value);
         }
 
         // Toggle comments section
         function toggleComments(e) {
-            const index = e.target.dataset.index;
-            const commentsDiv = document.getElementById(`comments-${index}`);
+            const postId = e.target.dataset.id;
+            const commentsDiv = document.getElementById(`comments-${postId}`);
             commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
         }
 
         // Handle commenting
-        function handleComment(e) {
+        async function handleComment(e) {
             if (e.key !== 'Enter') return;
-            const index = e.target.dataset.index;
-            const commentText = e.target.value.trim();
-            if (!commentText) return;
+            const postId = e.target.dataset.id;
+            const text = e.target.value.trim();
+            if (!text) return;
 
-            if (!comments[index]) comments[index] = [];
-            comments[index].push({
-                username: currentUser.username,
-                text: commentText
-            });
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ text })
+                });
 
-            e.target.value = '';
-            saveData();
-            displayCars(document.getElementById('searchBar').value);
+                const post = await response.json();
+                if (!response.ok) {
+                    throw new Error(post.error || 'Failed to comment');
+                }
+
+                e.target.value = '';
+                fetchPosts();
+            } catch (error) {
+                displayError(error.message);
+            }
         }
 
         // Handle following a user
-        function handleFollow(e) {
+        async function handleFollow(e) {
             const userId = e.target.dataset.user;
-            const followers = users[currentUser.id].followers;
 
-            if (followers.includes(userId)) {
-                followers.splice(followers.indexOf(userId), 1);
-            } else {
-                followers.push(userId);
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to follow/unfollow');
+                }
+
+                // Refresh current user data
+                const userResponse = await fetch(`${API_BASE_URL}/api/users/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                currentUser = await userResponse.json();
+
+                // Refresh the current view
+                if (document.getElementById('homeSection').classList.contains('active')) {
+                    fetchPosts();
+                } else if (document.getElementById('profileSection').classList.contains('active')) {
+                    fetchUserProfile();
+                } else if (document.getElementById('otherProfileSection').classList.contains('active')) {
+                    fetchUserProfile(userId);
+                }
+            } catch (error) {
+                displayError(error.message);
             }
-
-            saveData();
-            displayCars(document.getElementById('searchBar').value);
         }
 
         // Search functionality
-        document.getElementById('searchBar').addEventListener('input', (e) => {
-            displayCars(e.target.value);
-        });
+        document.getElementById('searchBar').addEventListener('input', async (e) => {
+            const query = e.target.value.trim().toLowerCase();
 
-        // Initial display
-        displayCars();
+            if (query.includes('about')) {
+                showSection('aboutSection');
+                return;
+            }
+            if (query.includes('contact')) {
+                showSection('contactSection');
+                return;
+            }
 
-        // Section navigation (using search bar keywords for simplicity)
-        document.getElementById('searchBar').addEventListener('keypress', (e) => {
-            if (e.key !== 'Enter') return;
-            const searchTerm = e.target.value.toLowerCase();
+            if (!query) {
+                document.getElementById('searchResults').style.display = 'none';
+                fetchPosts();
+                return;
+            }
 
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
+            // Search users
+            try {
+                const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${query}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const users = await userResponse.json();
 
-            if (searchTerm.includes('about')) {
-                document.getElementById('aboutSection').classList.add('active');
-            } else if (searchTerm.includes('contact')) {
-                document.getElementById('contactSection').classList.add('active');
-            } else {
-                document.getElementById('homeSection').classList.add('active');
-                displayCars(searchTerm);
+                const searchResults = document.getElementById('searchResults');
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = users.map(user => `
+                    <div class="user" data-user="${user._id}">
+                        <img src="${user.profilePicture}" alt="${user.username}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
+                        ${user.username}
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.user').forEach(userDiv => {
+                    userDiv.addEventListener('click', () => {
+                        showSection('otherProfileSection');
+                        fetchUserProfile(userDiv.dataset.user);
+                    });
+                });
+
+                // Search posts
+                fetchPosts(query);
+            } catch (error) {
+                displayError(error.message);
             }
         });
     </script>
