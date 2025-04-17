@@ -2,1224 +2,942 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore cars and bikes on The Marts Motors.">
-  <meta name="keywords" content="cars, bikes, automobiles, buy cars, sell cars, The Marts Motors">
-  <meta name="author" content="The Marts Motors">
-  <title>Main Page | The Marts Motors</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>Automobile Social Platform</title>
   <style>
-    /* General Styles */
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: var(--background-color);
-      color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
+      background-color: #f4f4f4;
     }
-
-    :root {
-      --background-color: #f5f7fa;
-      --text-color: #2d3436;
-      --primary-color: #0984e3;
-      --secondary-color: #e17055;
-      --card-bg: #ffffff;
-      --border-color: #dfe6e9;
-    }
-
-    [data-theme="dark"] {
-      --background-color: #1a1a1a;
-      --text-color: #dfe6e9;
-      --primary-color: #74b9ff;
-      --secondary-color: #ff9f43;
-      --card-bg: #2d3436;
-      --border-color: #636e72;
-    }
-
-    [data-theme="dark"] input,
-    [data-theme="dark"] select {
-      background-color: #2d3436;
-      color: var(--text-color);
-      border-color: var(--border-color);
-    }
-
-    header {
-      background-color: var(--primary-color);
-      color: #fff;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .logo {
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      margin: 0;
-      padding: 0;
-    }
-
-    nav ul li a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
-    }
-
-    nav ul li a:hover {
-      background-color: var(--secondary-color);
-    }
-
-    .theme-toggle {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #fff;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .theme-toggle:hover {
-      transform: rotate(20deg);
-    }
-
-    .theme-toggle-tooltip {
-      position: absolute;
-      top: 3.5rem;
-      right: 1rem;
-      background-color: #2d3436;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      display: none;
-      z-index: 1000;
-    }
-
-    .theme-toggle:hover + .theme-toggle-tooltip {
-      display: block;
-    }
-
-    main {
+    .container {
       max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: 0 auto;
+      padding: 20px;
     }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .section-button {
-      padding: 0.75rem 1.5rem;
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 500;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .section-button:hover {
-      background-color: var(--secondary-color);
-      transform: translateY(-2px);
-    }
-
-    .section-button:disabled {
-      background-color: #b2bec3;
-      cursor: not-allowed;
-    }
-
-    .content-section {
-      display: none;
-      margin-top: 2rem;
-    }
-
-    .content-section.active {
-      display: block;
-    }
-
-    .featured-section {
-      display: none;
-      margin: 2rem 0;
-    }
-
-    .featured-section.active {
-      display: block;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin: 2rem 0;
-    }
-
-    .product-card {
-      background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    }
-
-    .product-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      loading: lazy;
-    }
-
-    .product-card .details {
-      padding: 1rem;
+    .header {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
       text-align: center;
     }
-
-    .product-card .details h3 {
-      margin: 0 0 0.5rem;
-      font-size: 1.25rem;
-      color: var(--text-color);
-    }
-
-    .product-card .details .price {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 0.5rem;
-    }
-
-    .product-card .details .contact-btn {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background-color: var(--secondary-color);
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-    }
-
-    .product-card .details .contact-btn:hover {
-      background-color: #d63031;
-    }
-
-    .interactions {
+    .nav {
       display: flex;
       justify-content: space-around;
-      padding: 0.75rem;
-      border-top: 1px solid var(--border-color);
+      background-color: #444;
+      padding: 10px 0;
     }
-
-    .interaction-btn {
+    .nav button {
       background: none;
       border: none;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--primary-color);
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      transition: color 0.3s ease;
     }
-
-    .interaction-btn:hover {
-      color: var(--secondary-color);
+    .nav button:hover {
+      color: #ddd;
     }
-
-    .interaction-count {
-      font-size: 0.8rem;
-      color: #636e72;
-    }
-
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 2rem;
-    }
-
-    .page-btn {
-      padding: 0.5rem 1rem;
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-    }
-
-    .page-btn:disabled {
-      background-color: #b2bec3;
-      cursor: not-allowed;
-    }
-
-    .page-btn:hover:not(:disabled) {
-      background-color: var(--secondary-color);
-    }
-
-    #page-info {
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    footer {
-      background-color: var(--primary-color);
-      color: #fff;
-      text-align: center;
-      padding: 1.5rem 0;
-      margin-top: 3rem;
-    }
-
-    .contact-icon {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      margin-right: 0.5rem;
-      transition: transform 0.3s ease;
-    }
-
-    .contact-list a:hover .contact-icon {
-      transform: scale(1.1);
-    }
-
-    .reset-btn {
-      padding: 0.5rem 1rem;
-      background-color: var(--secondary-color);
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: background-color 0.3s ease;
-    }
-
-    .reset-btn:hover {
-      background-color: #d63031;
-    }
-
-    .filter-container {
-      background-color: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
-    }
-
-    .filter-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .filter-group {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .filter-group label {
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-      color: var(--text-color);
-    }
-
-    .filter-group select,
-    .filter-group input {
-      padding: 0.5rem;
-      font-size: 0.9rem;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      transition: border-color 0.3s ease;
-    }
-
-    .filter-group select:focus,
-    .filter-group input:focus {
-      border-color: var(--primary-color);
-      outline: none;
-    }
-
-    .filter-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 1rem;
-    }
-
-    .loading-spinner {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
-      border-top: 4px solid var(--primary-color);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      z-index: 9999;
+    .section {
       display: none;
+      margin-top: 20px;
     }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .section.active {
+      display: block;
     }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      padding: 0.75rem;
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s ease;
+    .form-group {
+      margin-bottom: 15px;
     }
-
-    .back-to-top:hover {
-      background-color: var(--secondary-color);
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
     }
-
-    .search-container {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin: 1.5rem 0;
-    }
-
-    #search-bar {
+    .form-group input, .form-group textarea, .form-group select {
       width: 100%;
-      max-width: 400px;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      transition: border-color 0.3s ease;
+      padding: 8px;
+      box-sizing: border-box;
     }
-
-    #search-bar:focus {
-      border-color: var(--primary-color);
-      outline: none;
+    .form-group input[type="file"] {
+      padding: 3px;
     }
-
-    #search-button,
-    #clear-search {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      background-color: var(--primary-color);
-      color: #fff;
+    button {
+      background-color: #333;
+      color: white;
+      padding: 10px 15px;
       border: none;
-      border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-
-    #search-button:hover,
-    #clear-search:hover {
-      background-color: var(--secondary-color);
+    button:hover {
+      background-color: #555;
     }
-
-    .error-message {
-      color: #d63031;
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-      display: none;
+    .post {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
-
-    @media (max-width: 768px) {
-      .filter-row {
-        flex-direction: column;
-      }
-
-      .filter-group {
-        min-width: 100%;
-      }
-
-      .product-grid {
-        grid-template-columns: 1fr;
-      }
-
-      nav ul {
-        flex-wrap: wrap;
-      }
+    .post img {
+      max-width: 100%;
+      height: auto;
+      margin: 10px 0;
     }
-
-    @media (max-width: 480px) {
-      .logo {
-        font-size: 1.5rem;
-      }
-
-      .section-button {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-      }
-
-      .contact-icon {
-        width: 24px;
-        height: 24px;
-      }
+    .comment {
+      margin-left: 20px;
+      margin-top: 10px;
+      border-left: 2px solid #ccc;
+      padding-left: 10px;
+    }
+    .message {
+      background-color: #e9e9e9;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    #profileInfo {
+      background-color: white;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">The Marts Motors</div>
-    <nav>
-      <ul>
-        <li><a href="#" onclick="navigateToWelcomePage()" aria-label="Go to home page">Home</a></li>
-        <li><a href="#" id="create-profile-link" class="section-button" data-section="profile" aria-label="Create profile">Create Profile</a></li>
-        <li><a href="#" id="login-link" class="section-button" data-section="profile" aria-label="Log in">Log In</a></li>
-        <li><a href="#" id="create-listing-link" style="display: none;" aria-label="Create listing">Create Listing</a></li>
-        <li><a href="#" id="logout-link" style="display: none;" aria-label="Log out">Log Out</a></li>
-        <li><a href="#" class="section-button" data-section="contact" aria-label="Contact us">Contact Us</a></li>
-      </ul>
-    </nav>
-    <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
-    <div id="theme-tooltip" class="theme-toggle-tooltip">Toggle Dark Mode</div>
-  </header>
-
-  <main>
-    <div class="search-container">
-      <input type="text" id="search-bar" placeholder="Search by make, model, or price..." aria-label="Search vehicles">
-      <button id="search-button" aria-label="Search">Search</button>
-      <button id="clear-search" aria-label="Clear search">Clear</button>
-    </div>
-
-    <div class="featured-section active">
-      <h2>Featured Products</h2>
-      <div class="product-grid" id="featured-products"></div>
-    </div>
-
-    <div id="loading-spinner" class="loading-spinner"></div>
-
-    <div class="button-container">
-      <button class="section-button" data-section="listings" aria-label="View listings">Listings</button>
-      <button class="section-button" data-section="profile" aria-label="View profile">Profile</button>
-      <button class="section-button" data-section="about" aria-label="View about">About</button>
-      <button class="section-button" data-section="contact" aria-label="View contact">Contact Us</button>
-    </div>
-
-    <div id="listings" class="content-section active">
-      <h2>Available Cars and Bikes</h2>
-      <div class="filter-container">
-        <div class="filter-row">
-          <div class="filter-group">
-            <label for="filter-type">Type</label>
-            <select id="filter-type" aria-label="Filter by vehicle type">
-              <option value="all">All</option>
-              <option value="car">Cars</option>
-              <option value="bike">Bikes</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="filter-price">Price</label>
-            <select id="filter-price" aria-label="Filter by price range">
-              <option value="all">All</option>
-              <option value="low">Below $10,000</option>
-              <option value="medium">$10,000 - $20,000</option>
-              <option value="high">Above $20,000</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="filter-make">Make</label>
-            <select id="filter-make" aria-label="Filter by make">
-              <option value="all">All</option>
-            </select>
-          </div>
-        </div>
-        <div class="filter-row">
-          <div class="filter-group">
-            <label for="filter-origin">Origin</label>
-            <select id="filter-origin" aria-label="Filter by origin">
-              <option value="all">All</option>
-              <option value="foreign">Foreign</option>
-              <option value="local">Local</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="filter-year">Year</label>
-            <select id="filter-year" aria-label="Filter by year">
-              <option value="all">All</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="sort-options">Sort By</label>
-            <select id="sort-options" aria-label="Sort options">
-              <option value="default">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="year-asc">Year: Oldest First</option>
-              <option value="year-desc">Year: Newest First</option>
-            </select>
-          </div>
-        </div>
-        <div class="filter-actions">
-          <button id="reset-filters" class="reset-btn" aria-label="Reset all filters">Reset Filters</button>
-        </div>
+  <div class="header">
+    <h1>Automobile Social Platform</h1>
+  </div>
+  <div class="nav">
+    <button onclick="showSection('register')">Register</button>
+    <button onclick="showSection('login')">Login</button>
+    <button onclick="showSection('profile')">Profile</button>
+    <button onclick="showSection('createPost')">Create Post</button>
+    <button onclick="showSection('feed')">Feed</button>
+    <button onclick="showSection('search')">Search Posts</button>
+    <button onclick="showSection('messages')">Messages</button>
+    <button onclick="showSection('notifications')">Notifications</button>
+    <button onclick="showSection('wishlist')">Wishlist</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <div class="container">
+    <!-- Register Section -->
+    <div id="register" class="section">
+      <h2>Register</h2>
+      <div class="form-group">
+        <label for="regFirstName">First Name:</label>
+        <input type="text" id="regFirstName" required>
       </div>
-      <div class="product-grid"></div>
-      <div id="no-results" style="display: none; text-align: center; font-size: 1.1rem;">No results found.</div>
-      <div class="pagination">
-        <button class="page-btn" data-page="prev" disabled aria-label="Previous page">Previous</button>
-        <span id="page-info">Page 1</span>
-        <button class="page-btn" data-page="next" aria-label="Next page">Next</button>
+      <div class="form-group">
+        <label for="regLastName">Last Name:</label>
+        <input type="text" id="regLastName" required>
       </div>
-    </div>
-
-    <div id="profile" class="content-section">
-      <h2 id="profile-title">User Profile</h2>
-      <div id="user-info" style="display: none;">
-        <p>Welcome, <span id="username"></span>!</p>
-        <p>Email: <span id="user-email"></span></p>
-        <button id="create-listing-button" class="section-button" aria-label="Create a new listing">Create a New Listing</button>
+      <div class="form-group">
+        <label for="regPhoneNumber">Phone Number (e.g., +1234567890):</label>
+        <input type="tel" id="regPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
       </div>
-      <div id="auth-forms">
-        <div id="register-form" style="display: none;">
-          <h3>Register</h3>
-          <form id="register-form-element">
-            <div class="filter-group">
-              <label for="register-username">Username</label>
-              <input type="text" id="register-username" name="register-username" required aria-required="true">
-            </div>
-            <div class="filter-group">
-              <label for="register-email">Email</label>
-              <input type="email" id="register-email" name="register-email" required aria-required="true">
-            </div>
-            <div class="filter-group">
-              <label for="register-password">Password</label>
-              <input type="password" id="register-password" name="register-password" required aria-required="true">
-            </div>
-            <button type="submit" class="section-button" aria-label="Register">Register</button>
-            <p id="register-message" class="error-message"></p>
-          </form>
-          <p>Already have an account? <a href="#" id="show-login" aria-label="Show login form">Log In</a></p>
-        </div>
-        <div id="login-form">
-          <h3>Log In</h3>
-          <form id="login-form-element">
-            <div class="filter-group">
-              <label for="login-email">Email</label>
-              <input type="email" id="login-email" name="login-email" required aria-required="true">
-            </div>
-            <div class="filter-group">
-              <label for="login-password">Password</label>
-              <input type="password" id="login-password" name="login-password" required aria-required="true">
-            </div>
-            <button type="submit" class="section-button" aria-label="Log in">Log In</button>
-            <p id="login-message" class="error-message"></p>
-          </form>
-          <p>Don't have an account? <a href="#" id="show-register" aria-label="Show register form">Register</a></p>
-        </div>
+      <div class="form-group">
+        <label for="regPassword">Password:</label>
+        <input type="password" id="regPassword" required>
       </div>
+      <div class="form-group">
+        <label for="regDob">Date of Birth:</label>
+        <input type="date" id="regDob" required>
+      </div>
+      <div class="form-group">
+        <label for="regGender">Gender:</label>
+        <select id="regGender" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="regProfilePicture">Profile Picture:</label>
+        <input type="file" id="regProfilePicture" accept="image/*">
+      </div>
+      <button onclick="register()">Register</button>
     </div>
 
-    <div id="create-listing" class="content-section">
-      <h2>Create a New Listing</h2>
-      <form id="create-listing-form">
-        <div class="filter-group">
-          <label for="vehicle-type">Type</label>
-          <select id="vehicle-type" required aria-required="true">
-            <option value="car">Car</option>
-            <option value="bike">Bike</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-make">Make</label>
-          <input type="text" id="vehicle-make" required aria-required="true">
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-model">Model</label>
-          <input type="text" id="vehicle-model" required aria-required="true">
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-price">Price</label>
-          <input type="number" id="vehicle-price" min="0" required aria-required="true">
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-origin">Origin</label>
-          <select id="vehicle-origin" required aria-required="true">
-            <option value="foreign">Foreign</option>
-            <option value="local">Local</option>
-          </select>
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-year">Year</label>
-          <input type="number" id="vehicle-year" min="1900" max="2025" required aria-required="true">
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-image">Image URL</label>
-          <input type="url" id="vehicle-image" placeholder="https://example.com/image.jpg" aria-describedby="image-hint">
-          <small id="image-hint">Optional: Provide a valid image URL</small>
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-contact">Contact URL</label>
-          <input type="url" id="vehicle-contact" placeholder="https://wa.me/1234567890" aria-describedby="contact-hint">
-          <small id="contact-hint">Optional: Provide a valid contact URL (e.g., WhatsApp)</small>
-        </div>
-        <div class="filter-group">
-          <label for="vehicle-featured">Featured</label>
-          <input type="checkbox" id="vehicle-featured" aria-label="Mark as featured">
-        </div>
-        <button type="submit" class="section-button" aria-label="Create listing">Create Listing</button>
-        <p id="create-listing-message" class="error-message"></p>
-      </form>
+    <!-- Login Section -->
+    <div id="login" class="section">
+      <h2>Login</h2>
+      <div class="form-group">
+        <label for="loginPhoneNumber">Phone Number:</label>
+        <input type="tel" id="loginPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" required>
+      </div>
+      <button onclick="login()">Login</button>
+      <p><a href="#" onclick="showSection('passwordResetRequest')">Forgot Password?</a></p>
     </div>
 
-    <div id="about" class="content-section">
-      <h2>About The Marts Motors</h2>
-      <p>Welcome to <strong>The Marts Motors</strong>, your premier destination for automotive excellence. Whether you're buying, selling, or browsing, our platform connects enthusiasts with quality vehicles.</p>
-      <h3>Why Choose Us?</h3>
-      <ul>
-        <li><strong>Wide Selection</strong>: From sports cars to motorcycles, find your perfect ride.</li>
-        <li><strong>Secure Platform</strong>: Safe transactions with verified listings.</li>
-        <li><strong>User-Friendly</strong>: Intuitive design for seamless navigation.</li>
-      </ul>
+    <!-- Password Reset Request Section -->
+    <div id="passwordResetRequest" class="section">
+      <h2>Request Password Reset</h2>
+      <div class="form-group">
+        <label for="resetPhoneNumber">Phone Number:</label>
+        <input type="tel" id="resetPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
+      </div>
+      <button onclick="requestPasswordReset()">Request Reset Token</button>
     </div>
 
-    <div id="contact" class="content-section">
-      <h2>Contact Us</h2>
-      <ul class="contact-list" style="list-style: none; padding: 0;">
-        <li><a href="https://wa.me/254799582173" target="_blank" aria-label="Contact via WhatsApp"><img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="WhatsApp" class="contact-icon">WhatsApp</a></li>
-        <li><a href="mailto:themartswriters@gmail.com" aria-label="Contact via Email"><img src="https://img.icons8.com/color/48/000000/email.png" alt="Email" class="contact-icon">Email</a></li>
-      </ul>
+    <!-- Password Reset Section -->
+    <div id="passwordReset" class="section">
+      <h2>Reset Password</h2>
+      <div class="form-group">
+        <label for="resetToken">Reset Token:</label>
+        <input type="text" id="resetToken" required>
+      </div>
+      <div class="form-group">
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" required>
+      </div>
+      <button onclick="resetPassword()">Reset Password</button>
     </div>
-    <button id="scroll-to-listings" class="section-button" aria-label="Go to listings">Go to Listings</button>
-  </main>
 
-  <footer>
-    <p>The Marts Motors © <span id="current-year"></span> | Drive Your Passion</p>
-  </footer>
-  <button id="back-to-top" class="back-to-top" style="display: none;" aria-label="Back to top">↑</button>
+    <!-- Profile Section -->
+    <div id="profile" class="section">
+      <h2>Profile</h2>
+      <div id="profileInfo"></div>
+      <h3>Update Profile</h3>
+      <div class="form-group">
+        <label for="updateUsername">Username:</label>
+        <input type="text" id="updateUsername">
+      </div>
+      <div class="form-group">
+        <label for="updatePhoneNumber">Phone Number:</label>
+        <input type="tel" id="updatePhoneNumber" pattern="\+[0-9]{10,15}">
+      </div>
+      <div class="form-group">
+        <label for="updateBio">Bio:</label>
+        <textarea id="updateBio"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="updateProfilePicture">Profile Picture:</label>
+        <input type="file" id="updateProfilePicture" accept="image/*">
+      </div>
+      <button onclick="updateProfile()">Update Profile</button>
+      <h3>Followers</h3>
+      <div id="followers"></div>
+      <h3>Following</h3>
+      <div id="following"></div>
+      <h3>Activity</h3>
+      <div id="activity"></div>
+    </div>
+
+    <!-- Create Post Section -->
+    <div id="createPost" class="section">
+      <h2>Create Post</h2>
+      <div class="form-group">
+        <label for="postContent">Content:</label>
+        <textarea id="postContent"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="postImages">Images:</label>
+        <input type="file" id="postImages" accept="image/*" multiple>
+      </div>
+      <div class="form-group">
+        <label for="postType">Type:</label>
+        <select id="postType">
+          <option value="">Select Type</option>
+          <option value="car">Car</option>
+          <option value="bike">Bike</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="postMake">Make:</label>
+        <input type="text" id="postMake">
+      </div>
+      <div class="form-group">
+        <label for="postModel">Model:</label>
+        <input type="text" id="postModel">
+      </div>
+      <div class="form-group">
+        <label for="postPrice">Price:</label>
+        <input type="number" id="postPrice">
+      </div>
+      <div class="form-group">
+        <label for="postYear">Year:</label>
+        <input type="number" id="postYear">
+      </div>
+      <div class="form-group">
+        <label for="postOrigin">Origin:</label>
+        <select id="postOrigin">
+          <option value="">Select Origin</option>
+          <option value="foreign">Foreign</option>
+          <option value="local">Local</option>
+        </select>
+      </div>
+      <button onclick="createPost()">Create Post</button>
+    </div>
+
+    <!-- Feed Section -->
+    <div id="feed" class="section">
+      <h2>Feed</h2>
+      <div id="posts"></div>
+    </div>
+
+    <!-- Search Posts Section -->
+    <div id="search" class="section">
+      <h2>Search Posts</h2>
+      <div class="form-group">
+        <label for="searchType">Type:</label>
+        <select id="searchType">
+          <option value="">Any</option>
+          <option value="car">Car</option>
+          <option value="bike">Bike</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="searchMake">Make:</label>
+        <input type="text" id="searchMake">
+      </div>
+      <div class="form-group">
+        <label for="searchModel">Model:</label>
+        <input type="text" id="searchModel">
+      </div>
+      <div class="form-group">
+        <label for="searchMinPrice">Min Price:</label>
+        <input type="number" id="searchMinPrice">
+      </div>
+      <div class="form-group">
+        <label for="searchMaxPrice">Max Price:</label>
+        <input type="number" id="searchMaxPrice">
+      </div>
+      <div class="form-group">
+        <label for="searchOrigin">Origin:</label>
+        <select id="searchOrigin">
+          <option value="">Any</option>
+          <option value="foreign">Foreign</option>
+          <option value="local">Local</option>
+        </select>
+      </div>
+      <button onclick="searchPosts()">Search</button>
+      <div id="searchResults"></div>
+    </div>
+
+    <!-- Messages Section -->
+    <div id="messages" class="section">
+      <h2>Messages</h2>
+      <div class="form-group">
+        <label for="recipientId">Recipient User ID:</label>
+        <input type="text" id="recipientId">
+      </div>
+      <div class="form-group">
+        <label for="messageContent">Message:</label>
+        <textarea id="messageContent"></textarea>
+      </div>
+      <button onclick="sendMessage()">Send Message</button>
+      <h3>Conversation</h3>
+      <div id="conversation"></div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div id="notifications" class="section">
+      <h2>Notifications</h2>
+      <div id="notificationsList"></div>
+    </div>
+
+    <!-- Wishlist Section -->
+    <div id="wishlist" class="section">
+      <h2>Wishlist</h2>
+      <div id="wishlistItems"></div>
+    </div>
+  </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      // Set current year
-      document.getElementById("current-year").textContent = new Date().getFullYear();
+    const API_URL = 'http://localhost:5000/api'; // Replace with Heroku URL after deployment
+    let token = localStorage.getItem('token');
+    let currentUser = JSON.parse(localStorage.getItem('user')) || {};
 
-      // Section navigation
-      const buttons = document.querySelectorAll(".section-button");
-      const sections = document.querySelectorAll(".content-section");
-      const featuredSection = document.querySelector(".featured-section");
-      const authForms = document.getElementById("auth-forms");
-      const userInfo = document.getElementById("user-info");
-
-      buttons.forEach(button => {
-        button.addEventListener("click", () => {
-          const sectionId = button.getAttribute("data-section");
-          const section = document.getElementById(sectionId);
-
-          sections.forEach(sec => sec.classList.remove("active"));
-          section.classList.add("active");
-
-          featuredSection.classList.toggle("active", sectionId === "listings");
-
-          const token = localStorage.getItem("token");
-          if (sectionId === "profile") {
-            authForms.style.display = token ? "none" : "block";
-            userInfo.style.display = token ? "block" : "none";
-          } else {
-            authForms.style.display = "none";
-            userInfo.style.display = "none";
-          }
-        });
+    // Show Section
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
       });
+      document.getElementById(sectionId).classList.add('active');
 
-      // Initialize variables
-      const filterType = document.getElementById("filter-type");
-      const filterPrice = document.getElementById("filter-price");
-      const filterMake = document.getElementById("filter-make");
-      const filterOrigin = document.getElementById("filter-origin");
-      const filterYear = document.getElementById("filter-year");
-      const sortOptions = document.getElementById("sort-options");
-      const productGrid = document.querySelector(".product-grid");
-      let currentPage = 1;
-      const itemsPerPage = 6;
-      let products = [];
-      let filteredProducts = [];
-
-      // Authentication state
-      const token = localStorage.getItem("token");
-      const user = JSON.parse(localStorage.getItem("user"));
-
-      // Update navigation
-      const createProfileLink = document.getElementById("create-profile-link");
-      const loginLink = document.getElementById("login-link");
-      const logoutLink = document.getElementById("logout-link");
-      const createListingLink = document.getElementById("create-listing-link");
-
-      if (token && user) {
-        createProfileLink.style.display = "none";
-        loginLink.style.display = "none";
-        logoutLink.style.display = "inline";
-        createListingLink.style.display = "inline";
-        userInfo.style.display = "block";
-        authForms.style.display = "none";
-        document.getElementById("username").textContent = user.username;
-        document.getElementById("user-email").textContent = user.email;
-      }
-
-      // Logout
-      logoutLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.reload();
-      });
-
-      // Toggle auth forms
-      document.getElementById("show-register").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.getElementById("login-form").style.display = "none";
-        document.getElementById("register-form").style.display = "block";
-      });
-
-      document.getElementById("show-login").addEventListener("click", (e) => {
-        e.preventDefault();
-        document.getElementById("register-form").style.display = "none";
-        document.getElementById("login-form").style.display = "block";
-      });
-
-      // Register
-      const registerForm = document.getElementById("register-form-element");
-      registerForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const username = document.getElementById("register-username").value;
-        const email = document.getElementById("register-email").value;
-        const password = document.getElementById("register-password").value;
-        const messageElement = document.getElementById("register-message");
-
-        messageElement.textContent = "Registering...";
-        messageElement.style.display = "block";
-
-        try {
-          const response = await fetch("https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password })
-          });
-          const data = await response.json();
-          messageElement.style.color = response.ok ? "#2ecc71" : "#d63031";
-          messageElement.textContent = data.message || (response.ok ? "Registration successful!" : "Error registering user");
-          if (response.ok) {
-            setTimeout(() => {
-              document.getElementById("register-form").style.display = "none";
-              document.getElementById("login-form").style.display = "block";
-              messageElement.style.display = "none";
-            }, 2000);
-          }
-        } catch (error) {
-          messageElement.style.color = "#d63031";
-          messageElement.textContent = "Server error. Please try again.";
-        }
-      });
-
-      // Login
-      const loginForm = document.getElementById("login-form-element");
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("login-email").value;
-        const password = document.getElementById("login-password").value;
-        const messageElement = document.getElementById("login-message");
-
-        messageElement.textContent = "Logging in...";
-        messageElement.style.display = "block";
-
-        try {
-          const response = await fetch("https://automobile-backend-dcd22d288ee3.herokuapp.com/api/users/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-          });
-          const data = await response.json();
-          messageElement.style.color = response.ok ? "#2ecc71" : "#d63031";
-          messageElement.textContent = data.message || (response.ok ? "Login successful!" : "Error logging in");
-          if (response.ok) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("user", JSON.stringify(data.user));
-            setTimeout(() => window.location.reload(), 1000);
-          }
-        } catch (error) {
-          messageElement.style.color = "#d63031";
-          messageElement.textContent = "Server error. Please try again.";
-        }
-      });
-
-      // Create listing
-      const createListingForm = document.getElementById("create-listing-form");
-      createListingForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const type = document.getElementById("vehicle-type").value;
-        const make = document.getElementById("vehicle-make").value;
-        const model = document.getElementById("vehicle-model").value;
-        const price = parseInt(document.getElementById("vehicle-price").value);
-        const origin = document.getElementById("vehicle-origin").value;
-        const year = parseInt(document.getElementById("vehicle-year").value);
-        const image = document.getElementById("vehicle-image").value || "https://via.placeholder.com/300x200";
-        const contact = document.getElementById("vehicle-contact").value || "#";
-        const featured = document.getElementById("vehicle-featured").checked;
-        const messageElement = document.getElementById("create-listing-message");
-
-        try {
-          const response = await fetch("https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            },
-            body: JSON.stringify({ type, make, model, price, origin, year, image, contact, featured })
-          });
-          const data = await response.json();
-          messageElement.style.color = response.ok ? "#2ecc71" : "#d63031";
-          messageElement.textContent = data.message || (response.ok ? "Listing created!" : "Error creating listing");
-          messageElement.style.display = "block";
-          if (response.ok) {
-            fetchProducts();
-            fetchFeaturedProducts();
-            createListingForm.reset();
-            setTimeout(() => messageElement.style.display = "none", 3000);
-          }
-        } catch (error) {
-          messageElement.style.color = "#d63031";
-          messageElement.textContent = "Server error. Please try again.";
-          messageElement.style.display = "block";
-        }
-      });
-
-      // Navigate to create listing
-      document.getElementById("create-listing-link").addEventListener("click", (e) => {
-        e.preventDefault();
-        sections.forEach(sec => sec.classList.remove("active"));
-        document.getElementById("create-listing").classList.add("active");
-        featuredSection.classList.remove("active");
-      });
-
-      document.getElementById("create-listing-button").addEventListener("click", () => {
-        sections.forEach(sec => sec.classList.remove("active"));
-        document.getElementById("create-listing").classList.add("active");
-        featuredSection.classList.remove("active");
-      });
-
-      // Fetch products
-      async function fetchProducts() {
-        const spinner = document.getElementById("loading-spinner");
-        spinner.style.display = "block";
-        try {
-          const response = await fetch("https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles");
-          if (!response.ok) throw new Error("Failed to fetch vehicles");
-          products = await response.json();
-          filteredProducts = [...products];
-          currentPage = 1;
-          document.getElementById("page-info").textContent = `Page ${currentPage}`;
-          updatePagination();
-          populateFilters();
-          renderProducts(paginateProducts(filteredProducts));
-        } catch (error) {
-          productGrid.innerHTML = '<p style="text-align: center; color: #d63031;">Error loading vehicles. Please try again.</p>';
-        } finally {
-          spinner.style.display = "none";
-        }
-      }
-
-      function populateFilters() {
-        const makes = [...new Set(products.map(p => p.make.toLowerCase()))];
-        const years = [...new Set(products.map(p => p.year.toString()))].sort((a, b) => b - a);
-        filterMake.innerHTML = '<option value="all">All</option>' + makes.map(make => `<option value="${make}">${make.charAt(0).toUpperCase() + make.slice(1)}</option>`).join("");
-        filterYear.innerHTML = '<option value="all">All</option>' + years.map(year => `<option value="${year}">${year}</option>`).join("");
-      }
-
-      function paginateProducts(products) {
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        return products.slice(startIndex, startIndex + itemsPerPage);
-      }
-
-      function updatePagination() {
-        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-        document.querySelector('.page-btn[data-page="prev"]').disabled = currentPage === 1;
-        document.querySelector('.page-btn[data-page="next"]').disabled = currentPage === totalPages || totalPages === 0;
-      }
-
-      document.querySelectorAll(".page-btn").forEach(button => {
-        button.addEventListener("click", () => {
-          const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-          if (button.dataset.page === "prev" && currentPage > 1) currentPage--;
-          else if (button.dataset.page === "next" && currentPage < totalPages) currentPage++;
-          document.getElementById("page-info").textContent = `Page ${currentPage}`;
-          updatePagination();
-          renderProducts(paginateProducts(filteredProducts));
-        });
-      });
-
-      function renderProducts(products) {
-        const noResults = document.getElementById("no-results");
-        productGrid.innerHTML = "";
-        if (!products.length) {
-          noResults.style.display = "block";
-          return;
-        }
-        noResults.style.display = "none";
-        products.forEach(product => {
-          const likeKey = `like_${product.id}`;
-          const commentKey = `comment_${product.id}`;
-          const repostKey = `repost_${product.id}`;
-          const shareKey = `share_${product.id}`;
-          const likeCount = parseInt(localStorage.getItem(likeKey) || "0");
-          const commentCount = parseInt(localStorage.getItem(commentKey) || "0");
-          const repostCount = parseInt(localStorage.getItem(repostKey) || "0");
-          const shareCount = parseInt(localStorage.getItem(shareKey) || "0");
-
-          const productCard = `
-            <div class="product-card">
-              <img src="${product.image}" alt="${product.make} ${product.model}" loading="lazy">
-              <div class="details">
-                <h3>${product.make} ${product.model}</h3>
-                <p class="price">$${product.price.toLocaleString()}</p>
-                <p>Year: ${product.year}</p>
-                <p>Origin: ${product.origin.charAt(0).toUpperCase() + product.origin.slice(1)}</p>
-                <a href="${product.contact}" target="_blank" class="contact-btn">Contact Owner</a>
-              </div>
-              <div class="interactions">
-                <button class="interaction-btn like-btn" data-id="${product.id}" aria-label="Like">❤️ <span class="interaction-count">${likeCount}</span></button>
-                <button class="interaction-btn comment-btn" data-id="${product.id}" aria-label="Comment">💬 <span class="interaction-count">${commentCount}</span></button>
-                <button class="interaction-btn repost-btn" data-id="${product.id}" aria-label="Repost">🔄 <span class="interaction-count">${repostCount}</span></button>
-                <button class="interaction-btn share-btn" data-id="${product.id}" aria-label="Share">📤 <span class="interaction-count">${shareCount}</span></button>
-              </div>
-            </div>
-          `;
-          productGrid.innerHTML += productCard;
-        });
-
-        document.querySelectorAll(".like-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const key = `like_${id}`;
-            let count = parseInt(localStorage.getItem(key) || "0") + 1;
-            localStorage.setItem(key, count);
-            btn.querySelector(".interaction-count").textContent = count;
-          });
-        });
-
-        document.querySelectorAll(".comment-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const key = `comment_${id}`;
-            let count = parseInt(localStorage.getItem(key) || "0") + 1;
-            localStorage.setItem(key, count);
-            btn.querySelector(".interaction-count").textContent = count;
-            alert("Comment feature coming soon!");
-          });
-        });
-
-        document.querySelectorAll(".repost-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const key = `repost_${id}`;
-            let count = parseInt(localStorage.getItem(key) || "0") + 1;
-            localStorage.setItem(key, count);
-            btn.querySelector(".interaction-count").textContent = count;
-          });
-        });
-
-        document.querySelectorAll(".share-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const key = `share_${id}`;
-            let count = parseInt(localStorage.getItem(key) || "0") + 1;
-            localStorage.setItem(key, count);
-            btn.querySelector(".interaction-count").textContent = count;
-            navigator.clipboard.writeText(window.location.href);
-            alert("Link copied to clipboard!");
-          });
-        });
-      }
-
-      function filterProducts() {
-        const spinner = document.getElementById("loading-spinner");
-        spinner.style.display = "block";
-        setTimeout(() => {
-          filteredProducts = products.filter(product => {
-            const matchesType = filterType.value === "all" || product.type === filterType.value;
-            const matchesPrice = filterPrice.value === "all" ||
-              (filterPrice.value === "low" && product.price < 10000) ||
-              (filterPrice.value === "medium" && product.price >= 10000 && product.price <= 20000) ||
-              (filterPrice.value === "high" && product.price > 20000);
-            const matchesMake = filterMake.value === "all" || product.make.toLowerCase() === filterMake.value;
-            const matchesOrigin = filterOrigin.value === "all" || product.origin === filterOrigin.value;
-            const matchesYear = filterYear.value === "all" || product.year.toString() === filterYear.value;
-            return matchesType && matchesPrice && matchesMake && matchesOrigin && matchesYear;
-          });
-          currentPage = 1;
-          document.getElementById("page-info").textContent = `Page ${currentPage}`;
-          updatePagination();
-          renderProducts(paginateProducts(filteredProducts));
-          spinner.style.display = "none";
-        }, 500);
-      }
-
-      filterType.addEventListener("change", filterProducts);
-      filterPrice.addEventListener("change", filterProducts);
-      filterMake.addEventListener("change", filterProducts);
-      filterOrigin.addEventListener("change", filterProducts);
-      filterYear.addEventListener("change", filterProducts);
-
-      document.getElementById("reset-filters").addEventListener("click", () => {
-        filterType.value = "all";
-        filterPrice.value = "all";
-        filterMake.value = "all";
-        filterOrigin.value = "all";
-        filterYear.value = "all";
-        sortOptions.value = "default";
-        filteredProducts = [...products];
-        currentPage = 1;
-        document.getElementById("page-info").textContent = `Page ${currentPage}`;
-        updatePagination();
-        renderProducts(paginateProducts(filteredProducts));
-      });
-
-      sortOptions.addEventListener("change", () => {
-        const sortValue = sortOptions.value;
-        if (sortValue === "price-asc") filteredProducts.sort((a, b) => a.price - b.price);
-        else if (sortValue === "price-desc") filteredProducts.sort((a, b) => b.price - a.price);
-        else if (sortValue === "year-asc") filteredProducts.sort((a, b) => a.year - b.year);
-        else if (sortValue === "year-desc") filteredProducts.sort((a, b) => b.year - a.year);
-        renderProducts(paginateProducts(filteredProducts));
-      });
-
-      function debounce(func, wait) {
-        let timeout;
-        return function (...args) {
-          clearTimeout(timeout);
-          timeout = setTimeout(() => func(...args), wait);
-        };
-      }
-
-      const searchBar = document.getElementById("search-bar");
-      const searchButton = document.getElementById("search-button");
-      const clearSearchButton = document.getElementById("clear-search");
-
-      const performSearch = debounce(() => {
-        const spinner = document.getElementById("loading-spinner");
-        spinner.style.display = "block";
-        setTimeout(() => {
-          const query = searchBar.value.toLowerCase();
-          filteredProducts = products.filter(product =>
-            product.make.toLowerCase().includes(query) ||
-            product.model.toLowerCase().includes(query) ||
-            product.price.toString().includes(query)
-          );
-          currentPage = 1;
-          document.getElementById("page-info").textContent = `Page ${currentPage}`;
-          updatePagination();
-          renderProducts(paginateProducts(filteredProducts));
-          spinner.style.display = "none";
-        }, 500);
-      }, 300);
-
-      searchButton.addEventListener("click", performSearch);
-      searchBar.addEventListener("input", performSearch);
-      clearSearchButton.addEventListener("click", () => {
-        searchBar.value = "";
-        filteredProducts = [...products];
-        currentPage = 1;
-        document.getElementById("page-info").textContent = `Page ${currentPage}`;
-        updatePagination();
-        renderProducts(paginateProducts(filteredProducts));
-      });
-
-      async function fetchFeaturedProducts() {
-        const featuredGrid = document.getElementById("featured-products");
-        try {
-          const response = await fetch("https://automobile-backend-dcd22d288ee3.herokuapp.com/api/vehicles");
-          if (!response.ok) throw new Error("Failed to fetch featured products");
-          const vehicles = await response.json();
-          const featuredProducts = vehicles.filter(v => v.featured).slice(0, 3);
-          featuredGrid.innerHTML = featuredProducts.length ? "" : '<p style="text-align: center;">No featured products available.</p>';
-          featuredProducts.forEach(product => {
-            featuredGrid.innerHTML += `
-              <div class="product-card">
-                <img src="${product.image}" alt="${product.make} ${product.model}" loading="lazy">
-                <div class="details">
-                  <h3>${product.make} ${product.model}</h3>
-                  <p class="price">$${product.price.toLocaleString()}</p>
-                  <p>Year: ${product.year}</p>
-                </div>
-              </div>
-            `;
-          });
-        } catch (error) {
-          featuredGrid.innerHTML = '<p style="text-align: center; color: #d63031;">Error loading featured products.</p>';
-        }
-      }
-
-      fetchProducts();
-      fetchFeaturedProducts();
-
-      document.getElementById("scroll-to-listings").addEventListener("click", () => {
-        document.getElementById("listings").scrollIntoView({ behavior: "smooth" });
-      });
-
-      const themeToggle = document.querySelector(".theme-toggle");
-      themeToggle.addEventListener("click", () => {
-        const currentTheme = document.documentElement.dataset.theme || "light";
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        document.documentElement.dataset.theme = newTheme;
-        themeToggle.textContent = newTheme === "dark" ? "☀️" : "🌙";
-        localStorage.setItem("theme", newTheme);
-      });
-
-      // Load saved theme
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme) {
-        document.documentElement.dataset.theme = savedTheme;
-        themeToggle.textContent = savedTheme === "dark" ? "☀️" : "🌙";
-      }
-
-      const backToTopButton = document.getElementById("back-to-top");
-      window.addEventListener("scroll", () => {
-        backToTopButton.style.display = window.scrollY > 200 ? "block" : "none";
-      });
-
-      backToTopButton.addEventListener("click", () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    });
-
-    function navigateToWelcomePage() {
-      window.location.href = "index.html";
+      // Load data for specific sections
+      if (sectionId === 'profile' && token) fetchProfile();
+      if (sectionId === 'feed') fetchPosts();
+      if (sectionId === 'notifications' && token) fetchNotifications();
+      if (sectionId === 'wishlist' && token) fetchWishlist();
     }
+
+    // Register
+    async function register() {
+      const firstName = document.getElementById('regFirstName').value;
+      const lastName = document.getElementById('regLastName').value;
+      const phoneNumber = document.getElementById('regPhoneNumber').value;
+      const password = document.getElementById('regPassword').value;
+      const dob = document.getElementById('regDob').value;
+      const gender = document.getElementById('regGender').value;
+      const profilePictureInput = document.getElementById('regProfilePicture');
+      let profilePicture = null;
+
+      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
+        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
+        return;
+      }
+
+      if (profilePictureInput.files.length > 0) {
+        profilePicture = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(profilePictureInput.files[0]);
+        });
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/users/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, lastName, phoneNumber, password, dob, gender, profilePicture })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Registration failed');
+        token = data.token;
+        currentUser = data.user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        alert('Registration successful!');
+        showSection('profile');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Login
+    async function login() {
+      const phoneNumber = document.getElementById('loginPhoneNumber').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
+        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/users/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber, password })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Login failed');
+        token = data.token;
+        currentUser = data.user;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        alert('Login successful!');
+        showSection('profile');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Request Password Reset
+    async function requestPasswordReset() {
+      const phoneNumber = document.getElementById('resetPhoneNumber').value;
+
+      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
+        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/users/password-reset-request`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Request failed');
+        alert(`Password reset token: ${data.token}\nCopy this token and use it in the Reset Password section.`);
+        showSection('passwordReset');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Reset Password
+    async function resetPassword() {
+      const token = document.getElementById('resetToken').value;
+      const newPassword = document.getElementById('newPassword').value;
+
+      try {
+        const response = await fetch(`${API_URL}/users/password-reset/${token}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: newPassword })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Password reset failed');
+        alert('Password reset successful! Please login with your new password.');
+        showSection('login');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Profile
+    async function fetchProfile() {
+      try {
+        const response = await fetch(`${API_URL}/users/profile`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const user = await response.json();
+        if (!response.ok) throw new Error(user.error || 'Failed to fetch profile');
+        currentUser = user;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        document.getElementById('profileInfo').innerHTML = `
+          <p>Username: ${user.username}</p>
+          <p>Phone Number: ${user.phoneNumber}</p>
+          <p>Bio: ${user.bio}</p>
+          <img src="${user.profilePicture}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
+        `;
+        fetchFollowers();
+        fetchFollowing();
+        fetchActivity();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Update Profile
+    async function updateProfile() {
+      const username = document.getElementById('updateUsername').value;
+      const phoneNumber = document.getElementById('updatePhoneNumber').value;
+      const bio = document.getElementById('updateBio').value;
+      const profilePictureInput = document.getElementById('updateProfilePicture');
+      let profilePicture = null;
+
+      if (phoneNumber && !phoneNumber.match(/^\+[0-9]{10,15}$/)) {
+        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
+        return;
+      }
+
+      if (profilePictureInput.files.length > 0) {
+        profilePicture = await new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(profilePictureInput.files[0]);
+        });
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/users/profile`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ username, phoneNumber, bio, profilePicture })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Update failed');
+        currentUser = data.user;
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        alert('Profile updated successfully!');
+        fetchProfile();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Followers
+    async function fetchFollowers() {
+      try {
+        const response = await fetch(`${API_URL}/users/followers`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const followers = await response.json();
+        if (!response.ok) throw new Error(followers.error || 'Failed to fetch followers');
+        document.getElementById('followers').innerHTML = followers.map(f => `
+          <p>${f.username} <button onclick="unfollow('${f._id}')">Unfollow</button></p>
+        `).join('');
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
+    // Fetch Following
+    async function fetchFollowing() {
+      try {
+        const response = await fetch(`${API_URL}/users/following`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const following = await response.json();
+        if (!response.ok) throw new Error(following.error || 'Failed to fetch following');
+        document.getElementById('following').innerHTML = following.map(f => `
+          <p>${f.username} (ID: ${f._id}) <button onclick="unfollow('${f._id}')">Unfollow</button></p>
+        `).join('');
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
+    // Fetch Activity
+    async function fetchActivity() {
+      try {
+        const response = await fetch(`${API_URL}/users/activity`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to fetch activity');
+        const activityHtml = `
+          <h4>Your Posts:</h4>
+          ${data.posts.map(p => `<p>${p.content || `${p.make} ${p.model}`}</p>`).join('')}
+          <h4>Your Comments:</h4>
+          ${data.comments.map(c => `<p>${c.content} on post: ${c.post.content || `${c.post.make} ${c.post.model}`}</p>`).join('')}
+        `;
+        document.getElementById('activity').innerHTML = activityHtml;
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+
+    // Follow User
+    async function follow(userId) {
+      try {
+        const response = await fetch(`${API_URL}/users/follow/${userId}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Follow failed');
+        alert('Followed successfully!');
+        fetchFollowing();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Unfollow User
+    async function unfollow(userId) {
+      try {
+        const response = await fetch(`${API_URL}/users/unfollow/${userId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Unfollow failed');
+        alert('Unfollowed successfully!');
+        fetchFollowers();
+        fetchFollowing();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Create Post
+    async function createPost() {
+      const content = document.getElementById('postContent').value;
+      const imagesInput = document.getElementById('postImages');
+      const type = document.getElementById('postType').value;
+      const make = document.getElementById('postMake').value;
+      const model = document.getElementById('postModel').value;
+      const price = document.getElementById('postPrice').value;
+      const year = document.getElementById('postYear').value;
+      const origin = document.getElementById('postOrigin').value;
+
+      const images = [];
+      if (imagesInput.files.length > 0) {
+        for (const file of imagesInput.files) {
+          const imageData = await new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({ data: reader.result, type: file.type });
+            reader.readAsDataURL(file);
+          });
+          images.push(imageData);
+        }
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/posts`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ content, images, type, make, model, price: Number(price), year: Number(year), origin })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Post creation failed');
+        alert('Post created successfully!');
+        showSection('feed');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Posts
+    async function fetchPosts() {
+      try {
+        const response = await fetch(`${API_URL}/posts`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to fetch posts');
+        document.getElementById('posts').innerHTML = data.posts.map(post => `
+          <div class="post">
+            <p><strong>${post.user.username}</strong> (${post.contact})</p>
+            <p>${post.content || ''}</p>
+            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
+            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
+            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
+            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
+            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
+            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
+            <p>Likes: ${post.likes} | Shares: ${post.shares}</p>
+            ${token ? `
+              <button onclick="likePost('${post._id}', ${post.likes})">Like</button>
+              ${post.user._id !== currentUser._id ? `<button onclick="follow('${post.user._id}')">Follow ${post.user.username}</button>` : ''}
+              <button onclick="addToWishlist('${post._id}')">Add to Wishlist</button>
+            ` : ''}
+            <h4>Comments:</h4>
+            ${post.comments.map(c => `
+              <div class="comment">
+                <p><strong>${c.user.username}</strong>: ${c.content}</p>
+                ${c.replies.map(r => `<p style="margin-left: 20px;">${r.user.username}: ${r.content}</p>`).join('')}
+              </div>
+            `).join('')}
+            ${token ? `
+              <div class="form-group">
+                <textarea id="comment-${post._id}" placeholder="Add a comment"></textarea>
+                <button onclick="addComment('${post._id}')">Comment</button>
+              </div>
+            ` : ''}
+          </div>
+        `).join('');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Like Post
+    async function likePost(postId, currentLikes) {
+      try {
+        const response = await fetch(`${API_URL}/posts/${postId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ likes: currentLikes + 1 })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Like failed');
+        fetchPosts();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Add Comment
+    async function addComment(postId) {
+      const content = document.getElementById(`comment-${postId}`).value;
+      try {
+        const response = await fetch(`${API_URL}/comments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ postId, content })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Comment failed');
+        fetchPosts();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Search Posts
+    async function searchPosts() {
+      const type = document.getElementById('searchType').value;
+      const make = document.getElementById('searchMake').value;
+      const model = document.getElementById('searchModel').value;
+      const minPrice = document.getElementById('searchMinPrice').value;
+      const maxPrice = document.getElementById('searchMaxPrice').value;
+      const origin = document.getElementById('searchOrigin').value;
+
+      const query = new URLSearchParams();
+      if (type) query.append('type', type);
+      if (make) query.append('make', make);
+      if (model) query.append('model', model);
+      if (minPrice) query.append('minPrice', minPrice);
+      if (maxPrice) query.append('maxPrice', maxPrice);
+      if (origin) query.append('origin', origin);
+
+      try {
+        const response = await fetch(`${API_URL}/posts/search?${query.toString()}`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Search failed');
+        document.getElementById('searchResults').innerHTML = data.posts.map(post => `
+          <div class="post">
+            <p><strong>${post.user.username}</strong> (${post.contact})</p>
+            <p>${post.content || ''}</p>
+            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
+            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
+            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
+            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
+            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
+            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
+            <p>Likes: ${post.likes} | Shares: ${post.shares}</p>
+            ${token ? `
+              <button onclick="likePost('${post._id}', ${post.likes})">Like</button>
+              ${post.user._id !== currentUser._id ? `<button onclick="follow('${post.user._id}')">Follow ${post.user.username}</button>` : ''}
+              <button onclick="addToWishlist('${post._id}')">Add to Wishlist</button>
+            ` : ''}
+          </div>
+        `).join('');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Send Message
+    async function sendMessage() {
+      const recipientId = document.getElementById('recipientId').value;
+      const content = document.getElementById('messageContent').value;
+
+      try {
+        const response = await fetch(`${API_URL}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ recipientId, content })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Message send failed');
+        fetchConversation(recipientId);
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Conversation
+    async function fetchConversation(recipientId) {
+      try {
+        const response = await fetch(`${API_URL}/messages/${recipientId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const messages = await response.json();
+        if (!response.ok) throw new Error(messages.error || 'Failed to fetch messages');
+        document.getElementById('conversation').innerHTML = messages.map(m => `
+          <div class="message">
+            <p><strong>${m.sender.username}</strong> to <strong>${m.recipient.username}</strong>: ${m.content}</p>
+            <p>${new Date(m.createdAt).toLocaleString()}</p>
+          </div>
+        `).join('');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Notifications
+    async function fetchNotifications() {
+      try {
+        const response = await fetch(`${API_URL}/users/notifications`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const notifications = await response.json();
+        if (!response.ok) throw new Error(notifications.error || 'Failed to fetch notifications');
+        document.getElementById('notificationsList').innerHTML = notifications.map(n => `
+          <p>${n.message} (${n.read ? 'Read' : '<button onclick="markNotificationRead(\'' + n._id + '\')">Mark as Read</button>'})</p>
+        `).join('');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Mark Notification as Read
+    async function markNotificationRead(notificationId) {
+      try {
+        const response = await fetch(`${API_URL}/users/notifications/${notificationId}/read`, {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to mark as read');
+        fetchNotifications();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Add to Wishlist
+    async function addToWishlist(postId) {
+      try {
+        const response = await fetch(`${API_URL}/users/wishlist/${postId}`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to add to wishlist');
+        alert('Added to wishlist!');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Fetch Wishlist
+    async function fetchWishlist() {
+      try {
+        const response = await fetch(`${API_URL}/users/wishlist`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const wishlist = await response.json();
+        if (!response.ok) throw new Error(wishlist.error || 'Failed to fetch wishlist');
+        document.getElementById('wishlistItems').innerHTML = wishlist.map(post => `
+          <div class="post">
+            <p><strong>${post.user.username}</strong> (${post.contact})</p>
+            <p>${post.content || ''}</p>
+            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
+            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
+            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
+            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
+            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
+            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
+            <button onclick="removeFromWishlist('${post._id}')">Remove from Wishlist</button>
+          </div>
+        `).join('');
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Remove from Wishlist
+    async function removeFromWishlist(postId) {
+      try {
+        const response = await fetch(`${API_URL}/users/wishlist/${postId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to remove from wishlist');
+        alert('Removed from wishlist!');
+        fetchWishlist();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    // Logout
+    function logout() {
+      token = null;
+      currentUser = {};
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      showSection('login');
+    }
+
+    // Initial Section
+    showSection(token ? 'profile' : 'login');
   </script>
 </body>
 </html>
