@@ -656,42 +656,6 @@
         let currentChatUserId = null;
 
         // Helper functions
-function showSection(sectionId, userId = null) {
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-    });
-    document.getElementById(sectionId).classList.add('active');
-    document.getElementById('error').textContent = '';
-    document.getElementById('searchBar').value = '';
-
-    if (sectionId === 'homeSection') {
-        fetchPosts();
-        fetchNotifications();
-    } else if (sectionId === 'profileSection') {
-        fetchUserProfile();
-    } else if (sectionId === 'otherProfileSection' && userId) {
-        fetchUserProfile(userId);
-    } else if (sectionId === 'messagesSection') {
-        fetchMessageThreads();
-    } else if (sectionId === 'notificationsSection') {
-        fetchNotifications(true);
-    }
-}
-
-// Toggle password visibility
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const toggleText = input.nextElementSibling;
-    if (input.type === 'password') {
-        input.type = 'text';
-        toggleText.textContent = 'Hide';
-    } else {
-        input.type = 'password';
-        toggleText.textContent = 'Show';
-    }
-}
-
-        // Helper functions
         function showSection(sectionId, userId = null) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
@@ -1436,4 +1400,111 @@ function togglePassword(inputId) {
         }
 
         // Handle sending a message
-        document.getElement
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const receiverUsername = document.getElementById('messageReceiver').value;
+            const content = document.getElementById('messageContent').value;
+
+            try {
+                const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${receiverUsername}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const users = await userResponse.json();
+                const receiver = users.find(user => user.username === receiverUsername);
+                if (!receiver) {
+                    throw new Error('User not found');
+                }
+
+                const response = await fetch(`${API_BASE_URL}/api/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ receiver: receiver._id, content })
+                });
+
+                const message = await response.json();
+                if (!response.ok) {
+                    throw new Error(message.error || 'Failed to send message');
+                }
+
+                currentChatUserId = receiver._id;
+                fetchMessages(receiver._id);
+                e.target.reset();
+                fetchNotifications();
+            } catch (error) {
+                displayError(error.message);
+            }
+        });
+
+        // Fetch notifications
+        async function fetchNotifications(showToSection = false) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/notifications`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const notifications = await response.json();
+
+                const unreadCount = notifications.filter(n => !n.read).length;
+                const countSpan = document.getElementById('notificationCount');
+                countSpan.textContent = unreadCount;
+                countSpan.style.display = unreadCount > 0 ? 'inline' : 'none';
+
+                if (showToSection) {
+                    const notificationList = document.getElementById('notificationList');
+                    notificationList.innerHTML = '';
+                    for (const notification of notifications) {
+                        let message = '';
+                        if (notification.type === 'like') {
+                            message = `${notification.fromUser.username} liked your post "${notification.post.title}"`;
+                        } else if (notification.type === 'comment') {
+                            message = `${notification.fromUser.username} commented on your post "${notification.post.title}"`;
+                        } else if (notification.type === 'follow') {
+                            message = `${notification.fromUser.username} followed you`;
+                        } else if (notification.type === 'message') {
+                            message = `${notification.fromUser.username} sent you a message: "${notification.message.content}"`;
+                        }
+
+                        const notificationDiv = document.createElement('div');
+                        notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
+                        notificationDiv.dataset.id = notification._id;
+                        notificationDiv.innerHTML = `
+                            <img src="${notification.fromUser.profilePicture}" alt="${notification.fromUser.username}">
+                            <span>${message}</span>
+                        `;
+                        notificationDiv.addEventListener('click', async () => {
+                            if (!notification.read) {
+                                await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                    }
+                                });
+                                fetchNotifications(true);
+                            }
+                            if (notification.type === 'message') {
+                                currentChatUserId = notification.fromUser._id;
+                                showSection('messagesSection');
+                                fetchMessages(notification.fromUser._id);
+                            } else if (notification.post) {
+                                fetchPosts();
+                                showSection('homeSection');
+                            }
+                        });
+                        notificationList.appendChild(notificationDiv);
+                    }
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
