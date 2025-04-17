@@ -3,214 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automobile App</title>
+    <title>TheMarts - Automobile Marketplace</title>
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 600px;
-            margin: 0 auto;
         }
-        h1, h2 {
-            text-align: center;
+        body {
+            background-color: #f0f2f5;
         }
-        form {
+        nav {
+            background-color: #1877f2;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        nav h1 {
+            font-size: 24px;
+        }
+        nav input {
+            padding: 8px;
+            width: 300px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .post-form, .car-post, .about, .contact {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .post-form form {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 20px;
         }
-        input, select, button {
+        .post-form input, .post-form textarea {
             padding: 10px;
-            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
-        button {
-            background-color: #007bff;
+        .post-form button {
+            padding: 10px;
+            background-color: #1877f2;
             color: white;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+        .post-form button:hover {
+            background-color: #145db2;
         }
-        #profile, #error {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        .car-post {
+            position: relative;
         }
-        #error {
-            color: red;
+        .car-post img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .car-post h3 {
+            margin: 10px 0;
+        }
+        .car-post p {
+            color: #333;
+        }
+        .car-post .actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .car-post .actions button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .car-post .like-btn {
+            background-color: #e4e6eb;
+        }
+        .car-post .like-btn.liked {
+            background-color: #1877f2;
+            color: white;
+        }
+        .car-post .comment-btn {
+            background-color: #e4e6eb;
+        }
+        .car-post .follow-btn {
+            background-color: #42b72a;
+            color: white;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .car-post .follow-btn.following {
+            background-color: #e4e6eb;
+            color: black;
+        }
+        .comments {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .comments input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .comments .comment {
+            background: #f0f2f5;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .about, .contact {
+            line-height: 1.6;
+        }
+        .contact a {
+            color: #1877f2;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <h1>Automobile App</h1>
+    <nav>
+        <h1>TheMarts</h1>
+        <input type="text" id="searchBar" placeholder="Search cars...">
+    </nav>
 
-    <!-- Registration Form -->
-    <h2>Register</h2>
-    <form id="registerForm">
-        <input type="text" id="regFirstName" placeholder="First Name" required>
-        <input type="text" id="regLastName" placeholder="Last Name" required>
-        <input type="text" id="regPhoneNumber" placeholder="Phone Number (e.g., +1234567890)" required>
-        <input type="password" id="regPassword" placeholder="Password" required>
-        <input type="date" id="regDob" required>
-        <select id="regGender" required>
-            <option value="" disabled selected>Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-        </select>
-        <button type="submit">Register</button>
-    </form>
+    <div class="container">
+        <!-- Post Form Section -->
+        <div id="homeSection" class="section active">
+            <div class="post-form">
+                <h2>Post a Car for Sale</h2>
+                <form id="carForm">
+                    <input type="text" id="carTitle" placeholder="Car Title (e.g., 2019 Toyota Camry)" required>
+                    <input type="text" id="carPrice" placeholder="Price (e.g., $15,000)" required>
+                    <textarea id="carDescription" placeholder="Description (e.g., mileage, condition, features)" required></textarea>
+                    <input type="text" id="carImage" placeholder="Image URL (e.g., https://via.placeholder.com/300)" required>
+                    <button type="submit">Post Car</button>
+                </form>
+            </div>
 
-    <!-- Login Form -->
-    <h2>Login</h2>
-    <form id="loginForm">
-        <input type="text" id="loginPhoneNumber" placeholder="Phone Number" required>
-        <input type="password" id="loginPassword" placeholder="Password" required>
-        <button type="submit">Login</button>
-    </form>
+            <!-- Car Listings -->
+            <div id="carListings"></div>
+        </div>
 
-    <!-- Profile Section -->
-    <h2>Profile</h2>
-    <button id="fetchProfile">Fetch Profile</button>
-    <div id="profile"></div>
+        <!-- About Section -->
+        <div id="aboutSection" class="section">
+            <div class="about">
+                <h2>About TheMarts</h2>
+                <p>TheMarts is a dedicated marketplace for automobile enthusiasts to buy, sell, and connect over their passion for cars. Our platform allows users to post their cars for sale, browse listings, comment, like, and follow other users. We aim to create a community where car lovers can share their vehicles and stories safely and easily.</p>
+                <p>Founded in 2025, TheMarts focuses exclusively on automobiles, ensuring a clutter-free experience with only car-related content. Join our growing community today!</p>
+            </div>
+        </div>
 
-    <!-- Error Section -->
-    <div id="error"></div>
+        <!-- Contact Section -->
+        <div id="contactSection" class="section">
+            <div class="contact">
+                <h2>Contact TheMarts Officials</h2>
+                <p>If you have any questions, feedback, or need support, feel free to reach out to us:</p>
+                <p>Email: <a href="mailto:support@themarts.com">support@themarts.com</a></p>
+                <p>Phone: +1 (555) 123-4567</p>
+                <p>Address: 123 Auto Lane, Car City, CA 90210</p>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // Set the API base URL to the deployed Heroku backend
-        const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
+        // Simulated user data (in a real app, this would come from a backend)
+        const currentUser = { id: 'user1', username: 'Current User' };
+        let users = JSON.parse(localStorage.getItem('users')) || {
+            'user1': { username: 'Current User', followers: [] },
+            'user2': { username: 'CarLover123', followers: [] }
+        };
+        let cars = JSON.parse(localStorage.getItem('cars')) || [];
+        let likes = JSON.parse(localStorage.getItem('likes')) || {};
+        let comments = JSON.parse(localStorage.getItem('comments')) || {};
 
-        // Helper function to display errors
-        function displayError(message) {
-            document.getElementById('error').textContent = message;
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('cars', JSON.stringify(cars));
+            localStorage.setItem('likes', JSON.stringify(likes));
+            localStorage.setItem('comments', JSON.stringify(comments));
         }
 
-        // Helper function to clear errors
-        function clearError() {
-            document.getElementById('error').textContent = '';
-        }
+        // Display car listings
+        function displayCars(searchTerm = '') {
+            const listingsDiv = document.getElementById('carListings');
+            listingsDiv.innerHTML = '';
 
-        // Helper function to display profile
-        function displayProfile(user) {
-            const profileDiv = document.getElementById('profile');
-            profileDiv.innerHTML = `
-                <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
-                <p><strong>Username:</strong> ${user.username}</p>
-                <p><strong>Phone Number:</strong> ${user.phoneNumber}</p>
-                <p><strong>Gender:</strong> ${user.gender}</p>
-                <p><strong>Date of Birth:</strong> ${new Date(user.dob).toLocaleDateString()}</p>
-                <p><strong>Bio:</strong> ${user.bio || 'Not set'}</p>
-            `;
-        }
+            const filteredCars = cars.filter(car => 
+                car.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                car.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
 
-        // Handle Registration
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearError();
+            filteredCars.forEach((car, index) => {
+                const carDiv = document.createElement('div');
+                carDiv.classList.add('car-post');
+                carDiv.innerHTML = `
+                    <h3>${car.title}</h3>
+                    <p><strong>Price:</strong> ${car.price}</p>
+                    <img src="${car.image}" alt="${car.title}">
+                    <p>${car.description}</p>
+                    <p><strong>Posted by:</strong> ${users[car.userId].username}</p>
+                    <button class="follow-btn ${users[currentUser.id].followers.includes(car.userId) ? 'following' : ''}" data-user="${car.userId}">
+                        ${users[currentUser.id].followers.includes(car.userId) ? 'Following' : 'Follow'}
+                    </button>
+                    <div class="actions">
+                        <button class="like-btn ${likes[`${currentUser.id}-${index}`] ? 'liked' : ''}" data-index="${index}">
+                            Like (${car.likes || 0})
+                        </button>
+                        <button class="comment-btn" data-index="${index}">Comment</button>
+                    </div>
+                    <div class="comments" id="comments-${index}" style="display: none;">
+                        <input type="text" class="comment-input" placeholder="Write a comment..." data-index="${index}">
+                        <div class="comment-list" id="comment-list-${index}"></div>
+                    </div>
+                `;
 
-            const firstName = document.getElementById('regFirstName').value;
-            const lastName = document.getElementById('regLastName').value;
-            const phoneNumber = document.getElementById('regPhoneNumber').value;
-            const password = document.getElementById('regPassword').value;
-            const dob = document.getElementById('regDob').value;
-            const gender = document.getElementById('regGender').value;
+                listingsDiv.appendChild(carDiv);
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/users/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        firstName,
-                        lastName,
-                        phoneNumber,
-                        password,
-                        dob,
-                        gender
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Registration failed');
+                // Display comments
+                const commentList = document.getElementById(`comment-list-${index}`);
+                if (comments[index]) {
+                    comments[index].forEach(comment => {
+                        const commentDiv = document.createElement('div');
+                        commentDiv.classList.add('comment');
+                        commentDiv.textContent = `${comment.username}: ${comment.text}`;
+                        commentList.appendChild(commentDiv);
+                    });
                 }
+            });
 
-                // Save token to localStorage
-                localStorage.setItem('token', data.token);
-                displayError('Registration successful! You can now log in.');
-            } catch (error) {
-                displayError(error.message);
-            }
+            // Add event listeners for like, comment, and follow buttons
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', handleLike);
+            });
+            document.querySelectorAll('.comment-btn').forEach(btn => {
+                btn.addEventListener('click', toggleComments);
+            });
+            document.querySelectorAll('.comment-input').forEach(input => {
+                input.addEventListener('keypress', handleComment);
+            });
+            document.querySelectorAll('.follow-btn').forEach(btn => {
+                btn.addEventListener('click', handleFollow);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('carForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('carTitle').value;
+            const price = document.getElementById('carPrice').value;
+            const description = document.getElementById('carDescription').value;
+            const image = document.getElementById('carImage').value;
+
+            const newCar = {
+                title,
+                price,
+                description,
+                image,
+                userId: currentUser.id,
+                likes: 0,
+                timestamp: new Date().toISOString()
+            };
+
+            cars.push(newCar);
+            saveData();
+            displayCars();
+            e.target.reset();
         });
 
-        // Handle Login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearError();
+        // Handle liking a post
+        function handleLike(e) {
+            const index = e.target.dataset.index;
+            const likeKey = `${currentUser.id}-${index}`;
 
-            const phoneNumber = document.getElementById('loginPhoneNumber').value;
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/users/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        phoneNumber,
-                        password
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Login failed');
-                }
-
-                // Save token to localStorage
-                localStorage.setItem('token', data.token);
-                displayError('Login successful! You can now fetch your profile.');
-            } catch (error) {
-                displayError(error.message);
+            if (likes[likeKey]) {
+                cars[index].likes--;
+                delete likes[likeKey];
+            } else {
+                cars[index].likes++;
+                likes[likeKey] = true;
             }
+
+            saveData();
+            displayCars(document.getElementById('searchBar').value);
+        }
+
+        // Toggle comments section
+        function toggleComments(e) {
+            const index = e.target.dataset.index;
+            const commentsDiv = document.getElementById(`comments-${index}`);
+            commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Handle commenting
+        function handleComment(e) {
+            if (e.key !== 'Enter') return;
+            const index = e.target.dataset.index;
+            const commentText = e.target.value.trim();
+            if (!commentText) return;
+
+            if (!comments[index]) comments[index] = [];
+            comments[index].push({
+                username: currentUser.username,
+                text: commentText
+            });
+
+            e.target.value = '';
+            saveData();
+            displayCars(document.getElementById('searchBar').value);
+        }
+
+        // Handle following a user
+        function handleFollow(e) {
+            const userId = e.target.dataset.user;
+            const followers = users[currentUser.id].followers;
+
+            if (followers.includes(userId)) {
+                followers.splice(followers.indexOf(userId), 1);
+            } else {
+                followers.push(userId);
+            }
+
+            saveData();
+            displayCars(document.getElementById('searchBar').value);
+        }
+
+        // Search functionality
+        document.getElementById('searchBar').addEventListener('input', (e) => {
+            displayCars(e.target.value);
         });
 
-        // Handle Fetch Profile
-        document.getElementById('fetchProfile').addEventListener('click', async () => {
-            clearError();
-            document.getElementById('profile').innerHTML = '';
+        // Initial display
+        displayCars();
 
-            const token = localStorage.getItem('token');
-            if (!token) {
-                displayError('No token found. Please register or log in first.');
-                return;
-            }
+        // Section navigation (using search bar keywords for simplicity)
+        document.getElementById('searchBar').addEventListener('keypress', (e) => {
+            if (e.key !== 'Enter') return;
+            const searchTerm = e.target.value.toLowerCase();
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
 
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to fetch profile');
-                }
-
-                displayProfile(data);
-            } catch (error) {
-                displayError(error.message);
+            if (searchTerm.includes('about')) {
+                document.getElementById('aboutSection').classList.add('active');
+            } else if (searchTerm.includes('contact')) {
+                document.getElementById('contactSection').classList.add('active');
+            } else {
+                document.getElementById('homeSection').classList.add('active');
+                displayCars(searchTerm);
             }
         });
     </script>
