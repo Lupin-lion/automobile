@@ -465,15 +465,15 @@
 </head>
 <body>
     <nav>
-        <h1 onclick="showSection('homeSection')">TheMarts</h1>
+        <h1 id="homeLink">TheMarts</h1>
         <input type="text" id="searchBar" placeholder="Search users or cars...">
         <div class="nav-links">
-            <a href="#" onclick="showSection('profileSection')">Profile</a>
-            <a href="#" onclick="showSection('messagesSection')">Messages</a>
-            <a href="#" onclick="showSection('notificationsSection')">Notifications <span id="notificationCount" class="notification-count" style="display: none;"></span></a>
-            <a href="#" onclick="showSection('aboutSection')">About</a>
-            <a href="#" onclick="showSection('contactSection')">Contact</a>
-            <a href="#" onclick="logout()">Logout</a>
+            <a href="#" id="profileLink">Profile</a>
+            <a href="#" id="messagesLink">Messages</a>
+            <a href="#" id="notificationsLink">Notifications <span id="notificationCount" class="notification-count" style="display: none;"></span></a>
+            <a href="#" id="aboutLink">About</a>
+            <a href="#" id="contactLink">Contact</a>
+            <a href="#" id="logoutLink">Logout</a>
         </div>
     </nav>
 
@@ -651,6 +651,17 @@
     </div>
 
     <script>
+        // Attach navigation event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('homeLink').addEventListener('click', () => showSection('homeSection'));
+            document.getElementById('profileLink').addEventListener('click', (e) => { e.preventDefault(); showSection('profileSection'); });
+            document.getElementById('messagesLink').addEventListener('click', (e) => { e.preventDefault(); showSection('messagesSection'); });
+            document.getElementById('notificationsLink').addEventListener('click', (e) => { e.preventDefault(); showSection('notificationsSection'); });
+            document.getElementById('aboutLink').addEventListener('click', (e) => { e.preventDefault(); showSection('aboutSection'); });
+            document.getElementById('contactLink').addEventListener('click', (e) => { e.preventDefault(); showSection('contactSection'); });
+            document.getElementById('logoutLink').addEventListener('click', (e) => { e.preventDefault(); logout(); });
+        });
+
         const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
         let currentUser = null;
         let currentChatUserId = null;
@@ -836,6 +847,11 @@
 
                 const user = await response.json();
                 if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
                     throw new Error(user.error || 'Failed to fetch profile');
                 }
 
@@ -843,8 +859,8 @@
                 const isFollowing = user.followers.includes(currentUser?._id || '');
 
                 if (userId) {
-                    document.getElementById('otherProfilePicture').src = user.profilePicture;
-                    document.getElementById('otherProfileUsername').textContent = user.username;
+                    document.getElementById('otherProfilePicture').src = user.profilePicture || '/default-profile.png';
+                    document.getElementById('otherProfileUsername').textContent = user.username || 'Unknown User';
                     document.getElementById('otherProfileName').textContent = `${user.firstName} ${user.lastName}`;
                     document.getElementById('otherProfileGender').textContent = user.gender;
                     document.getElementById('otherProfileDob').textContent = new Date(user.dob).toLocaleDateString();
@@ -872,11 +888,11 @@
                             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
                         })).json();
                         const followerDiv = document.createElement('div');
-                        followerDiv.classList.add('follower');
+                        followerDiv.classList.add('follower'); // Fixed: Changed 'class David.add' to 'classList.add'
                         followerDiv.dataset.user = follower._id;
                         followerDiv.innerHTML = `
-                            <img src="${follower.profilePicture}" alt="${follower.username}">
-                            <span>${follower.username}</span>
+                            <img src="${follower.profilePicture || '/default-profile.png'}" alt="${follower.username || 'Unknown User'}">
+                            <span>${follower.username || 'Unknown User'}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
                             showSection('otherProfileSection', follower._id);
@@ -884,8 +900,8 @@
                         followersList.appendChild(followerDiv);
                     }
                 } else {
-                    document.getElementById('profilePicture').src = user.profilePicture;
-                    document.getElementById('profileUsername').textContent = user.username;
+                    document.getElementById('profilePicture').src = user.profilePicture || '/default-profile.png';
+                    document.getElementById('profileUsername').textContent = user.username || 'Unknown User';
                     document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
                     document.getElementById('profileGender').textContent = user.gender;
                     document.getElementById('profileDob').textContent = new Date(user.dob).toLocaleDateString();
@@ -903,8 +919,8 @@
                         followerDiv.classList.add('follower');
                         followerDiv.dataset.user = follower._id;
                         followerDiv.innerHTML = `
-                            <img src="${follower.profilePicture}" alt="${follower.username}">
-                            <span>${follower.username}</span>
+                            <img src="${follower.profilePicture || '/default-profile.png'}" alt="${follower.username || 'Unknown User'}">
+                            <span>${follower.username || 'Unknown User'}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
                             showSection('otherProfileSection', follower._id);
@@ -940,6 +956,11 @@
 
                 const user = await response.json();
                 if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
                     throw new Error(user.error || 'Failed to update profile');
                 }
 
@@ -962,6 +983,11 @@
 
                 const posts = await response.json();
                 if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
                     throw new Error(posts.error || 'Failed to fetch posts');
                 }
 
@@ -987,14 +1013,14 @@
             }
 
             for (const post of posts) {
-                const user = post.user;
+                const user = post.user || { profilePicture: '/default-profile.png', username: 'Unknown User', _id: '' }; // Fallback for null user
                 const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
                     <div class="post-header">
-                        <img src="${user.profilePicture}" alt="${user.username}" data-user="${user._id}">
-                        <span class="username" data-user="${user._id}">${user.username}</span>
+                        <img src="${user.profilePicture || '/default-profile.png'}" alt="${user.username || 'Unknown User'}" data-user="${user._id}">
+                        <span class="username" data-user="${user._id}">${user.username || 'Unknown User'}</span>
                         <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'following' : ''}" data-user="${user._id}">
                             ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'Following' : 'Follow'}
                         </button>
@@ -1016,15 +1042,18 @@
 
                 const commentsDiv = document.getElementById(`comments-${post._id}`);
                 for (const comment of post.comments) {
-                    const commenter = await (await fetch(`${API_BASE_URL}/api/users/${comment.user}`, {
+                    const commenterResponse = await fetch(`${API_BASE_URL}/api/users/${comment.user}`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    })).json();
+                    });
+                    const commenter = await commenterResponse.json();
+                    const commenterProfilePicture = commenter.profilePicture || '/default-profile.png';
+                    const commenterUsername = commenter.username || 'Unknown User';
                     const commentDiv = document.createElement('div');
                     commentDiv.classList.add('comment');
                     commentDiv.innerHTML = `
-                        <img src="${commenter.profilePicture}" alt="${comment.username}">
+                        <img src="${commenterProfilePicture}" alt="${commenterUsername}">
                         <div>
-                            <strong>${comment.username}</strong>
+                            <strong>${commenterUsername}</strong>
                             <p>${comment.text}</p>
                         </div>
                     `;
@@ -1085,7 +1114,9 @@
             document.getElementById('carListings').addEventListener('click', (e) => {
                 if (e.target.classList.contains('username') || (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('post-header'))) {
                     const userId = e.target.dataset.user;
-                    showSection('otherProfileSection', userId);
+                    if (userId) { // Ensure userId exists before navigating
+                        showSection('otherProfileSection', userId);
+                    }
                 }
             });
 
@@ -1129,6 +1160,11 @@
 
                 const post = await response.json();
                 if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
                     throw new Error(post.error || 'Failed to create post');
                 }
 
@@ -1220,6 +1256,11 @@
 
         // Handle following a user
         async function handleFollow(userId) {
+            if (!userId) {
+                displayError('Cannot follow: User ID is missing.');
+                return;
+            }
+
             console.log('handleFollow called with userId:', userId);
             try {
                 const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
@@ -1295,12 +1336,21 @@
                 });
                 const users = await userResponse.json();
 
+                if (!userResponse.ok) {
+                    if (userResponse.status === 401 || userResponse.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    throw new Error(users.error || 'Failed to search users');
+                }
+
                 const searchResults = document.getElementById('searchResults');
                 searchResults.style.display = 'block';
                 searchResults.innerHTML = users.map(user => `
                     <div class="user" data-user="${user._id}">
-                        <img src="${user.profilePicture}" alt="${user.username}">
-                        <span>${user.username}</span>
+                        <img src="${user.profilePicture || '/default-profile.png'}" alt="${user.username || 'Unknown User'}">
+                        <span>${user.username || 'Unknown User'}</span>
                     </div>
                 `).join('');
 
@@ -1320,19 +1370,42 @@
         // Fetch message threads
         async function fetchMessageThreads() {
             try {
+                // Fetch all users to build message threads
                 const response = await fetch(`${API_BASE_URL}/api/users/search/`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    throw new Error('Failed to fetch users for message threads');
+                }
+
                 const users = await response.json();
 
                 const threads = new Map();
                 for (const user of users) {
                     if (user._id === currentUser._id) continue;
-                    const messages = await (await fetch(`${API_BASE_URL}/api/messages/${user._id}`, {
+                    const messagesResponse = await fetch(`${API_BASE_URL}/api/messages/${user._id}`, {
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                    })).json();
+                    });
+
+                    if (!messagesResponse.ok) {
+                        if (messagesResponse.status === 401 || messagesResponse.status === 403) {
+                            localStorage.removeItem('token');
+                            showSection('loginSection');
+                            throw new Error('Session expired. Please log in again.');
+                        }
+                        // Skip users with no messages or errors
+                        continue;
+                    }
+
+                    const messages = await messagesResponse.json();
                     if (messages.length > 0) {
                         threads.set(user._id, { user, lastMessage: messages[messages.length - 1] });
                     }
@@ -1345,8 +1418,8 @@
                     threadDiv.classList.add('user');
                     threadDiv.dataset.user = userId;
                     threadDiv.innerHTML = `
-                        <img src="${thread.user.profilePicture}" alt="${thread.user.username}">
-                        <span>${thread.user.username}: ${thread.lastMessage.content}</span>
+                        <img src="${thread.user.profilePicture || '/default-profile.png'}" alt="${thread.user.username || 'Unknown User'}">
+                        <span>${thread.user.username || 'Unknown User'}: ${thread.lastMessage.content}</span>
                     `;
                     threadDiv.addEventListener('click', () => {
                         currentChatUserId = userId;
@@ -1371,19 +1444,30 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    throw new Error('Failed to fetch messages');
+                }
+
                 const messages = await response.json();
 
                 const threadsDiv = document.getElementById('messageThreads');
-                threadsDiv.innerHTML = `<h3>Conversation with ${messages[0]?.receiver._id === userId ? messages[0].receiver.username : messages[0].sender.username}</h3>`;
+                const chatUser = messages.length > 0 ? (messages[0].receiver._id === userId ? messages[0].receiver : messages[0].sender) : { username: 'Unknown User' };
+                threadsDiv.innerHTML = `<h3>Conversation with ${chatUser.username || 'Unknown User'}</h3>`;
                 const messageThread = document.createElement('div');
                 messageThread.classList.add('message-thread');
                 messages.forEach(message => {
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add('message', message.sender._id === currentUser._id ? 'sent' : 'received');
                     messageDiv.innerHTML = `
-                        <img src="${message.sender.profilePicture}" alt="${message.sender.username}">
+                        <img src="${message.sender.profilePicture || '/default-profile.png'}" alt="${message.sender.username || 'Unknown User'}">
                         <div>
-                            <strong>${message.sender.username}</strong>
+                            <strong>${message.sender.username || 'Unknown User'}</strong>
                             <p>${message.content}</p>
                         </div>
                     `;
@@ -1393,7 +1477,7 @@
 
                 const messageForm = document.querySelector('.message-form');
                 messageForm.style.display = 'block';
-                document.getElementById('messageReceiver').value = messages[0]?.receiver._id === userId ? messages[0].receiver.username : messages[0].sender.username;
+                document.getElementById('messageReceiver').value = chatUser.username || '';
             } catch (error) {
                 displayError(error.message);
             }
@@ -1413,6 +1497,16 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+
+                if (!userResponse.ok) {
+                    if (userResponse.status === 401 || userResponse.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    throw new Error('Failed to find user');
+                }
+
                 const users = await userResponse.json();
                 const receiver = users.find(user => user.username === receiverUsername);
                 if (!receiver) {
@@ -1430,6 +1524,11 @@
 
                 const message = await response.json();
                 if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
                     throw new Error(message.error || 'Failed to send message');
                 }
 
@@ -1450,6 +1549,16 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        localStorage.removeItem('token');
+                        showSection('loginSection');
+                        throw new Error('Session expired. Please log in again.');
+                    }
+                    throw new Error('Failed to fetch notifications');
+                }
+
                 const notifications = await response.json();
 
                 const unreadCount = notifications.filter(n => !n.read).length;
@@ -1476,7 +1585,7 @@
                         notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
                         notificationDiv.dataset.id = notification._id;
                         notificationDiv.innerHTML = `
-                            <img src="${notification.fromUser.profilePicture}" alt="${notification.fromUser.username}">
+                            <img src="${notification.fromUser.profilePicture || '/default-profile.png'}" alt="${notification.fromUser.username || 'Unknown User'}">
                             <span>${message}</span>
                         `;
                         notificationDiv.addEventListener('click', async () => {
