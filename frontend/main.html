@@ -9,21 +9,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
         body {
             background-color: #f0f2f5;
         }
         nav {
-            background-color: #1877f2;
+            background-color: #4267B2;
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         nav h1 {
             font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
         }
         nav .nav-links {
@@ -34,16 +39,18 @@
             color: white;
             text-decoration: none;
             font-size: 16px;
+            font-weight: 500;
         }
         nav .nav-links a:hover {
             text-decoration: underline;
         }
         nav input {
-            padding: 8px;
+            padding: 8px 12px;
             width: 300px;
             border-radius: 20px;
             border: none;
             outline: none;
+            font-size: 14px;
         }
         .container {
             max-width: 800px;
@@ -61,12 +68,12 @@
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        .auth-form form, .post-form form {
+        .auth-form form, .post-form form, .edit-profile-form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
         .auth-form .password-container {
             position: relative;
@@ -76,6 +83,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
         }
         .auth-form .password-container .toggle-password {
             position: absolute;
@@ -83,150 +91,308 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #1877f2;
+            color: #4267B2;
+            font-size: 12px;
         }
-        .auth-form input, .post-form input, .post-form textarea, .auth-form select {
+        .auth-form input, .post-form input, .post-form textarea, .auth-form select, .edit-profile-form input, .edit-profile-form textarea {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
         }
-        .auth-form button, .post-form button, .create-post-btn, .back-btn {
+        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn {
             padding: 10px;
-            background-color: #1877f2;
+            background-color: #4267B2;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
         }
-        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover {
-            background-color: #145db2;
+        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover {
+            background-color: #365899;
         }
         .car-post {
             position: relative;
+            border-bottom: 1px solid #dddfe2;
+            padding-bottom: 15px;
         }
         .car-post img {
             width: 100%;
-            height: 200px;
+            height: 300px;
             object-fit: cover;
             border-radius: 4px;
+            margin-top: 10px;
         }
         .car-post h3 {
             margin: 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c1e21;
         }
         .car-post p {
-            color: #333;
+            color: #606770;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        .car-post .post-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .car-post .post-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .car-post .post-header .username {
+            font-size: 14px;
+            font-weight: 600;
+            color: #4267B2;
+            cursor: pointer;
+        }
+        .car-post .follow-btn {
+            background-color: #4267B2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: auto;
+        }
+        .car-post .follow-btn.following {
+            background-color: #e4e6eb;
+            color: #1c1e21;
         }
         .car-post .actions {
             margin-top: 10px;
             display: flex;
             gap: 10px;
+            border-top: 1px solid #dddfe2;
+            padding-top: 10px;
         }
         .car-post .actions button {
-            padding: 5px 10px;
+            flex: 1;
+            padding: 8px;
             border: none;
-            border-radius: 4px;
+            background: none;
+            color: #606770;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        .car-post .like-btn {
-            background-color: #e4e6eb;
+        .car-post .actions button:hover {
+            background-color: #f0f2f5;
+            border-radius: 4px;
         }
         .car-post .like-btn.liked {
-            background-color: #1877f2;
-            color: white;
-        }
-        .car-post .comment-btn {
-            background-color: #e4e6eb;
-        }
-        .car-post .follow-btn {
-            background-color: #42b72a;
-            color: white;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .car-post .follow-btn.following {
-            background-color: #e4e6eb;
-            color: black;
-        }
-        .car-post .username {
-            cursor: pointer;
-            color: #1877f2;
+            color: #4267B2;
         }
         .comments {
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #dddfe2;
         }
         .comments input {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 20px;
+            font-size: 14px;
         }
         .comments .comment {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .comments .comment img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .comments .comment div {
             background: #f0f2f5;
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 5px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            color: #1c1e21;
+        }
+        .comments .comment div strong {
+            font-weight: 600;
         }
         .profile {
-            text-align: center;
+            text-align: left;
         }
-        .profile img {
+        .profile .cover-photo {
+            width: 100%;
+            height: 200px;
+            background: #ddd;
+            border-radius: 8px 8px 0 0;
+        }
+        .profile .profile-header {
+            position: relative;
+            margin-top: -60px;
+            padding: 0 20px;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+        }
+        .profile .profile-header img {
             width: 120px;
             height: 120px;
             border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+        }
+        .profile .profile-header .info {
+            flex: 1;
             margin-bottom: 10px;
         }
-        .profile .follow-btn {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #42b72a;
+        .profile .profile-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1c1e21;
+        }
+        .profile .profile-header .follow-btn {
+            background-color: #4267B2;
             color: white;
             border: none;
             border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
         }
-        .profile .follow-btn.following {
+        .profile .profile-header .follow-btn.following {
             background-color: #e4e6eb;
-            color: black;
+            color: #1c1e21;
+        }
+        .profile .profile-details {
+            padding: 20px;
+            border-top: 1px solid #dddfe2;
+        }
+        .profile .profile-details p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #1c1e21;
+        }
+        .profile .profile-details p strong {
+            color: #606770;
+        }
+        .profile .followers-list {
+            margin-top: 20px;
+        }
+        .profile .followers-list h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1c1e21;
+            margin-bottom: 10px;
+        }
+        .profile .followers-list .follower {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .profile .followers-list .follower:hover {
+            background-color: #f0f2f5;
+        }
+        .profile .followers-list .follower img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .profile .followers-list .follower span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1c1e21;
         }
         .search-results {
             background: white;
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 20px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .search-results .user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             padding: 10px;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #dddfe2;
             cursor: pointer;
         }
         .search-results .user:last-child {
             border-bottom: none;
         }
+        .search-results .user img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .search-results .user span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1c1e21;
+        }
         .about, .contact {
             line-height: 1.6;
+            font-size: 14px;
+            color: #1c1e21;
         }
         .contact a {
-            color: #1877f2;
+            color: #4267B2;
             text-decoration: none;
         }
         #error {
-            color: red;
+            color: #d32f2f;
             text-align: center;
             margin-bottom: 20px;
+            font-size: 14px;
         }
         .create-post-btn {
             margin-bottom: 20px;
             display: block;
             width: 100%;
             text-align: center;
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            font-weight: 500;
+        }
+        .create-post-btn:hover {
+            background-color: #e4e6eb;
         }
         .back-btn {
             margin-bottom: 10px;
             display: block;
+            background-color: #e4e6eb;
+            color: #1c1e21;
+            font-weight: 500;
+        }
+        .back-btn:hover {
+            background-color: #dadde1;
+        }
+        .edit-profile-form {
+            display: none;
+        }
+        .edit-profile-form.active {
+            display: flex;
         }
     </style>
 </head>
@@ -313,13 +479,56 @@
         <!-- Profile Section -->
         <div id="profileSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
-            <div class="profile" id="userProfile"></div>
+            <div class="profile" id="userProfile">
+                <div class="cover-photo"></div>
+                <div class="profile-header">
+                    <img id="profilePicture" src="" alt="">
+                    <div class="info">
+                        <h2 id="profileUsername"></h2>
+                        <button class="edit-profile-btn" onclick="showEditProfileForm()">Edit Profile</button>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <p><strong>Name:</strong> <span id="profileName"></span></p>
+                    <p><strong>Gender:</strong> <span id="profileGender"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
+                    <p><strong>Bio:</strong> <span id="profileBio"></span></p>
+                    <p><strong>Followers:</strong> <span id="profileFollowersCount"></span></p>
+                    <div class="followers-list" id="followersList"></div>
+                </div>
+                <div class="edit-profile-form" id="editProfileForm">
+                    <h3>Edit Profile</h3>
+                    <form id="editProfileFormSubmit" enctype="multipart/form-data">
+                        <textarea id="editBio" placeholder="Update your bio"></textarea>
+                        <input type="file" id="editProfilePicture" accept="image/*">
+                        <button type="submit" class="save-profile-btn">Save</button>
+                        <button type="button" class="back-btn" onclick="hideEditProfileForm()">Cancel</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Other User's Profile Section -->
         <div id="otherProfileSection" class="section">
             <button class="back-btn" onclick="showSection('homeSection')">Back</button>
-            <div class="profile" id="otherUserProfile"></div>
+            <div class="profile" id="otherUserProfile">
+                <div class="cover-photo"></div>
+                <div class="profile-header">
+                    <img id="otherProfilePicture" src="" alt="">
+                    <div class="info">
+                        <h2 id="otherProfileUsername"></h2>
+                        <button class="follow-btn" id="otherProfileFollowBtn"></button>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <p><strong>Name:</strong> <span id="otherProfileName"></span></p>
+                    <p><strong>Gender:</strong> <span id="otherProfileGender"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="otherProfileDob"></span></p>
+                    <p><strong>Bio:</strong> <span id="otherProfileBio"></span></p>
+                    <p><strong>Followers:</strong> <span id="otherProfileFollowersCount"></span></p>
+                    <div class="followers-list" id="otherFollowersList"></div>
+                </div>
+            </div>
         </div>
 
         <!-- About Section -->
@@ -384,6 +593,20 @@
                 input.type = 'password';
                 toggleText.textContent = 'Show';
             }
+        }
+
+        // Show/hide edit profile form
+        function showEditProfileForm() {
+            document.getElementById('editProfileForm').classList.add('active');
+            document.querySelector('.profile-details').style.display = 'none';
+            document.querySelector('.edit-profile-btn').style.display = 'none';
+        }
+
+        function hideEditProfileForm() {
+            document.getElementById('editProfileForm').classList.remove('active');
+            document.querySelector('.profile-details').style.display = 'block';
+            document.querySelector('.edit-profile-btn').style.display = 'block';
+            fetchUserProfile();
         }
 
         // Initialize the app: Check for token and fetch user profile
@@ -511,28 +734,109 @@
 
                 const profileDiv = userId ? document.getElementById('otherUserProfile') : document.getElementById('userProfile');
                 const isFollowing = user.followers.includes(currentUser?._id || '');
-                profileDiv.innerHTML = `
-                    <img src="${user.profilePicture}" alt="${user.username}">
-                    <h2>${user.username}</h2>
-                    <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
-                    <p><strong>Gender:</strong> ${user.gender}</p>
-                    <p><strong>Date of Birth:</strong> ${new Date(user.dob).toLocaleDateString()}</p>
-                    <p><strong>Bio:</strong> ${user.bio || 'Not set'}</p>
-                    <p><strong>Followers:</strong> ${user.followers.length}</p>
-                    ${userId && userId !== currentUser?._id ? `
-                        <button class="follow-btn ${isFollowing ? 'following' : ''}" data-user="${user._id}">
-                            ${isFollowing ? 'Following' : 'Follow'}
-                        </button>
-                    ` : ''}
-                `;
 
-                if (userId && userId !== currentUser?._id) {
-                    document.querySelector('.follow-btn').addEventListener('click', handleFollow);
+                if (userId) {
+                    document.getElementById('otherProfilePicture').src = user.profilePicture;
+                    document.getElementById('otherProfileUsername').textContent = user.username;
+                    document.getElementById('otherProfileName').textContent = `${user.firstName} ${user.lastName}`;
+                    document.getElementById('otherProfileGender').textContent = user.gender;
+                    document.getElementById('otherProfileDob').textContent = new Date(user.dob).toLocaleDateString();
+                    document.getElementById('otherProfileBio').textContent = user.bio || 'Not set';
+                    document.getElementById('otherProfileFollowersCount').textContent = user.followers.length;
+
+                    const followBtn = document.getElementById('otherProfileFollowBtn');
+                    followBtn.textContent = isFollowing ? 'Following' : 'Follow';
+                    followBtn.className = `follow-btn ${isFollowing ? 'following' : ''}`;
+                    followBtn.dataset.user = user._id;
+                    followBtn.addEventListener('click', handleFollow);
+
+                    // Fetch followers
+                    const followersList = document.getElementById('otherFollowersList');
+                    followersList.innerHTML = '<h3>Followers</h3>';
+                    for (const followerId of user.followers) {
+                        const follower = await (await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        })).json();
+                        const followerDiv = document.createElement('div');
+                        followerDiv.classList.add('follower');
+                        followerDiv.dataset.user = follower._id;
+                        followerDiv.innerHTML = `
+                            <img src="${follower.profilePicture}" alt="${follower.username}">
+                            <span>${follower.username}</span>
+                        `;
+                        followerDiv.addEventListener('click', () => {
+                            showSection('otherProfileSection');
+                            fetchUserProfile(follower._id);
+                        });
+                        followersList.appendChild(followerDiv);
+                    }
+                } else {
+                    document.getElementById('profilePicture').src = user.profilePicture;
+                    document.getElementById('profileUsername').textContent = user.username;
+                    document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
+                    document.getElementById('profileGender').textContent = user.gender;
+                    document.getElementById('profileDob').textContent = new Date(user.dob).toLocaleDateString();
+                    document.getElementById('profileBio').textContent = user.bio || 'Not set';
+                    document.getElementById('profileFollowersCount').textContent = user.followers.length;
+
+                    // Fetch followers
+                    const followersList = document.getElementById('followersList');
+                    followersList.innerHTML = '<h3>Followers</h3>';
+                    for (const followerId of user.followers) {
+                        const follower = await (await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
+                            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                        })).json();
+                        const followerDiv = document.createElement('div');
+                        followerDiv.classList.add('follower');
+                        followerDiv.dataset.user = follower._id;
+                        followerDiv.innerHTML = `
+                            <img src="${follower.profilePicture}" alt="${follower.username}">
+                            <span>${follower.username}</span>
+                        `;
+                        followerDiv.addEventListener('click', () => {
+                            showSection('otherProfileSection');
+                            fetchUserProfile(follower._id);
+                        });
+                        followersList.appendChild(followerDiv);
+                    }
                 }
             } catch (error) {
                 displayError(error.message);
             }
         }
+
+        // Handle profile update
+        document.getElementById('editProfileFormSubmit').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const bio = document.getElementById('editBio').value;
+            const profilePicture = document.getElementById('editProfilePicture').files[0];
+
+            const formData = new FormData();
+            if (bio) formData.append('bio', bio);
+            if (profilePicture) formData.append('profilePicture', profilePicture);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+
+                const user = await response.json();
+                if (!response.ok) {
+                    throw new Error(user.error || 'Failed to update profile');
+                }
+
+                currentUser = user;
+                hideEditProfileForm();
+            } catch (error) {
+                displayError(error.message);
+            }
+        });
 
         // Fetch posts
         async function fetchPosts(searchTerm = '') {
@@ -556,54 +860,69 @@
         }
 
         // Display posts
-        function displayPosts(posts) {
+        async function displayPosts(posts) {
             const listingsDiv = document.getElementById('carListings');
             listingsDiv.innerHTML = '';
 
-            posts.forEach(post => {
+            for (const post of posts) {
+                const user = post.user;
                 const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
+                    <div class="post-header">
+                        <img src="${user.profilePicture}" alt="${user.username}">
+                        <span class="username" data-user="${user._id}">${user.username}</span>
+                        <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'following' : ''}" data-user="${user._id}">
+                            ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'Following' : 'Follow'}
+                        </button>
+                    </div>
                     <h3>${post.title}</h3>
                     <p><strong>Price:</strong> ${post.price}</p>
-                    <img src="${post.image}" alt="${post.title}">
                     <p>${post.description}</p>
-                    <p><strong>Posted by:</strong> <span class="username" data-user="${post.user._id}">${post.user.username}</span></p>
-                    <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(post.user._id) ? 'following' : ''}" data-user="${post.user._id}">
-                        ${currentUser && currentUser.following && currentUser.following.includes(post.user._id) ? 'Following' : 'Follow'}
-                    </button>
+                    <img src="${post.image}" alt="${post.title}">
                     <div class="actions">
                         <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
                             Like (${post.likes.length})
                         </button>
-                        <button class="comment-btn" data-id="${post._id}">Comment</button>
+                        <button class="comment-btn" data-id="${post._id}">Comment (${post.comments.length})</button>
                     </div>
-                    <div class="comments" id="comments-${post._id}" style="display: none;">
-                        <input type="text" class="comment-input" placeholder="Write a comment..." data-id="${post._id}">
-                        <div class="comment-list" id="comment-list-${post._id}"></div>
-                    </div>
+                    <div class="comments" id="comments-${post._id}" style="display: none;"></div>
                 `;
 
                 listingsDiv.appendChild(carDiv);
 
-                const commentList = document.getElementById(`comment-list-${post._id}`);
-                post.comments.forEach(comment => {
+                const commentsDiv = document.getElementById(`comments-${post._id}`);
+                for (const comment of post.comments) {
+                    const commenter = await (await fetch(`${API_BASE_URL}/api/users/${comment.user}`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    })).json();
                     const commentDiv = document.createElement('div');
                     commentDiv.classList.add('comment');
-                    commentDiv.textContent = `${comment.username}: ${comment.text}`;
-                    commentList.appendChild(commentDiv);
-                });
-            });
+                    commentDiv.innerHTML = `
+                        <img src="${commenter.profilePicture}" alt="${comment.username}">
+                        <div>
+                            <strong>${comment.username}</strong>
+                            <p>${comment.text}</p>
+                        </div>
+                    `;
+                    commentsDiv.appendChild(commentDiv);
+                }
+
+                const commentInput = document.createElement('input');
+                commentInput.type = 'text';
+                commentInput.className = 'comment-input';
+                commentInput.placeholder = 'Write a comment...';
+                commentInput.dataset.id = post._id;
+                commentInput.addEventListener('keypress', handleComment);
+                commentsDiv.appendChild(commentInput);
+            }
 
             document.querySelectorAll('.like-btn').forEach(btn => {
                 btn.addEventListener('click', handleLike);
             });
             document.querySelectorAll('.comment-btn').forEach(btn => {
                 btn.addEventListener('click', toggleComments);
-            });
-            document.querySelectorAll('.comment-input').forEach(input => {
-                input.addEventListener('keypress', handleComment);
             });
             document.querySelectorAll('.follow-btn').forEach(btn => {
                 btn.addEventListener('click', handleFollow);
@@ -785,8 +1104,8 @@
                 searchResults.style.display = 'block';
                 searchResults.innerHTML = users.map(user => `
                     <div class="user" data-user="${user._id}">
-                        <img src="${user.profilePicture}" alt="${user.username}" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                        ${user.username}
+                        <img src="${user.profilePicture}" alt="${user.username}">
+                        <span>${user.username}</span>
                     </div>
                 `).join('');
 
