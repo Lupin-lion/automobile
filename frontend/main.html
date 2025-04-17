@@ -68,12 +68,29 @@
             flex-direction: column;
             gap: 10px;
         }
+        .auth-form .password-container {
+            position: relative;
+        }
+        .auth-form .password-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .auth-form .password-container .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #1877f2;
+        }
         .auth-form input, .post-form input, .post-form textarea, .auth-form select {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-        .auth-form button, .post-form button {
+        .auth-form button, .post-form button, .create-post-btn, .back-btn {
             padding: 10px;
             background-color: #1877f2;
             color: white;
@@ -81,7 +98,7 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .auth-form button:hover, .post-form button:hover {
+        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover {
             background-color: #145db2;
         }
         .car-post {
@@ -201,6 +218,16 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .create-post-btn {
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+        .back-btn {
+            margin-bottom: 10px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -225,7 +252,10 @@
                 <h2>Login</h2>
                 <form id="loginForm">
                     <input type="text" id="loginPhoneNumber" placeholder="Phone Number" required>
-                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <div class="password-container">
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                        <span class="toggle-password" onclick="togglePassword('loginPassword')">Show</span>
+                    </div>
                     <button type="submit">Login</button>
                 </form>
                 <p>Don't have an account? <a href="#" onclick="showSection('registerSection')">Register</a></p>
@@ -235,12 +265,16 @@
         <!-- Register Section -->
         <div id="registerSection" class="section">
             <div class="auth-form">
+                <button class="back-btn" onclick="showSection('loginSection')">Back</button>
                 <h2>Register</h2>
                 <form id="registerForm">
                     <input type="text" id="regFirstName" placeholder="First Name" required>
                     <input type="text" id="regLastName" placeholder="Last Name" required>
                     <input type="text" id="regPhoneNumber" placeholder="Phone Number (e.g., +1234567890)" required>
-                    <input type="password" id="regPassword" placeholder="Password" required>
+                    <div class="password-container">
+                        <input type="password" id="regPassword" placeholder="Password" required>
+                        <span class="toggle-password" onclick="togglePassword('regPassword')">Show</span>
+                    </div>
                     <input type="date" id="regDob" required>
                     <select id="regGender" required>
                         <option value="" disabled selected>Select Gender</option>
@@ -257,31 +291,40 @@
         <!-- Home Section -->
         <div id="homeSection" class="section">
             <div class="search-results" id="searchResults" style="display: none;"></div>
+            <button class="create-post-btn" onclick="showSection('createPostSection')">Create Post</button>
+            <div id="carListings"></div>
+        </div>
+
+        <!-- Create Post Section -->
+        <div id="createPostSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="post-form">
                 <h2>Post a Car for Sale</h2>
-                <form id="carForm">
+                <form id="carForm" enctype="multipart/form-data">
                     <input type="text" id="carTitle" placeholder="Car Title (e.g., 2019 Toyota Camry)" required>
                     <input type="text" id="carPrice" placeholder="Price (e.g., $15,000)" required>
                     <textarea id="carDescription" placeholder="Description (e.g., mileage, condition)" required></textarea>
-                    <input type="text" id="carImage" placeholder="Image URL (e.g., https://via.placeholder.com/300)" required>
+                    <input type="file" id="carImage" accept="image/*" required>
                     <button type="submit">Post Car</button>
                 </form>
             </div>
-            <div id="carListings"></div>
         </div>
 
         <!-- Profile Section -->
         <div id="profileSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="profile" id="userProfile"></div>
         </div>
 
         <!-- Other User's Profile Section -->
         <div id="otherProfileSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="profile" id="otherUserProfile"></div>
         </div>
 
         <!-- About Section -->
         <div id="aboutSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="about">
                 <h2>About TheMarts</h2>
                 <p>TheMarts is a dedicated marketplace for automobile enthusiasts to buy, sell, and connect over their passion for cars. Our platform allows users to post their cars for sale, browse listings, comment, like, and follow other users. We focus exclusively on automobiles, ensuring a clutter-free experience with only car-related content.</p>
@@ -291,6 +334,7 @@
 
         <!-- Contact Section -->
         <div id="contactSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
             <div class="contact">
                 <h2>Contact TheMarts Officials</h2>
                 <p>If you have any questions, feedback, or need support, feel free to reach out to us:</p>
@@ -329,6 +373,19 @@
             document.getElementById('error').textContent = '';
         }
 
+        // Toggle password visibility
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const toggleText = input.nextElementSibling;
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleText.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                toggleText.textContent = 'Show';
+            }
+        }
+
         // Initialize the app: Check for token and fetch user profile
         (async function initializeApp() {
             const token = localStorage.getItem('token');
@@ -344,7 +401,7 @@
                         currentUser = user;
                         showSection('homeSection');
                     } else {
-                        localStorage.removeItem('token'); // Invalid token, clear it
+                        localStorage.removeItem('token');
                         showSection('loginSection');
                     }
                 } catch (error) {
@@ -567,16 +624,23 @@
             const title = document.getElementById('carTitle').value;
             const price = document.getElementById('carPrice').value;
             const description = document.getElementById('carDescription').value;
-            const image = document.getElementById('carImage').value;
+            const image = document.getElementById('carImage').files[0];
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('price', price);
+            formData.append('description', description);
+            if (image) {
+                formData.append('image', image);
+            }
 
             try {
                 const response = await fetch(`${API_BASE_URL}/api/posts`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ title, price, description, image })
+                    body: formData
                 });
 
                 const post = await response.json();
@@ -584,6 +648,7 @@
                     throw new Error(post.error || 'Failed to create post');
                 }
 
+                showSection('homeSection');
                 fetchPosts();
                 e.target.reset();
             } catch (error) {
