@@ -1416,4 +1416,46 @@
                         if (notification.type === 'like') {
                             message = `${notification.fromUser.username} liked your post "${notification.post.title}"`;
                         } else if (notification.type === 'comment') {
-                            message = `${notification.fromUser.username} commented on your post
+                            message = `${notification.fromUser.username} commented on your post "${notification.post.title}"`;
+                        } else if (notification.type === 'follow') {
+                            message = `${notification.fromUser.username} followed you`;
+                        } else if (notification.type === 'message') {
+                            message = `${notification.fromUser.username} sent you a message: "${notification.message.content}"`;
+                        }
+
+                        const notificationDiv = document.createElement('div');
+                        notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
+                        notificationDiv.dataset.id = notification._id;
+                        notificationDiv.innerHTML = `
+                            <img src="${notification.fromUser.profilePicture}" alt="${notification.fromUser.username}">
+                            <span>${message}</span>
+                        `;
+                        notificationDiv.addEventListener('click', async () => {
+                            if (!notification.read) {
+                                await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                                    }
+                                });
+                                fetchNotifications(true);
+                            }
+                            if (notification.type === 'message') {
+                                currentChatUserId = notification.fromUser._id;
+                                showSection('messagesSection');
+                                fetchMessages(notification.fromUser._id);
+                            } else if (notification.post) {
+                                fetchPosts();
+                                showSection('homeSection');
+                            }
+                        });
+                        notificationList.appendChild(notificationDiv);
+                    }
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+    </script>
+</body>
+</html>
