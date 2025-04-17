@@ -656,6 +656,42 @@
         let currentChatUserId = null;
 
         // Helper functions
+function showSection(sectionId, userId = null) {
+    document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+    });
+    document.getElementById(sectionId).classList.add('active');
+    document.getElementById('error').textContent = '';
+    document.getElementById('searchBar').value = '';
+
+    if (sectionId === 'homeSection') {
+        fetchPosts();
+        fetchNotifications();
+    } else if (sectionId === 'profileSection') {
+        fetchUserProfile();
+    } else if (sectionId === 'otherProfileSection' && userId) {
+        fetchUserProfile(userId);
+    } else if (sectionId === 'messagesSection') {
+        fetchMessageThreads();
+    } else if (sectionId === 'notificationsSection') {
+        fetchNotifications(true);
+    }
+}
+
+// Toggle password visibility
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggleText = input.nextElementSibling;
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggleText.textContent = 'Hide';
+    } else {
+        input.type = 'password';
+        toggleText.textContent = 'Show';
+    }
+}
+
+        // Helper functions
         function showSection(sectionId, userId = null) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
