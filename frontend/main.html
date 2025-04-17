@@ -34,6 +34,7 @@
         nav .nav-links {
             display: flex;
             gap: 20px;
+            align-items: center;
         }
         nav .nav-links a {
             color: white;
@@ -63,14 +64,14 @@
         .section.active {
             display: block;
         }
-        .auth-form, .post-form, .car-post, .profile, .about, .contact {
+        .auth-form, .post-form, .car-post, .profile, .about, .contact, .messages, .notifications {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        .auth-form form, .post-form form, .edit-profile-form {
+        .auth-form form, .post-form form, .edit-profile-form, .message-form {
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -94,13 +95,13 @@
             color: #4267B2;
             font-size: 12px;
         }
-        .auth-form input, .post-form input, .post-form textarea, .auth-form select, .edit-profile-form input, .edit-profile-form textarea {
+        .auth-form input, .post-form input, .post-form textarea, .auth-form select, .edit-profile-form input, .edit-profile-form textarea, .message-form input, .message-form textarea {
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
         }
-        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn {
+        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn, .message-form button, .connect-btn {
             padding: 10px;
             background-color: #4267B2;
             color: white;
@@ -110,7 +111,7 @@
             font-size: 14px;
             font-weight: 500;
         }
-        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover {
+        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover, .message-form button:hover, .connect-btn:hover {
             background-color: #365899;
         }
         .car-post {
@@ -147,6 +148,7 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
+            cursor: pointer;
         }
         .car-post .post-header .username {
             font-size: 14px;
@@ -259,13 +261,16 @@
         .profile .profile-header .info {
             flex: 1;
             margin-bottom: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
         .profile .profile-header h2 {
             font-size: 24px;
             font-weight: 600;
             color: #1c1e21;
         }
-        .profile .profile-header .follow-btn {
+        .profile .profile-header .follow-btn, .connect-btn {
             background-color: #4267B2;
             color: white;
             border: none;
@@ -394,6 +399,68 @@
         .edit-profile-form.active {
             display: flex;
         }
+        .messages .message-thread {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .messages .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .messages .message img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .messages .message div {
+            background: #f0f2f5;
+            padding: 8px 12px;
+            border-radius: 18px;
+            font-size: 14px;
+            color: #1c1e21;
+        }
+        .messages .message.sent div {
+            background: #4267B2;
+            color: white;
+        }
+        .notifications .notification {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #dddfe2;
+            cursor: pointer;
+        }
+        .notifications .notification:last-child {
+            border-bottom: none;
+        }
+        .notifications .notification.unread {
+            background-color: #e7f3ff;
+        }
+        .notifications .notification img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .notifications .notification span {
+            font-size: 14px;
+            color: #1c1e21;
+        }
+        .notification-count {
+            background: #d32f2f;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 8px;
+            font-size: 12px;
+            position: relative;
+            top: -10px;
+            left: -5px;
+        }
     </style>
 </head>
 <body>
@@ -402,6 +469,8 @@
         <input type="text" id="searchBar" placeholder="Search users or cars...">
         <div class="nav-links">
             <a href="#" onclick="showSection('profileSection')">Profile</a>
+            <a href="#" onclick="showSection('messagesSection')">Messages</a>
+            <a href="#" onclick="showSection('notificationsSection')">Notifications <span id="notificationCount" class="notification-count" style="display: none;"></span></a>
             <a href="#" onclick="showSection('aboutSection')">About</a>
             <a href="#" onclick="showSection('contactSection')">Contact</a>
             <a href="#" onclick="logout()">Logout</a>
@@ -518,6 +587,7 @@
                     <div class="info">
                         <h2 id="otherProfileUsername"></h2>
                         <button class="follow-btn" id="otherProfileFollowBtn"></button>
+                        <button class="connect-btn" id="connectBtn">Message</button>
                     </div>
                 </div>
                 <div class="profile-details">
@@ -528,6 +598,32 @@
                     <p><strong>Followers:</strong> <span id="otherProfileFollowersCount"></span></p>
                     <div class="followers-list" id="otherFollowersList"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messagesSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
+            <div class="messages">
+                <h2>Messages</h2>
+                <div id="messageThreads"></div>
+                <div class="message-form">
+                    <h3>Start a Conversation</h3>
+                    <form id="messageForm">
+                        <input type="text" id="messageReceiver" placeholder="Receiver's Username" required>
+                        <textarea id="messageContent" placeholder="Type your message..." required></textarea>
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div id="notificationsSection" class="section">
+            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
+            <div class="notifications">
+                <h2>Notifications</h2>
+                <div id="notificationList"></div>
             </div>
         </div>
 
@@ -557,9 +653,10 @@
     <script>
         const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
         let currentUser = null;
+        let currentChatUserId = null;
 
         // Helper functions
-        function showSection(sectionId) {
+        function showSection(sectionId, userId = null) {
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
@@ -569,8 +666,15 @@
 
             if (sectionId === 'homeSection') {
                 fetchPosts();
+                fetchNotifications();
             } else if (sectionId === 'profileSection') {
                 fetchUserProfile();
+            } else if (sectionId === 'otherProfileSection' && userId) {
+                fetchUserProfile(userId);
+            } else if (sectionId === 'messagesSection') {
+                fetchMessageThreads();
+            } else if (sectionId === 'notificationsSection') {
+                fetchNotifications(true);
             }
         }
 
@@ -623,6 +727,7 @@
                     if (response.ok) {
                         currentUser = user;
                         showSection('homeSection');
+                        fetchNotifications();
                     } else {
                         localStorage.removeItem('token');
                         showSection('loginSection');
@@ -663,6 +768,7 @@
                 currentUser = data.user;
                 showSection('homeSection');
                 fetchPosts();
+                fetchNotifications();
             } catch (error) {
                 displayError(error.message);
             }
@@ -705,6 +811,7 @@
                 currentUser = data.user;
                 showSection('homeSection');
                 fetchPosts();
+                fetchNotifications();
             } catch (error) {
                 displayError(error.message);
             }
@@ -748,7 +855,14 @@
                     followBtn.textContent = isFollowing ? 'Following' : 'Follow';
                     followBtn.className = `follow-btn ${isFollowing ? 'following' : ''}`;
                     followBtn.dataset.user = user._id;
-                    followBtn.addEventListener('click', handleFollow);
+
+                    const connectBtn = document.getElementById('connectBtn');
+                    connectBtn.dataset.user = user._id;
+                    connectBtn.addEventListener('click', () => {
+                        currentChatUserId = user._id;
+                        showSection('messagesSection');
+                        fetchMessages(user._id);
+                    });
 
                     // Fetch followers
                     const followersList = document.getElementById('otherFollowersList');
@@ -765,8 +879,7 @@
                             <span>${follower.username}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
-                            showSection('otherProfileSection');
-                            fetchUserProfile(follower._id);
+                            showSection('otherProfileSection', follower._id);
                         });
                         followersList.appendChild(followerDiv);
                     }
@@ -794,8 +907,7 @@
                             <span>${follower.username}</span>
                         `;
                         followerDiv.addEventListener('click', () => {
-                            showSection('otherProfileSection');
-                            fetchUserProfile(follower._id);
+                            showSection('otherProfileSection', follower._id);
                         });
                         followersList.appendChild(followerDiv);
                     }
@@ -871,7 +983,7 @@
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
                     <div class="post-header">
-                        <img src="${user.profilePicture}" alt="${user.username}">
+                        <img src="${user.profilePicture}" alt="${user.username}" data-user="${user._id}">
                         <span class="username" data-user="${user._id}">${user.username}</span>
                         <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'following' : ''}" data-user="${user._id}">
                             ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'Following' : 'Follow'}
@@ -914,25 +1026,63 @@
                 commentInput.className = 'comment-input';
                 commentInput.placeholder = 'Write a comment...';
                 commentInput.dataset.id = post._id;
-                commentInput.addEventListener('keypress', handleComment);
                 commentsDiv.appendChild(commentInput);
             }
 
-            document.querySelectorAll('.like-btn').forEach(btn => {
-                btn.addEventListener('click', handleLike);
+            // Attach event listeners using delegation
+            attachEventListeners();
+        }
+
+        // Attach event listeners using delegation
+        function attachEventListeners() {
+            // Like buttons
+            document.getElementById('carListings').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('like-btn')) {
+                    const postId = e.target.dataset.id;
+                    await handleLike(postId);
+                }
             });
-            document.querySelectorAll('.comment-btn').forEach(btn => {
-                btn.addEventListener('click', toggleComments);
+
+            // Comment buttons
+            document.getElementById('carListings').addEventListener('click', (e) => {
+                if (e.target.classList.contains('comment-btn')) {
+                    const postId = e.target.dataset.id;
+                    toggleComments(postId);
+                }
             });
-            document.querySelectorAll('.follow-btn').forEach(btn => {
-                btn.addEventListener('click', handleFollow);
+
+            // Comment inputs
+            document.getElementById('carListings').addEventListener('keypress', async (e) => {
+                if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
+                    const postId = e.target.dataset.id;
+                    await handleComment(postId, e.target);
+                }
             });
-            document.querySelectorAll('.username').forEach(span => {
-                span.addEventListener('click', () => {
-                    showSection('otherProfileSection');
-                    fetchUserProfile(span.dataset.user);
-                });
+
+            // Follow buttons
+            document.getElementById('carListings').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('follow-btn')) {
+                    const userId = e.target.dataset.user;
+                    await handleFollow(userId);
+                }
             });
+
+            // Profile navigation
+            document.getElementById('carListings').addEventListener('click', (e) => {
+                if (e.target.classList.contains('username') || (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('post-header'))) {
+                    const userId = e.target.dataset.user;
+                    showSection('otherProfileSection', userId);
+                }
+            });
+
+            // Follow button in other profile
+            const otherProfileFollowBtn = document.getElementById('otherProfileFollowBtn');
+            if (otherProfileFollowBtn) {
+                otherProfileFollowBtn.onclick = async () => {
+                    const userId = otherProfileFollowBtn.dataset.user;
+                    await handleFollow(userId);
+                };
+            }
         }
 
         // Handle post creation
@@ -976,9 +1126,7 @@
         });
 
         // Handle liking a post
-        async function handleLike(e) {
-            const postId = e.target.dataset.id;
-
+        async function handleLike(postId) {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
                     method: 'POST',
@@ -993,23 +1141,21 @@
                 }
 
                 fetchPosts();
+                fetchNotifications();
             } catch (error) {
                 displayError(error.message);
             }
         }
 
         // Toggle comments section
-        function toggleComments(e) {
-            const postId = e.target.dataset.id;
+        function toggleComments(postId) {
             const commentsDiv = document.getElementById(`comments-${postId}`);
             commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
         }
 
         // Handle commenting
-        async function handleComment(e) {
-            if (e.key !== 'Enter') return;
-            const postId = e.target.dataset.id;
-            const text = e.target.value.trim();
+        async function handleComment(postId, input) {
+            const text = input.value.trim();
             if (!text) return;
 
             try {
@@ -1027,17 +1173,16 @@
                     throw new Error(post.error || 'Failed to comment');
                 }
 
-                e.target.value = '';
+                input.value = '';
                 fetchPosts();
+                fetchNotifications();
             } catch (error) {
                 displayError(error.message);
             }
         }
 
         // Handle following a user
-        async function handleFollow(e) {
-            const userId = e.target.dataset.user;
-
+        async function handleFollow(userId) {
             try {
                 const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
                     method: 'POST',
@@ -1067,6 +1212,7 @@
                 } else if (document.getElementById('otherProfileSection').classList.contains('active')) {
                     fetchUserProfile(userId);
                 }
+                fetchNotifications();
             } catch (error) {
                 displayError(error.message);
             }
@@ -1111,8 +1257,7 @@
 
                 document.querySelectorAll('.user').forEach(userDiv => {
                     userDiv.addEventListener('click', () => {
-                        showSection('otherProfileSection');
-                        fetchUserProfile(userDiv.dataset.user);
+                        showSection('otherProfileSection', userDiv.dataset.user);
                     });
                 });
 
@@ -1122,6 +1267,153 @@
                 displayError(error.message);
             }
         });
-    </script>
-</body>
-</html>
+
+        // Fetch message threads
+        async function fetchMessageThreads() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/search/`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const users = await response.json();
+
+                const threads = new Map();
+                for (const user of users) {
+                    if (user._id === currentUser._id) continue;
+                    const messages = await (await fetch(`${API_BASE_URL}/api/messages/${user._id}`, {
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                    })).json();
+                    if (messages.length > 0) {
+                        threads.set(user._id, { user, lastMessage: messages[messages.length - 1] });
+                    }
+                }
+
+                const threadsDiv = document.getElementById('messageThreads');
+                threadsDiv.innerHTML = '';
+                for (const [userId, thread] of threads) {
+                    const threadDiv = document.createElement('div');
+                    threadDiv.classList.add('user');
+                    threadDiv.dataset.user = userId;
+                    threadDiv.innerHTML = `
+                        <img src="${thread.user.profilePicture}" alt="${thread.user.username}">
+                        <span>${thread.user.username}: ${thread.lastMessage.content}</span>
+                    `;
+                    threadDiv.addEventListener('click', () => {
+                        currentChatUserId = userId;
+                        fetchMessages(userId);
+                    });
+                    threadsDiv.appendChild(threadDiv);
+                }
+
+                if (currentChatUserId) {
+                    fetchMessages(currentChatUserId);
+                }
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        // Fetch messages
+        async function fetchMessages(userId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const messages = await response.json();
+
+                const threadsDiv = document.getElementById('messageThreads');
+                threadsDiv.innerHTML = `<h3>Conversation with ${messages[0]?.receiver._id === userId ? messages[0].receiver.username : messages[0].sender.username}</h3>`;
+                const messageThread = document.createElement('div');
+                messageThread.classList.add('message-thread');
+                messages.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message', message.sender._id === currentUser._id ? 'sent' : 'received');
+                    messageDiv.innerHTML = `
+                        <img src="${message.sender.profilePicture}" alt="${message.sender.username}">
+                        <div>
+                            <strong>${message.sender.username}</strong>
+                            <p>${message.content}</p>
+                        </div>
+                    `;
+                    messageThread.appendChild(messageDiv);
+                });
+                threadsDiv.appendChild(messageThread);
+
+                const messageForm = document.querySelector('.message-form');
+                messageForm.style.display = 'block';
+                document.getElementById('messageReceiver').value = messages[0]?.receiver._id === userId ? messages[0].receiver.username : messages[0].sender.username;
+            } catch (error) {
+                displayError(error.message);
+            }
+        }
+
+        // Handle sending a message
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const receiverUsername = document.getElementById('messageReceiver').value;
+            const content = document.getElementById('messageContent').value;
+
+            try {
+                const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${receiverUsername}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const users = await userResponse.json();
+                const receiver = users.find(user => user.username === receiverUsername);
+                if (!receiver) {
+                    throw new Error('User not found');
+                }
+
+                const response = await fetch(`${API_BASE_URL}/api/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ receiver: receiver._id, content })
+                });
+
+                const message = await response.json();
+                if (!response.ok) {
+                    throw new Error(message.error || 'Failed to send message');
+                }
+
+                currentChatUserId = receiver._id;
+                fetchMessages(receiver._id);
+                e.target.reset();
+                fetchNotifications();
+            } catch (error) {
+                displayError(error.message);
+            }
+        });
+
+        // Fetch notifications
+        async function fetchNotifications(showToSection = false) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/notifications`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const notifications = await response.json();
+
+                const unreadCount = notifications.filter(n => !n.read).length;
+                const countSpan = document.getElementById('notificationCount');
+                countSpan.textContent = unreadCount;
+                countSpan.style.display = unreadCount > 0 ? 'inline' : 'none';
+
+                if (showToSection) {
+                    const notificationList = document.getElementById('notificationList');
+                    notificationList.innerHTML = '';
+                    for (const notification of notifications) {
+                        let message = '';
+                        if (notification.type === 'like') {
+                            message = `${notification.fromUser.username} liked your post "${notification.post.title}"`;
+                        } else if (notification.type === 'comment') {
+                            message = `${notification.fromUser.username} commented on your post
