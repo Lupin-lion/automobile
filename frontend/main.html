@@ -329,13 +329,33 @@
             document.getElementById('error').textContent = '';
         }
 
-        // Check if user is logged in
-        const token = localStorage.getItem('token');
-        if (token) {
-            showSection('homeSection');
-        } else {
-            showSection('loginSection');
-        }
+        // Initialize the app: Check for token and fetch user profile
+        (async function initializeApp() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const user = await response.json();
+                    if (response.ok) {
+                        currentUser = user;
+                        showSection('homeSection');
+                    } else {
+                        localStorage.removeItem('token'); // Invalid token, clear it
+                        showSection('loginSection');
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch user profile:', error);
+                    localStorage.removeItem('token');
+                    showSection('loginSection');
+                }
+            } else {
+                showSection('loginSection');
+            }
+        })();
 
         // Handle Login
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -433,7 +453,7 @@
                 }
 
                 const profileDiv = userId ? document.getElementById('otherUserProfile') : document.getElementById('userProfile');
-                const isFollowing = user.followers.includes(currentUser._id);
+                const isFollowing = user.followers.includes(currentUser?._id || '');
                 profileDiv.innerHTML = `
                     <img src="${user.profilePicture}" alt="${user.username}">
                     <h2>${user.username}</h2>
@@ -442,14 +462,14 @@
                     <p><strong>Date of Birth:</strong> ${new Date(user.dob).toLocaleDateString()}</p>
                     <p><strong>Bio:</strong> ${user.bio || 'Not set'}</p>
                     <p><strong>Followers:</strong> ${user.followers.length}</p>
-                    ${userId && userId !== currentUser._id ? `
+                    ${userId && userId !== currentUser?._id ? `
                         <button class="follow-btn ${isFollowing ? 'following' : ''}" data-user="${user._id}">
                             ${isFollowing ? 'Following' : 'Follow'}
                         </button>
                     ` : ''}
                 `;
 
-                if (userId && userId !== currentUser._id) {
+                if (userId && userId !== currentUser?._id) {
                     document.querySelector('.follow-btn').addEventListener('click', handleFollow);
                 }
             } catch (error) {
@@ -484,7 +504,7 @@
             listingsDiv.innerHTML = '';
 
             posts.forEach(post => {
-                const hasLiked = post.likes.includes(currentUser._id);
+                const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
                 carDiv.innerHTML = `
@@ -493,8 +513,8 @@
                     <img src="${post.image}" alt="${post.title}">
                     <p>${post.description}</p>
                     <p><strong>Posted by:</strong> <span class="username" data-user="${post.user._id}">${post.user.username}</span></p>
-                    <button class="follow-btn ${currentUser.following && currentUser.following.includes(post.user._id) ? 'following' : ''}" data-user="${post.user._id}">
-                        ${currentUser.following && currentUser.following.includes(post.user._id) ? 'Following' : 'Follow'}
+                    <button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(post.user._id) ? 'following' : ''}" data-user="${post.user._id}">
+                        ${currentUser && currentUser.following && currentUser.following.includes(post.user._id) ? 'Following' : 'Follow'}
                     </button>
                     <div class="actions">
                         <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
