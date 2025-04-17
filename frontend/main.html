@@ -1,943 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Automobile Social Platform</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .header {
-      background-color: #333;
-      color: white;
-      padding: 10px 0;
-      text-align: center;
-    }
-    .nav {
-      display: flex;
-      justify-content: space-around;
-      background-color: #444;
-      padding: 10px 0;
-    }
-    .nav button {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .nav button:hover {
-      color: #ddd;
-    }
-    .section {
-      display: none;
-      margin-top: 20px;
-    }
-    .section.active {
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    .form-group input[type="file"] {
-      padding: 3px;
-    }
-    button {
-      background-color: #333;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #555;
-    }
-    .post {
-      background-color: white;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    .post img {
-      max-width: 100%;
-      height: auto;
-      margin: 10px 0;
-    }
-    .comment {
-      margin-left: 20px;
-      margin-top: 10px;
-      border-left: 2px solid #ccc;
-      padding-left: 10px;
-    }
-    .message {
-      background-color: #e9e9e9;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-    }
-    #profileInfo {
-      background-color: white;
-      padding: 15px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automobile App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #profile, #error {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Automobile Social Platform</h1>
-  </div>
-  <div class="nav">
-    <button onclick="showSection('register')">Register</button>
-    <button onclick="showSection('login')">Login</button>
-    <button onclick="showSection('profile')">Profile</button>
-    <button onclick="showSection('createPost')">Create Post</button>
-    <button onclick="showSection('feed')">Feed</button>
-    <button onclick="showSection('search')">Search Posts</button>
-    <button onclick="showSection('messages')">Messages</button>
-    <button onclick="showSection('notifications')">Notifications</button>
-    <button onclick="showSection('wishlist')">Wishlist</button>
-    <button onclick="logout()">Logout</button>
-  </div>
-  <div class="container">
-    <!-- Register Section -->
-    <div id="register" class="section">
-      <h2>Register</h2>
-      <div class="form-group">
-        <label for="regFirstName">First Name:</label>
-        <input type="text" id="regFirstName" required>
-      </div>
-      <div class="form-group">
-        <label for="regLastName">Last Name:</label>
-        <input type="text" id="regLastName" required>
-      </div>
-      <div class="form-group">
-        <label for="regPhoneNumber">Phone Number (e.g., +1234567890):</label>
-        <input type="tel" id="regPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
-      </div>
-      <div class="form-group">
-        <label for="regPassword">Password:</label>
-        <input type="password" id="regPassword" required>
-      </div>
-      <div class="form-group">
-        <label for="regDob">Date of Birth:</label>
+    <h1>Automobile App</h1>
+
+    <!-- Registration Form -->
+    <h2>Register</h2>
+    <form id="registerForm">
+        <input type="text" id="regFirstName" placeholder="First Name" required>
+        <input type="text" id="regLastName" placeholder="Last Name" required>
+        <input type="text" id="regPhoneNumber" placeholder="Phone Number (e.g., +1234567890)" required>
+        <input type="password" id="regPassword" placeholder="Password" required>
         <input type="date" id="regDob" required>
-      </div>
-      <div class="form-group">
-        <label for="regGender">Gender:</label>
         <select id="regGender" required>
-          <option value="">Select Gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
+            <option value="" disabled selected>Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label for="regProfilePicture">Profile Picture:</label>
-        <input type="file" id="regProfilePicture" accept="image/*">
-      </div>
-      <button onclick="register()">Register</button>
-    </div>
+        <button type="submit">Register</button>
+    </form>
 
-    <!-- Login Section -->
-    <div id="login" class="section">
-      <h2>Login</h2>
-      <div class="form-group">
-        <label for="loginPhoneNumber">Phone Number:</label>
-        <input type="tel" id="loginPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Password:</label>
-        <input type="password" id="loginPassword" required>
-      </div>
-      <button onclick="login()">Login</button>
-      <p><a href="#" onclick="showSection('passwordResetRequest')">Forgot Password?</a></p>
-    </div>
-
-    <!-- Password Reset Request Section -->
-    <div id="passwordResetRequest" class="section">
-      <h2>Request Password Reset</h2>
-      <div class="form-group">
-        <label for="resetPhoneNumber">Phone Number:</label>
-        <input type="tel" id="resetPhoneNumber" placeholder="+1234567890" pattern="\+[0-9]{10,15}" required>
-      </div>
-      <button onclick="requestPasswordReset()">Request Reset Token</button>
-    </div>
-
-    <!-- Password Reset Section -->
-    <div id="passwordReset" class="section">
-      <h2>Reset Password</h2>
-      <div class="form-group">
-        <label for="resetToken">Reset Token:</label>
-        <input type="text" id="resetToken" required>
-      </div>
-      <div class="form-group">
-        <label for="newPassword">New Password:</label>
-        <input type="password" id="newPassword" required>
-      </div>
-      <button onclick="resetPassword()">Reset Password</button>
-    </div>
+    <!-- Login Form -->
+    <h2>Login</h2>
+    <form id="loginForm">
+        <input type="text" id="loginPhoneNumber" placeholder="Phone Number" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
 
     <!-- Profile Section -->
-    <div id="profile" class="section">
-      <h2>Profile</h2>
-      <div id="profileInfo"></div>
-      <h3>Update Profile</h3>
-      <div class="form-group">
-        <label for="updateUsername">Username:</label>
-        <input type="text" id="updateUsername">
-      </div>
-      <div class="form-group">
-        <label for="updatePhoneNumber">Phone Number:</label>
-        <input type="tel" id="updatePhoneNumber" pattern="\+[0-9]{10,15}">
-      </div>
-      <div class="form-group">
-        <label for="updateBio">Bio:</label>
-        <textarea id="updateBio"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="updateProfilePicture">Profile Picture:</label>
-        <input type="file" id="updateProfilePicture" accept="image/*">
-      </div>
-      <button onclick="updateProfile()">Update Profile</button>
-      <h3>Followers</h3>
-      <div id="followers"></div>
-      <h3>Following</h3>
-      <div id="following"></div>
-      <h3>Activity</h3>
-      <div id="activity"></div>
-    </div>
+    <h2>Profile</h2>
+    <button id="fetchProfile">Fetch Profile</button>
+    <div id="profile"></div>
 
-    <!-- Create Post Section -->
-    <div id="createPost" class="section">
-      <h2>Create Post</h2>
-      <div class="form-group">
-        <label for="postContent">Content:</label>
-        <textarea id="postContent"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="postImages">Images:</label>
-        <input type="file" id="postImages" accept="image/*" multiple>
-      </div>
-      <div class="form-group">
-        <label for="postType">Type:</label>
-        <select id="postType">
-          <option value="">Select Type</option>
-          <option value="car">Car</option>
-          <option value="bike">Bike</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="postMake">Make:</label>
-        <input type="text" id="postMake">
-      </div>
-      <div class="form-group">
-        <label for="postModel">Model:</label>
-        <input type="text" id="postModel">
-      </div>
-      <div class="form-group">
-        <label for="postPrice">Price:</label>
-        <input type="number" id="postPrice">
-      </div>
-      <div class="form-group">
-        <label for="postYear">Year:</label>
-        <input type="number" id="postYear">
-      </div>
-      <div class="form-group">
-        <label for="postOrigin">Origin:</label>
-        <select id="postOrigin">
-          <option value="">Select Origin</option>
-          <option value="foreign">Foreign</option>
-          <option value="local">Local</option>
-        </select>
-      </div>
-      <button onclick="createPost()">Create Post</button>
-    </div>
+    <!-- Error Section -->
+    <div id="error"></div>
 
-    <!-- Feed Section -->
-    <div id="feed" class="section">
-      <h2>Feed</h2>
-      <div id="posts"></div>
-    </div>
+    <script>
+        // Set the API base URL to the deployed Heroku backend
+        const API_BASE_URL = 'https://themartsbackend-b1ad232b40bb.herokuapp.com';
 
-    <!-- Search Posts Section -->
-    <div id="search" class="section">
-      <h2>Search Posts</h2>
-      <div class="form-group">
-        <label for="searchType">Type:</label>
-        <select id="searchType">
-          <option value="">Any</option>
-          <option value="car">Car</option>
-          <option value="bike">Bike</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="searchMake">Make:</label>
-        <input type="text" id="searchMake">
-      </div>
-      <div class="form-group">
-        <label for="searchModel">Model:</label>
-        <input type="text" id="searchModel">
-      </div>
-      <div class="form-group">
-        <label for="searchMinPrice">Min Price:</label>
-        <input type="number" id="searchMinPrice">
-      </div>
-      <div class="form-group">
-        <label for="searchMaxPrice">Max Price:</label>
-        <input type="number" id="searchMaxPrice">
-      </div>
-      <div class="form-group">
-        <label for="searchOrigin">Origin:</label>
-        <select id="searchOrigin">
-          <option value="">Any</option>
-          <option value="foreign">Foreign</option>
-          <option value="local">Local</option>
-        </select>
-      </div>
-      <button onclick="searchPosts()">Search</button>
-      <div id="searchResults"></div>
-    </div>
-
-    <!-- Messages Section -->
-    <div id="messages" class="section">
-      <h2>Messages</h2>
-      <div class="form-group">
-        <label for="recipientId">Recipient User ID:</label>
-        <input type="text" id="recipientId">
-      </div>
-      <div class="form-group">
-        <label for="messageContent">Message:</label>
-        <textarea id="messageContent"></textarea>
-      </div>
-      <button onclick="sendMessage()">Send Message</button>
-      <h3>Conversation</h3>
-      <div id="conversation"></div>
-    </div>
-
-    <!-- Notifications Section -->
-    <div id="notifications" class="section">
-      <h2>Notifications</h2>
-      <div id="notificationsList"></div>
-    </div>
-
-    <!-- Wishlist Section -->
-    <div id="wishlist" class="section">
-      <h2>Wishlist</h2>
-      <div id="wishlistItems"></div>
-    </div>
-  </div>
-
-  <script>
-    const API_URL = 'http://localhost:5000/api'; // Replace with Heroku URL after deployment
-    let token = localStorage.getItem('token');
-    let currentUser = JSON.parse(localStorage.getItem('user')) || {};
-
-    // Show Section
-    function showSection(sectionId) {
-      document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-      });
-      document.getElementById(sectionId).classList.add('active');
-
-      // Load data for specific sections
-      if (sectionId === 'profile' && token) fetchProfile();
-      if (sectionId === 'feed') fetchPosts();
-      if (sectionId === 'notifications' && token) fetchNotifications();
-      if (sectionId === 'wishlist' && token) fetchWishlist();
-    }
-
-    // Register
-    async function register() {
-      const firstName = document.getElementById('regFirstName').value;
-      const lastName = document.getElementById('regLastName').value;
-      const phoneNumber = document.getElementById('regPhoneNumber').value;
-      const password = document.getElementById('regPassword').value;
-      const dob = document.getElementById('regDob').value;
-      const gender = document.getElementById('regGender').value;
-      const profilePictureInput = document.getElementById('regProfilePicture');
-      let profilePicture = null;
-
-      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
-        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
-        return;
-      }
-
-      if (profilePictureInput.files.length > 0) {
-        profilePicture = await new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(profilePictureInput.files[0]);
-        });
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/users/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName, lastName, phoneNumber, password, dob, gender, profilePicture })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Registration failed');
-        token = data.token;
-        currentUser = data.user;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        alert('Registration successful!');
-        showSection('profile');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Login
-    async function login() {
-      const phoneNumber = document.getElementById('loginPhoneNumber').value;
-      const password = document.getElementById('loginPassword').value;
-
-      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
-        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/users/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phoneNumber, password })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Login failed');
-        token = data.token;
-        currentUser = data.user;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        alert('Login successful!');
-        showSection('profile');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Request Password Reset
-    async function requestPasswordReset() {
-      const phoneNumber = document.getElementById('resetPhoneNumber').value;
-
-      if (!phoneNumber.match(/^\+[0-9]{10,15}$/)) {
-        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
-        return;
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/users/password-reset-request`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phoneNumber })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Request failed');
-        alert(`Password reset token: ${data.token}\nCopy this token and use it in the Reset Password section.`);
-        showSection('passwordReset');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Reset Password
-    async function resetPassword() {
-      const token = document.getElementById('resetToken').value;
-      const newPassword = document.getElementById('newPassword').value;
-
-      try {
-        const response = await fetch(`${API_URL}/users/password-reset/${token}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: newPassword })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Password reset failed');
-        alert('Password reset successful! Please login with your new password.');
-        showSection('login');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Fetch Profile
-    async function fetchProfile() {
-      try {
-        const response = await fetch(`${API_URL}/users/profile`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const user = await response.json();
-        if (!response.ok) throw new Error(user.error || 'Failed to fetch profile');
-        currentUser = user;
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        document.getElementById('profileInfo').innerHTML = `
-          <p>Username: ${user.username}</p>
-          <p>Phone Number: ${user.phoneNumber}</p>
-          <p>Bio: ${user.bio}</p>
-          <img src="${user.profilePicture}" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
-        `;
-        fetchFollowers();
-        fetchFollowing();
-        fetchActivity();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Update Profile
-    async function updateProfile() {
-      const username = document.getElementById('updateUsername').value;
-      const phoneNumber = document.getElementById('updatePhoneNumber').value;
-      const bio = document.getElementById('updateBio').value;
-      const profilePictureInput = document.getElementById('updateProfilePicture');
-      let profilePicture = null;
-
-      if (phoneNumber && !phoneNumber.match(/^\+[0-9]{10,15}$/)) {
-        alert('Phone number must start with "+" followed by 10-15 digits (e.g., +1234567890)');
-        return;
-      }
-
-      if (profilePictureInput.files.length > 0) {
-        profilePicture = await new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(profilePictureInput.files[0]);
-        });
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/users/profile`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ username, phoneNumber, bio, profilePicture })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Update failed');
-        currentUser = data.user;
-        localStorage.setItem('user', JSON.stringify(currentUser));
-        alert('Profile updated successfully!');
-        fetchProfile();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Fetch Followers
-    async function fetchFollowers() {
-      try {
-        const response = await fetch(`${API_URL}/users/followers`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const followers = await response.json();
-        if (!response.ok) throw new Error(followers.error || 'Failed to fetch followers');
-        document.getElementById('followers').innerHTML = followers.map(f => `
-          <p>${f.username} <button onclick="unfollow('${f._id}')">Unfollow</button></p>
-        `).join('');
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-
-    // Fetch Following
-    async function fetchFollowing() {
-      try {
-        const response = await fetch(`${API_URL}/users/following`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const following = await response.json();
-        if (!response.ok) throw new Error(following.error || 'Failed to fetch following');
-        document.getElementById('following').innerHTML = following.map(f => `
-          <p>${f.username} (ID: ${f._id}) <button onclick="unfollow('${f._id}')">Unfollow</button></p>
-        `).join('');
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-
-    // Fetch Activity
-    async function fetchActivity() {
-      try {
-        const response = await fetch(`${API_URL}/users/activity`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to fetch activity');
-        const activityHtml = `
-          <h4>Your Posts:</h4>
-          ${data.posts.map(p => `<p>${p.content || `${p.make} ${p.model}`}</p>`).join('')}
-          <h4>Your Comments:</h4>
-          ${data.comments.map(c => `<p>${c.content} on post: ${c.post.content || `${c.post.make} ${c.post.model}`}</p>`).join('')}
-        `;
-        document.getElementById('activity').innerHTML = activityHtml;
-      } catch (error) {
-        console.error(error.message);
-      }
-    }
-
-    // Follow User
-    async function follow(userId) {
-      try {
-        const response = await fetch(`${API_URL}/users/follow/${userId}`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Follow failed');
-        alert('Followed successfully!');
-        fetchFollowing();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Unfollow User
-    async function unfollow(userId) {
-      try {
-        const response = await fetch(`${API_URL}/users/unfollow/${userId}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Unfollow failed');
-        alert('Unfollowed successfully!');
-        fetchFollowers();
-        fetchFollowing();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Create Post
-    async function createPost() {
-      const content = document.getElementById('postContent').value;
-      const imagesInput = document.getElementById('postImages');
-      const type = document.getElementById('postType').value;
-      const make = document.getElementById('postMake').value;
-      const model = document.getElementById('postModel').value;
-      const price = document.getElementById('postPrice').value;
-      const year = document.getElementById('postYear').value;
-      const origin = document.getElementById('postOrigin').value;
-
-      const images = [];
-      if (imagesInput.files.length > 0) {
-        for (const file of imagesInput.files) {
-          const imageData = await new Promise(resolve => {
-            const reader = new FileReader();
-            reader.onload = () => resolve({ data: reader.result, type: file.type });
-            reader.readAsDataURL(file);
-          });
-          images.push(imageData);
+        // Helper function to display errors
+        function displayError(message) {
+            document.getElementById('error').textContent = message;
         }
-      }
 
-      try {
-        const response = await fetch(`${API_URL}/posts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ content, images, type, make, model, price: Number(price), year: Number(year), origin })
+        // Helper function to clear errors
+        function clearError() {
+            document.getElementById('error').textContent = '';
+        }
+
+        // Helper function to display profile
+        function displayProfile(user) {
+            const profileDiv = document.getElementById('profile');
+            profileDiv.innerHTML = `
+                <p><strong>Name:</strong> ${user.firstName} ${user.lastName}</p>
+                <p><strong>Username:</strong> ${user.username}</p>
+                <p><strong>Phone Number:</strong> ${user.phoneNumber}</p>
+                <p><strong>Gender:</strong> ${user.gender}</p>
+                <p><strong>Date of Birth:</strong> ${new Date(user.dob).toLocaleDateString()}</p>
+                <p><strong>Bio:</strong> ${user.bio || 'Not set'}</p>
+            `;
+        }
+
+        // Handle Registration
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
+
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const phoneNumber = document.getElementById('regPhoneNumber').value;
+            const password = document.getElementById('regPassword').value;
+            const dob = document.getElementById('regDob').value;
+            const gender = document.getElementById('regGender').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        phoneNumber,
+                        password,
+                        dob,
+                        gender
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                // Save token to localStorage
+                localStorage.setItem('token', data.token);
+                displayError('Registration successful! You can now log in.');
+            } catch (error) {
+                displayError(error.message);
+            }
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Post creation failed');
-        alert('Post created successfully!');
-        showSection('feed');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
 
-    // Fetch Posts
-    async function fetchPosts() {
-      try {
-        const response = await fetch(`${API_URL}/posts`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to fetch posts');
-        document.getElementById('posts').innerHTML = data.posts.map(post => `
-          <div class="post">
-            <p><strong>${post.user.username}</strong> (${post.contact})</p>
-            <p>${post.content || ''}</p>
-            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
-            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
-            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
-            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
-            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
-            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
-            <p>Likes: ${post.likes} | Shares: ${post.shares}</p>
-            ${token ? `
-              <button onclick="likePost('${post._id}', ${post.likes})">Like</button>
-              ${post.user._id !== currentUser._id ? `<button onclick="follow('${post.user._id}')">Follow ${post.user.username}</button>` : ''}
-              <button onclick="addToWishlist('${post._id}')">Add to Wishlist</button>
-            ` : ''}
-            <h4>Comments:</h4>
-            ${post.comments.map(c => `
-              <div class="comment">
-                <p><strong>${c.user.username}</strong>: ${c.content}</p>
-                ${c.replies.map(r => `<p style="margin-left: 20px;">${r.user.username}: ${r.content}</p>`).join('')}
-              </div>
-            `).join('')}
-            ${token ? `
-              <div class="form-group">
-                <textarea id="comment-${post._id}" placeholder="Add a comment"></textarea>
-                <button onclick="addComment('${post._id}')">Comment</button>
-              </div>
-            ` : ''}
-          </div>
-        `).join('');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
+        // Handle Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearError();
 
-    // Like Post
-    async function likePost(postId, currentLikes) {
-      try {
-        const response = await fetch(`${API_URL}/posts/${postId}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ likes: currentLikes + 1 })
+            const phoneNumber = document.getElementById('loginPhoneNumber').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        phoneNumber,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                // Save token to localStorage
+                localStorage.setItem('token', data.token);
+                displayError('Login successful! You can now fetch your profile.');
+            } catch (error) {
+                displayError(error.message);
+            }
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Like failed');
-        fetchPosts();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
 
-    // Add Comment
-    async function addComment(postId) {
-      const content = document.getElementById(`comment-${postId}`).value;
-      try {
-        const response = await fetch(`${API_URL}/comments`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ postId, content })
+        // Handle Fetch Profile
+        document.getElementById('fetchProfile').addEventListener('click', async () => {
+            clearError();
+            document.getElementById('profile').innerHTML = '';
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                displayError('No token found. Please register or log in first.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to fetch profile');
+                }
+
+                displayProfile(data);
+            } catch (error) {
+                displayError(error.message);
+            }
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Comment failed');
-        fetchPosts();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Search Posts
-    async function searchPosts() {
-      const type = document.getElementById('searchType').value;
-      const make = document.getElementById('searchMake').value;
-      const model = document.getElementById('searchModel').value;
-      const minPrice = document.getElementById('searchMinPrice').value;
-      const maxPrice = document.getElementById('searchMaxPrice').value;
-      const origin = document.getElementById('searchOrigin').value;
-
-      const query = new URLSearchParams();
-      if (type) query.append('type', type);
-      if (make) query.append('make', make);
-      if (model) query.append('model', model);
-      if (minPrice) query.append('minPrice', minPrice);
-      if (maxPrice) query.append('maxPrice', maxPrice);
-      if (origin) query.append('origin', origin);
-
-      try {
-        const response = await fetch(`${API_URL}/posts/search?${query.toString()}`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Search failed');
-        document.getElementById('searchResults').innerHTML = data.posts.map(post => `
-          <div class="post">
-            <p><strong>${post.user.username}</strong> (${post.contact})</p>
-            <p>${post.content || ''}</p>
-            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
-            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
-            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
-            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
-            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
-            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
-            <p>Likes: ${post.likes} | Shares: ${post.shares}</p>
-            ${token ? `
-              <button onclick="likePost('${post._id}', ${post.likes})">Like</button>
-              ${post.user._id !== currentUser._id ? `<button onclick="follow('${post.user._id}')">Follow ${post.user.username}</button>` : ''}
-              <button onclick="addToWishlist('${post._id}')">Add to Wishlist</button>
-            ` : ''}
-          </div>
-        `).join('');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Send Message
-    async function sendMessage() {
-      const recipientId = document.getElementById('recipientId').value;
-      const content = document.getElementById('messageContent').value;
-
-      try {
-        const response = await fetch(`${API_URL}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ recipientId, content })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Message send failed');
-        fetchConversation(recipientId);
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Fetch Conversation
-    async function fetchConversation(recipientId) {
-      try {
-        const response = await fetch(`${API_URL}/messages/${recipientId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const messages = await response.json();
-        if (!response.ok) throw new Error(messages.error || 'Failed to fetch messages');
-        document.getElementById('conversation').innerHTML = messages.map(m => `
-          <div class="message">
-            <p><strong>${m.sender.username}</strong> to <strong>${m.recipient.username}</strong>: ${m.content}</p>
-            <p>${new Date(m.createdAt).toLocaleString()}</p>
-          </div>
-        `).join('');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Fetch Notifications
-    async function fetchNotifications() {
-      try {
-        const response = await fetch(`${API_URL}/users/notifications`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const notifications = await response.json();
-        if (!response.ok) throw new Error(notifications.error || 'Failed to fetch notifications');
-        document.getElementById('notificationsList').innerHTML = notifications.map(n => `
-          <p>${n.message} (${n.read ? 'Read' : '<button onclick="markNotificationRead(\'' + n._id + '\')">Mark as Read</button>'})</p>
-        `).join('');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Mark Notification as Read
-    async function markNotificationRead(notificationId) {
-      try {
-        const response = await fetch(`${API_URL}/users/notifications/${notificationId}/read`, {
-          method: 'PATCH',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to mark as read');
-        fetchNotifications();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Add to Wishlist
-    async function addToWishlist(postId) {
-      try {
-        const response = await fetch(`${API_URL}/users/wishlist/${postId}`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to add to wishlist');
-        alert('Added to wishlist!');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Fetch Wishlist
-    async function fetchWishlist() {
-      try {
-        const response = await fetch(`${API_URL}/users/wishlist`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const wishlist = await response.json();
-        if (!response.ok) throw new Error(wishlist.error || 'Failed to fetch wishlist');
-        document.getElementById('wishlistItems').innerHTML = wishlist.map(post => `
-          <div class="post">
-            <p><strong>${post.user.username}</strong> (${post.contact})</p>
-            <p>${post.content || ''}</p>
-            ${post.make ? `<p>Make: ${post.make}</p>` : ''}
-            ${post.model ? `<p>Model: ${post.model}</p>` : ''}
-            ${post.price ? `<p>Price: $${post.price}</p>` : ''}
-            ${post.year ? `<p>Year: ${post.year}</p>` : ''}
-            ${post.origin ? `<p>Origin: ${post.origin}</p>` : ''}
-            ${post.images.map(img => `<img src="${img}" alt="Post Image">`).join('')}
-            <button onclick="removeFromWishlist('${post._id}')">Remove from Wishlist</button>
-          </div>
-        `).join('');
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Remove from Wishlist
-    async function removeFromWishlist(postId) {
-      try {
-        const response = await fetch(`${API_URL}/users/wishlist/${postId}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to remove from wishlist');
-        alert('Removed from wishlist!');
-        fetchWishlist();
-      } catch (error) {
-        alert(error.message);
-      }
-    }
-
-    // Logout
-    function logout() {
-      token = null;
-      currentUser = {};
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      showSection('login');
-    }
-
-    // Initial Section
-    showSection(token ? 'profile' : 'login');
-  </script>
+    </script>
 </body>
 </html>
