@@ -974,7 +974,17 @@
         // Display posts
         async function displayPosts(posts) {
             const listingsDiv = document.getElementById('carListings');
+            if (!listingsDiv) {
+                console.error('carListings div not found in DOM');
+                return;
+            }
             listingsDiv.innerHTML = '';
+
+            if (posts.length === 0) {
+                console.log('No posts to display');
+                listingsDiv.innerHTML = '<p>No posts available.</p>';
+                return;
+            }
 
             for (const post of posts) {
                 const user = post.user;
@@ -1029,7 +1039,7 @@
                 commentsDiv.appendChild(commentInput);
             }
 
-            // Attach event listeners using delegation
+            console.log('Posts displayed, attaching event listeners');
             attachEventListeners();
         }
 
@@ -1038,6 +1048,7 @@
             // Like buttons
             document.getElementById('carListings').addEventListener('click', async (e) => {
                 if (e.target.classList.contains('like-btn')) {
+                    console.log('Like button clicked, postId:', e.target.dataset.id);
                     const postId = e.target.dataset.id;
                     await handleLike(postId);
                 }
@@ -1046,6 +1057,7 @@
             // Comment buttons
             document.getElementById('carListings').addEventListener('click', (e) => {
                 if (e.target.classList.contains('comment-btn')) {
+                    console.log('Comment button clicked, postId:', e.target.dataset.id);
                     const postId = e.target.dataset.id;
                     toggleComments(postId);
                 }
@@ -1054,6 +1066,7 @@
             // Comment inputs
             document.getElementById('carListings').addEventListener('keypress', async (e) => {
                 if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
+                    console.log('Comment input Enter pressed, postId:', e.target.dataset.id);
                     const postId = e.target.dataset.id;
                     await handleComment(postId, e.target);
                 }
@@ -1062,6 +1075,7 @@
             // Follow buttons
             document.getElementById('carListings').addEventListener('click', async (e) => {
                 if (e.target.classList.contains('follow-btn')) {
+                    console.log('Follow button clicked, userId:', e.target.dataset.user);
                     const userId = e.target.dataset.user;
                     await handleFollow(userId);
                 }
@@ -1079,6 +1093,7 @@
             const otherProfileFollowBtn = document.getElementById('otherProfileFollowBtn');
             if (otherProfileFollowBtn) {
                 otherProfileFollowBtn.onclick = async () => {
+                    console.log('Follow button in other profile clicked, userId:', otherProfileFollowBtn.dataset.user);
                     const userId = otherProfileFollowBtn.dataset.user;
                     await handleFollow(userId);
                 };
@@ -1127,6 +1142,7 @@
 
         // Handle liking a post
         async function handleLike(postId) {
+            console.log('handleLike called with postId:', postId);
             try {
                 const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
                     method: 'POST',
@@ -1134,8 +1150,17 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+                console.log('Like API response status:', response.status);
 
                 const post = await response.json();
+                console.log('Like API response data:', post);
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    showSection('loginSection');
+                    throw new Error('Session expired. Please log in again.');
+                }
+
                 if (!response.ok) {
                     throw new Error(post.error || 'Failed to like post');
                 }
@@ -1143,6 +1168,7 @@
                 fetchPosts();
                 fetchNotifications();
             } catch (error) {
+                console.error('Error in handleLike:', error.message);
                 displayError(error.message);
             }
         }
@@ -1158,6 +1184,7 @@
             const text = input.value.trim();
             if (!text) return;
 
+            console.log('handleComment called with postId:', postId, 'text:', text);
             try {
                 const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment`, {
                     method: 'POST',
@@ -1167,8 +1194,17 @@
                     },
                     body: JSON.stringify({ text })
                 });
+                console.log('Comment API response status:', response.status);
 
                 const post = await response.json();
+                console.log('Comment API response data:', post);
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    showSection('loginSection');
+                    throw new Error('Session expired. Please log in again.');
+                }
+
                 if (!response.ok) {
                     throw new Error(post.error || 'Failed to comment');
                 }
@@ -1177,12 +1213,14 @@
                 fetchPosts();
                 fetchNotifications();
             } catch (error) {
+                console.error('Error in handleComment:', error.message);
                 displayError(error.message);
             }
         }
 
         // Handle following a user
         async function handleFollow(userId) {
+            console.log('handleFollow called with userId:', userId);
             try {
                 const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
                     method: 'POST',
@@ -1190,8 +1228,17 @@
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
+                console.log('Follow API response status:', response.status);
 
                 const data = await response.json();
+                console.log('Follow API response data:', data);
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    showSection('loginSection');
+                    throw new Error('Session expired. Please log in again.');
+                }
+
                 if (!response.ok) {
                     throw new Error(data.error || 'Failed to follow/unfollow');
                 }
@@ -1203,6 +1250,7 @@
                     }
                 });
                 currentUser = await userResponse.json();
+                console.log('Updated currentUser after follow:', currentUser);
 
                 // Refresh the current view
                 if (document.getElementById('homeSection').classList.contains('active')) {
@@ -1214,6 +1262,7 @@
                 }
                 fetchNotifications();
             } catch (error) {
+                console.error('Error in handleFollow:', error.message);
                 displayError(error.message);
             }
         }
@@ -1351,111 +1400,4 @@
         }
 
         // Handle sending a message
-        document.getElementById('messageForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            clearError();
-
-            const receiverUsername = document.getElementById('messageReceiver').value;
-            const content = document.getElementById('messageContent').value;
-
-            try {
-                const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${receiverUsername}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                const users = await userResponse.json();
-                const receiver = users.find(user => user.username === receiverUsername);
-                if (!receiver) {
-                    throw new Error('User not found');
-                }
-
-                const response = await fetch(`${API_BASE_URL}/api/messages`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({ receiver: receiver._id, content })
-                });
-
-                const message = await response.json();
-                if (!response.ok) {
-                    throw new Error(message.error || 'Failed to send message');
-                }
-
-                currentChatUserId = receiver._id;
-                fetchMessages(receiver._id);
-                e.target.reset();
-                fetchNotifications();
-            } catch (error) {
-                displayError(error.message);
-            }
-        });
-
-        // Fetch notifications
-        async function fetchNotifications(showToSection = false) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/notifications`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                const notifications = await response.json();
-
-                const unreadCount = notifications.filter(n => !n.read).length;
-                const countSpan = document.getElementById('notificationCount');
-                countSpan.textContent = unreadCount;
-                countSpan.style.display = unreadCount > 0 ? 'inline' : 'none';
-
-                if (showToSection) {
-                    const notificationList = document.getElementById('notificationList');
-                    notificationList.innerHTML = '';
-                    for (const notification of notifications) {
-                        let message = '';
-                        if (notification.type === 'like') {
-                            message = `${notification.fromUser.username} liked your post "${notification.post.title}"`;
-                        } else if (notification.type === 'comment') {
-                            message = `${notification.fromUser.username} commented on your post "${notification.post.title}"`;
-                        } else if (notification.type === 'follow') {
-                            message = `${notification.fromUser.username} followed you`;
-                        } else if (notification.type === 'message') {
-                            message = `${notification.fromUser.username} sent you a message: "${notification.message.content}"`;
-                        }
-
-                        const notificationDiv = document.createElement('div');
-                        notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
-                        notificationDiv.dataset.id = notification._id;
-                        notificationDiv.innerHTML = `
-                            <img src="${notification.fromUser.profilePicture}" alt="${notification.fromUser.username}">
-                            <span>${message}</span>
-                        `;
-                        notificationDiv.addEventListener('click', async () => {
-                            if (!notification.read) {
-                                await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
-                                    method: 'PUT',
-                                    headers: {
-                                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                                    }
-                                });
-                                fetchNotifications(true);
-                            }
-                            if (notification.type === 'message') {
-                                currentChatUserId = notification.fromUser._id;
-                                showSection('messagesSection');
-                                fetchMessages(notification.fromUser._id);
-                            } else if (notification.post) {
-                                fetchPosts();
-                                showSection('homeSection');
-                            }
-                        });
-                        notificationList.appendChild(notificationDiv);
-                    }
-                }
-            } catch (error) {
-                displayError(error.message);
-            }
-        }
-    </script>
-</body>
-</html>
+        document.getElement
