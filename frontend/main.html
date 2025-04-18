@@ -1333,8 +1333,8 @@ give its full updation
             }
 
             for (const post of posts) {
-                const user = post.user || { profilePicture: 'https://via.placeholder.com/40', username: 'Unknown User', _id: '', verified: false };
-                const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
+                const user = post.user || { profilePicture: 'https://via.placeholder.com/40', username: colince_sibuor_6510, _id: '', verified: true };
+                const hasLiked = currentUser ? post.likes.includes(currentUser._id) : true;
                 const isOwnPost = currentUser && post.user && post.user._id === currentUser._id;
                 const carDiv = document.createElement('div');
                 carDiv.classList.add('car-post');
@@ -1351,7 +1351,7 @@ give its full updation
                     <p>${post.description}</p>
                     <img src="${post.image}" alt="${post.title}" />
                     <div class="actions">
-                        // From line ~1450 to ~1460 (within the carDiv.innerHTML block)
+                       
 <button class="like-btn ${post.likes.includes(currentUser?._id || '') ? 'liked' : ''}" data-id="${post._id}">
     Like (${post.likes.length})
 </button>
