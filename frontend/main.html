@@ -22,7 +22,11 @@
 
     <div class="container">
         <p id="error"></p>
-        <div id="searchResults" style="display: none;"></div>
+        <!-- Added loading spinner for better UX -->
+        <div id="loadingSpinner" style="display: none; text-align: center; margin: 20px 0;">
+            <span style="font-size: 16px; color: #3498db;">Loading...</span>
+        </div>
+        <div id="searchResults" style="display: none;" class="search-results"></div>
 
         <div id="loginSection" class="section">
             <div class="auth-form">
@@ -167,7 +171,8 @@
                 <h3>Our Founders</h3>
                 <div class="founders-grid">
                     <div class="founder-card">
-                        <img class="founder-image" src="colince.jpg" alt="Colince">
+                        <!-- Replaced local image with Cloudinary placeholder (upload actual image to Cloudinary) -->
+                        <img class="founder-image" src="https://res.cloudinary.com/demo/image/upload/v1620000000/colince.jpg" alt="Colince">
                         <h4>Colince Lupin</h4>
                         <p class="founder-title">CEO & Founder</p>
                         <p class="founder-bio">Colince is a visionary leader with a passion for automobiles and technology. With over 15 years in the automotive industry, he founded TheMarts to bridge the gap between car enthusiasts and the digital world.</p>
@@ -177,7 +182,8 @@
                         </div>
                     </div>
                     <div class="founder-card">
-                        <img class="founder-image" src="victor.jpg" alt="Victor Martin">
+                        <!-- Replaced local image with Cloudinary placeholder (upload actual image to Cloudinary) -->
+                        <img class="founder-image" src="https://res.cloudinary.com/demo/image/upload/v1620000000/victor.jpg" alt="Victor Martin">
                         <h4>Victor Martin</h4>
                         <p class="founder-title">COO & Co-Founder</p>
                         <p class="founder-bio">Martin brings operational excellence to TheMarts. His expertise in logistics and customer experience ensures our platform runs smoothly, delivering value to every user.</p>
@@ -1025,6 +1031,7 @@ function showSection(sectionId, userId = null) {
 
 function displayError(message) {
     document.getElementById('error').textContent = message;
+    document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner on error
 }
 
 function clearError() {
@@ -1060,6 +1067,7 @@ function hideEditProfileForm() {
     const token = localStorage.getItem('token');
     if (token) {
         try {
+            document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
             const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -1078,6 +1086,9 @@ function hideEditProfileForm() {
             console.error('Failed to fetch user profile:', error);
             localStorage.removeItem('token');
             showSection('loginSection');
+            displayError('Unable to connect to server. Please check your internet connection.');
+        } finally {
+            document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
         }
     } else {
         showSection('loginSection');
@@ -1087,6 +1098,7 @@ function hideEditProfileForm() {
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
+    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
 
     const phoneNumber = document.getElementById('loginPhoneNumber').value;
     const password = document.getElementById('loginPassword').value;
@@ -1111,13 +1123,16 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         fetchPosts();
         fetchNotifications();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 });
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
+    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
 
     const firstName = document.getElementById('regFirstName').value;
     const lastName = document.getElementById('regLastName').value;
@@ -1153,7 +1168,9 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         fetchPosts();
         fetchNotifications();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 });
 
@@ -1175,6 +1192,7 @@ function logout() {
 
 async function fetchUserProfile(userId = null) {
     try {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const url = userId ? `${API_BASE_URL}/api/users/${userId}` : `${API_BASE_URL}/api/users/profile`;
         const response = await fetch(url, {
             headers: {
@@ -1266,13 +1284,16 @@ async function fetchUserProfile(userId = null) {
             }
         }
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
 document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
+    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
 
     const bio = document.getElementById('editBio').value;
     const profilePicture = document.getElementById('editProfilePicture').files[0];
@@ -1303,12 +1324,15 @@ document.getElementById('editProfileForm').addEventListener('submit', async (e) 
         currentUser = user;
         hideEditProfileForm();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 });
 
 async function fetchPosts(searchTerm = '') {
     try {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const url = searchTerm ? `${API_BASE_URL}/api/posts/search/${searchTerm}` : `${API_BASE_URL}/api/posts`;
         const response = await fetch(url, {
             headers: {
@@ -1328,7 +1352,9 @@ async function fetchPosts(searchTerm = '') {
 
         displayPosts(posts);
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
@@ -1360,7 +1386,7 @@ async function displayPosts(posts) {
             <h3>${post.title}</h3>
             <p><strong>Price:</strong> ${post.price}</p>
             <p>${post.description}</p>
-            <img src="${post.image}" alt="${post.title}" />
+            <img src="${post.image || 'https://via.placeholder.com/300'}" alt="${post.title}" />
             <div class="actions">
                 <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
                     Like (${post.likes.length})
@@ -1388,11 +1414,12 @@ async function displayPosts(posts) {
             commentsDiv.appendChild(commentDiv);
         }
 
-        const commentInput = document.createElement('input');
-        commentInput.type = 'text';
-        commentInput.className = 'comment-input';
-        commentInput.placeholder = 'Write a comment...';
-        commentInput.dataset.id = post._id;
+        const commentInput = document.createElement('div');
+        commentInput.className = 'comment-input-container';
+        commentInput.innerHTML = `
+            <input type="text" class="comment-input" placeholder="Write a comment..." data-id="${post._id}">
+            <button class="comment-submit-btn" data-id="${post._id}">Post</button>
+        `;
         commentsDiv.appendChild(commentInput);
     }
 
@@ -1427,6 +1454,10 @@ function attachEventListeners() {
             if (userId && userId !== currentUser?._id) {
                 showSection('otherProfileSection', userId);
             }
+        } else if (e.target.classList.contains('comment-submit-btn')) {
+            const postId = e.target.dataset.id;
+            const input = document.querySelector(`.comment-input[data-id="${postId}"]`);
+            await handleComment(postId, input);
         }
     };
 
@@ -1449,6 +1480,7 @@ function attachEventListeners() {
 document.getElementById('carForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     clearError();
+    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
 
     const title = document.getElementById('carTitle').value;
     const price = document.getElementById('carPrice').value;
@@ -1486,7 +1518,9 @@ document.getElementById('carForm').addEventListener('submit', async (e) => {
         fetchPosts();
         e.target.reset();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 });
 
@@ -1500,6 +1534,7 @@ async function handleLike(postId) {
             throw new Error('Invalid post ID');
         }
         console.log('Liking post:', postId); // Debug
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
             method: 'POST',
             headers: {
@@ -1518,29 +1553,17 @@ async function handleLike(postId) {
         fetchPosts();
         fetchNotifications();
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(errorData.error || 'Failed to like/unlike post');
-        }
-
-        fetchPosts();
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
-    }
-}
+// Removed duplicate handleLike function (there was a second one in your code)
 
 async function handleDelete(postId) {
     try {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
             method: 'DELETE',
             headers: {
@@ -1560,7 +1583,9 @@ async function handleDelete(postId) {
 
         fetchPosts();
     } catch (error) {
-        displayError(error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
@@ -1578,6 +1603,7 @@ async function handleComment(postId, input) {
         if (!token) {
             throw new Error('Please log in to comment.');
         }
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
 
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment`, {
             method: 'POST',
@@ -1602,7 +1628,9 @@ async function handleComment(postId, input) {
         fetchPosts();
         fetchNotifications();
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
@@ -1617,6 +1645,7 @@ async function handleFollow(userId) {
     }
 
     try {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
             method: 'POST',
             headers: {
@@ -1651,7 +1680,9 @@ async function handleFollow(userId) {
         }
         fetchNotifications();
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
@@ -1674,7 +1705,8 @@ document.getElementById('searchBar').addEventListener('input', async (e) => {
     }
 
     try {
-        const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${query}`, {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
+        const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${encodeURIComponent(query)}`, { // Added encodeURIComponent for safety
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -1707,13 +1739,17 @@ document.getElementById('searchBar').addEventListener('input', async (e) => {
 
         fetchPosts(query);
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 });
 
 async function fetchMessageThreads() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/users/search/`, {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
+        // Changed endpoint to /api/users to avoid 400 error on /api/users/search/
+        const response = await fetch(`${API_BASE_URL}/api/users`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -1773,12 +1809,15 @@ async function fetchMessageThreads() {
             fetchMessages(currentChatUserId);
         }
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
 async function fetchMessages(userId) {
     try {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
         const response = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -1815,38 +1854,30 @@ async function fetchMessages(userId) {
         threadsDiv.appendChild(messageThread);
         messageThread.scrollTop = messageThread.scrollHeight;
 
-        const messageForm = document.getElementById('messageForm');
+                const messageForm = document.getElementById('messageForm');
         messageForm.onsubmit = async (e) => {
             e.preventDefault();
+            clearError();
+            document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
+
             const content = document.getElementById('messageContent').value.trim();
-            if (!content) return;
+            if (!content) {
+                displayError('Message cannot be empty.');
+                document.getElementById('loadingSpinner').style.display = 'none';
+                return;
+            }
 
             try {
-                const userResponse = await fetch(`${API_BASE_URL}/api/users/${userId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-
-                if (!userResponse.ok) {
-                    if (userResponse.status === 401 || response.status === 403) {
-                        localStorage.removeItem('token');
-                        showSection('loginSection');
-                        throw new Error('Session expired. Please log in again.');
-                    }
-                    throw new Error('User not found');
-                }
-
-                const user = await userResponse.json();
-                const receiverId = user._id;
-
                 const response = await fetch(`${API_BASE_URL}/api/messages`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ receiverId, content })
+                    body: JSON.stringify({
+                        receiver: userId,
+                        content
+                    })
                 });
 
                 if (!response.ok) {
@@ -1859,134 +1890,100 @@ async function fetchMessages(userId) {
                     throw new Error(errorData.error || 'Failed to send message');
                 }
 
-                e.target.reset();
-                fetchMessages(receiverId);
+                document.getElementById('messageContent').value = '';
+                fetchMessages(userId);
                 fetchNotifications();
             } catch (error) {
-                displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+                displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+            } finally {
+                document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
             }
         };
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
 
-document.getElementById('messageForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-
-    const receiverUsername = document.getElementById('messageReceiver').value.trim();
-    const content = document.getElementById('messageContent').value.trim();
-
-    if (!receiverUsername || !content) return;
-
+async function fetchNotifications(displayAll = false) {
     try {
-        const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${receiverUsername}`, {
+        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
+        const response = await fetch(`${API_BASE_URL}/api/notifications`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
 
-        if (!userResponse.ok) {
-            if (userResponse.status === 401 || userResponse.status === 403) {
+        if (!response.ok) {
+            if (response.status === 401 || response.status === 403) {
                 localStorage.removeItem('token');
                 showSection('loginSection');
                 throw new Error('Session expired. Please log in again.');
             }
-            throw new Error('User not found');
-        }
-
-        const users = await userResponse.json();
-        if (!users || users.length === 0) {
-            throw new Error('User not found');
-        }
-
-        const receiverId = users[0]._id;
-
-        const response = await fetch(`${API_BASE_URL}/api/messages`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ receiverId, content })
-        });
-
-        if (!response.ok) {
             const errorData = await response.json();
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(errorData.error || 'Failed to send message');
-        }
-
-        e.target.reset();
-        fetchMessages(receiverId);
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
-    }
-});
-
-async function fetchNotifications(showAll = false) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/notifications${showAll ? '?all=true' : ''}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error('Failed to fetch notifications');
+            throw new Error(errorData.error || 'Failed to fetch notifications');
         }
 
         const notifications = await response.json();
-        const notificationList = document.getElementById('notificationList');
-        const notificationCount = document.getElementById('notificationCount');
+        const unreadCount = notifications.filter(n => !n.read).length;
+        const notificationCountSpan = document.getElementById('notificationCount');
+        notificationCountSpan.textContent = unreadCount;
+        notificationCountSpan.style.display = unreadCount > 0 ? 'inline' : 'none';
 
-        if (showAll && notificationList) {
-            notificationList.innerHTML = notifications.length > 0 ? '' : '<p>No notifications available.</p>';
+        if (displayAll) {
+            const notificationList = document.getElementById('notificationList');
+            notificationList.innerHTML = '';
+
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<p>No notifications available.</p>';
+                return;
+            }
+
             for (const notification of notifications) {
                 const notificationDiv = document.createElement('div');
                 notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
-                notificationDiv.dataset.id = notification._id;
+                const user = notification.sender || { profilePicture: 'https://via.placeholder.com/40', username: 'Unknown User', _id: '', verified: false };
                 notificationDiv.innerHTML = `
-                    <img src="${notification.from.profilePicture || 'https://via.placeholder.com/40'}" alt="${notification.from.username || 'Unknown User'}">
-                    <span>${notification.message}${notification.from.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
+                    <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}">
+                    <span>${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''} ${notification.message}</span>
                 `;
+                notificationDiv.dataset.id = notification._id;
+                notificationDiv.dataset.user = user._id;
                 notificationDiv.onclick = async () => {
                     try {
-                        await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
+                        const markReadResponse = await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
                             method: 'PUT',
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem('token')}`
                             }
                         });
-                        if (notification.from._id !== currentUser._id) {
-                            showSection('otherProfileSection', notification.from._id);
+
+                        if (!markReadResponse.ok) {
+                            throw new Error('Failed to mark notification as read');
+                        }
+
+                        fetchNotifications(true);
+                        if (notification.type === 'message') {
+                            currentChatUserId = user._id;
+                            showSection('messagesSection');
+                            fetchMessages(user._id);
+                        } else {
+                            showSection('otherProfileSection', user._id);
                         }
                     } catch (error) {
-                        console.error('Failed to mark notification as read:', error);
+                        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
                     }
                 };
                 notificationList.appendChild(notificationDiv);
             }
         }
-
-        const unreadCount = notifications.filter(n => !n.read).length;
-        notificationCount.style.display = unreadCount > 0 ? 'inline' : 'none';
-        notificationCount.textContent = unreadCount;
     } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
+    } finally {
+        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
     }
 }
-</script>
+    </script>
 </body>
 </html>
