@@ -863,37 +863,35 @@ give its full updation
             </div>
         </div>
 
-        <div id="aboutSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back</button>
-            <div class="about-section">
-    <h2>About TheMarts Automobiles</h2>
-    <p>Founded in 2025, TheMarts Automobiles is your premier destination for buying and selling cars with ease and confidence. Our innovative platform connects passionate car enthusiasts, savvy buyers, and trusted sellers in a vibrant community dedicated to all things automotive. Whether you're hunting for your dream ride or listing a vehicle for sale, we offer a seamless, user-friendly experience with a diverse selection of automobiles to explore. At TheMarts, we're driven by a mission to simplify car trading, deliver exceptional value, and fuel your passion for the open road. Join us today and discover the joy of car trading, redefined!</p>
-
-    <h3>Meet Our Founders</h3>
-    <div class="founders-grid">
-        <!-- Founder Card: Colince Sibuor -->
-        <div class="founder-card">
-            <img src="https://imgur.com/5mFDaSi" alt="Colince Sibuor, Founder of TheMarts Automobiles" class="founder-image">
-            <h4>Colince Sibuor</h4>
-            <p class="founder-title">Co-Founder & CEO</p>
-            <p class="founder-bio">Colince Sibuor brings visionary leadership and a passion for automotive innovation to TheMarts, driving our mission to revolutionize car trading.</p>
-            <div class="founder-contact">
-                <p>Email: <a href="mailto:colincesibuor122@gmail.com">Email</a></p>
-                <p>LinkedIn: <a href="https://www.linkedin.com/in/colince-sibuor" target="_blank">Connect with Colince</a></p>
-                <p>Contact: <a href="/contact">Reach out via our form</a></p>
+// From line ~850 to ~870
+<div id="aboutSection" class="section">
+    <button class="back-btn" onclick="showSection('homeSection')">Back</button>
+    <div class="about">
+        <h2>About TheMarts Automobiles</h2>
+        <p>Founded in 2025, TheMarts Automobiles is your premier destination for buying and selling cars with ease and confidence. Our innovative platform connects passionate car enthusiasts, savvy buyers, and trusted sellers in a vibrant community dedicated to all things automotive. Whether you're hunting for your dream ride or listing a vehicle for sale, we offer a seamless, user-friendly experience with a diverse selection of automobiles to explore. At TheMarts, we're driven by a mission to simplify car trading, deliver exceptional value, and fuel your passion for the open road. Join us today and discover the joy of car trading, redefined!</p>
+        <h3>Meet Our Founders</h3>
+        <div class="founders-grid">
+            <div class="founder-card">
+                <img src="./founders/colince_sibuor.jpg" alt="Colince Sibuor, Founder of TheMarts Automobiles" class="founder-image">
+                <h4>Colince Sibuor</h4>
+                <p class="founder-title">Co-Founder & CEO</p>
+                <p class="founder-bio">Colince Sibuor brings visionary leadership and a passion for automotive innovation to TheMarts, driving our mission to revolutionize car trading.</p>
+                <div class="founder-contact">
+                    <p>Email: <a href="mailto:colincesibuor122@gmail.com">colincesibuor122@gmail.com</a></p>
+                    <p>LinkedIn: <a href="https://www.linkedin.com/in/colince-sibuor" target="_blank">Connect with Colince</a></p>
+                    <p>Contact: <a href="#" onclick="showSection('contactSection')">Reach out via our form</a></p>
+                </div>
             </div>
-        </div>
-
-        <!-- Founder Card: Victor Martin -->
-        <div class="founder-card">
-            <img src="https://imgur.com/a/WS0kZ55" alt="Victor Martin, Founder of TheMarts Automobiles" class="founder-image">
-            <h4>Victor Martin</h4>
-            <p class="founder-title">Co-Founder & CTO</p>
-            <p class="founder-bio">Victor Martin leads our technology strategy, ensuring a cutting-edge platform that empowers users to buy and sell cars seamlessly.</p>
-            <div class="founder-contact">
-                <p>Email: <a href="mailto:victor.martin@themartsautomobiles.com">victor.martin@themartsautomobiles.com</a></p>
-                <p>LinkedIn: <a href="https://www.linkedin.com/in/victor-martin" target="_blank">Connect with Victor</a></p>
-                <p>Contact: <a href="/contact">Reach out via our form</a></p>
+            <div class="founder-card">
+                <img src="./founders/victor_martin.jpg" alt="Victor Martin, Founder of TheMarts Automobiles" class="founder-image">
+                <h4>Victor Martin</h4>
+                <p class="founder-title">Co-Founder & CTO</p>
+                <p class="founder-bio">Victor Martin leads our technology strategy, ensuring a cutting-edge platform that empowers users to buy and sell cars seamlessly.</p>
+                <div class="founder-contact">
+                    <p>Email: <a href="mailto:victor.martin@themartsautomobiles.com">victor.martin@themartsautomobiles.com</a></p>
+                    <p>LinkedIn: <a href="https://www.linkedin.com/in/victor-martin" target="_blank">Connect with Victor</a></p>
+                    <p>Contact: <a href="#" onclick="showSection('contactSection')">Reach out via our form</a></p>
+                </div>
             </div>
         </div>
     </div>
@@ -1353,9 +1351,10 @@ give its full updation
                     <p>${post.description}</p>
                     <img src="${post.image}" alt="${post.title}" />
                     <div class="actions">
-                        <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
-                            Like (${post.likes.length})
-                        </button>
+                        // From line ~1450 to ~1460 (within the carDiv.innerHTML block)
+<button class="like-btn ${post.likes.includes(currentUser?._id || '') ? 'liked' : ''}" data-id="${post._id}">
+    Like (${post.likes.length})
+</button>
                         <button class="comment-btn" data-id="${post._id}">Comment (${post.comments.length})</button>
                         ${isOwnPost ? `<button class="delete-btn" data-id="${post._id}">Delete</button>` : ''}
                     </div>
@@ -1497,46 +1496,40 @@ give its full updation
             }
         });
 
-        async function handleLike(postId) {
-            console.log('handleLike called with postId:', postId);
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('No authentication token found. Please log in again.');
-                }
-
-                const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                console.log('Like API response status:', response.status);
-
-                const post = await response.json();
-                console.log('Like API response data:', post);
-
-                if (response.status === 401 || response.status === 403) {
-                    localStorage.removeItem('token');
-                    showSection('loginSection');
-                    throw new Error('Session expired. Please log in again.');
-                }
-
-                if (!response.ok) {
-                    throw new Error(post.error || 'Failed to like post. Please try again.');
-                }
-
-                fetchPosts();
-                fetchNotifications();
-            } catch (error) {
-                console.error('Error in handleLike:', error.message);
-                if (error.message.includes('Failed to fetch')) {
-                    displayError('Unable to connect to the server. Please check your internet connection or try again later.');
-                } else {
-                    displayError(error.message);
-                }
-            }
+        // From line ~1700 to ~1720
+async function handleLike(postId) {
+    console.log('handleLike called with postId:', postId);
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Please log in to like posts.');
         }
+        if (!postId || typeof postId !== 'string' || postId.length !== 24) {
+            throw new Error('Invalid post ID');
+        }
+
+        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('token');
+                showSection('loginSection');
+                throw new Error('Session expired. Please log in again.');
+            }
+            throw new Error(errorData.error || 'Failed to like/unlike post');
+        }
+
+        fetchPosts();
+    } catch (error) {
+        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+    }
+}
 
         async function handleDelete(postId) {
             console.log('handleDelete called with postId:', postId);
@@ -1621,56 +1614,54 @@ give its full updation
             }
         }
 
-        async function handleFollow(userId) {
-            if (!userId) {
-                displayError('Cannot follow: User ID is missing.');
-                return;
+        // From line ~1800 to ~1820
+async function handleFollow(userId) {
+    if (!userId || userId.length !== 24) {
+        displayError('Cannot follow: Invalid user ID.');
+        return;
+    }
+    if (userId === currentUser?._id) {
+        displayError('You cannot follow yourself.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
+        });
 
-            console.log('handleFollow called with userId:', userId);
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                console.log('Follow API response status:', response.status);
-
-                const data = await response.json();
-                console.log('Follow API response data:', data);
-
-                if (response.status === 401) {
-                    localStorage.removeItem('token');
-                    showSection('loginSection');
-                    throw new Error('Session expired. Please log in again.');
-                }
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to follow/unfollow');
-                }
-
-                const userResponse = await fetch(`${API_BASE_URL}/api/users/profile`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                currentUser = await userResponse.json();
-                console.log('Updated currentUser after follow:', currentUser);
-
-                if (document.getElementById('homeSection').classList.contains('active')) {
-                    fetchPosts();
-                } else if (document.getElementById('profileSection').classList.contains('active')) {
-                    fetchUserProfile();
-                } else if (document.getElementById('otherProfileSection').classList.contains('active')) {
-                    fetchUserProfile(userId);
-                }
-                fetchNotifications();
-            } catch (error) {
-                console.error('Error in handleFollow:', error.message);
-                displayError(error.message);
+        if (!response.ok) {
+            const errorData = await response.json();
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('token');
+                showSection('loginSection');
+                throw new Error('Session expired. Please log in again.');
             }
+            throw new Error(errorData.error || 'Failed to follow/unfollow user');
         }
+
+        const userResponse = await fetch(`${API_BASE_URL}/api/users/profile`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        if (!userResponse.ok) {
+            throw new Error('Failed to refresh user data');
+        }
+        currentUser = await userResponse.json();
+
+        if (document.getElementById('homeSection').classList.contains('active')) {
+            fetchPosts();
+        } else if (document.getElementById('profileSection').classList.contains('active')) {
+            fetchUserProfile();
+        } else if (document.getElementById('otherProfileSection').classList.contains('active')) {
+            fetchUserProfile(userId);
+        }
+    } catch (error) {
+        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+    }
+}
 
         document.getElementById('searchBar').addEventListener('input', async (e) => {
             const query = e.target.value.trim().toLowerCase();
