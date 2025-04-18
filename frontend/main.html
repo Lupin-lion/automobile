@@ -1499,13 +1499,28 @@ async function handleLike(postId) {
         if (!postId || typeof postId !== 'string' || postId.length !== 24) {
             throw new Error('Invalid post ID');
         }
-
+        console.log('Liking post:', postId); // Debug
         const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
+        const errorData = await response.json();
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Post not found. It may have been deleted.');
+            } else if (response.status === 400) {
+                throw new Error('Invalid request. Please try again.');
+            }
+            throw new Error(errorData.error || 'Failed to like/unlike post');
+        }
+        fetchPosts();
+        fetchNotifications();
+    } catch (error) {
+        displayError(error.message.includes('Failed to fetch') ? 'Network error: Unable to connect to server.' : error.message);
+    }
+}
 
         if (!response.ok) {
             const errorData = await response.json();
