@@ -338,6 +338,15 @@
             font-size: 14px;
         }
 
+        .founder-contact a {
+            color: #1e3a8a;
+            text-decoration: none;
+        }
+
+        .founder-contact a:hover {
+            text-decoration: underline;
+        }
+
         /* Contact Section */
         .contact-section {
             background-color: white;
@@ -430,8 +439,8 @@
                 <h3>Create an Account</h3>
                 <label for="reg-username">Username:</label>
                 <input type="text" id="reg-username" placeholder="e.g., johndoe123" required>
-                <label for="reg-email">Email:</label>
-                <input type="email" id="reg-email" placeholder="e.g., johndoe@example.com" required>
+                <label for="reg-phone">Phone Number:</label>
+                <input type="tel" id="reg-phone" placeholder="e.g., +1234567890" pattern="\+[0-9]{10,15}" required>
                 <label for="reg-password">Password:</label>
                 <input type="password" id="reg-password" placeholder="Enter your password" required>
                 <button onclick="submitRegistration()">Register</button>
@@ -471,7 +480,7 @@
                 <input type="file" id="photo5" accept="image/*" required>
                 <label for="photo6">Photo 6:</label>
                 <input type="file" id="photo6" accept="image/*" required>
-                <button onclick="submitListing()">Submit Нижний Новгород</button>
+                <button onclick="submitListing()">Submit Listing</button>
             </div>
         </section>
 
@@ -533,8 +542,8 @@
                     <p class="founder-title">CEO & Founder</p>
                     <p class="founder-bio">Colince is the driving force behind TheMarts, blending his deep love for automobiles with a vision for digital innovation. With over 15 years in the automotive industry, he’s dedicated to making vehicle trading accessible to everyone.</p>
                     <div class="founder-contact">
-                        <p>Email: colincesibuor122@gmail.com</p>
                         <p>Phone: +245799582173</p>
+                        <p>WhatsApp: <a href="https://wa.me/245799582173">+245799582173</a></p>
                     </div>
                 </div>
                 <div class="founder-card">
@@ -543,8 +552,8 @@
                     <p class="founder-title">COO & Co-Founder</p>
                     <p class="founder-bio">Victor ensures TheMarts operates with precision and care. His expertise in logistics and user experience guarantees that every interaction on our platform is smooth and rewarding.</p>
                     <div class="founder-contact">
-                        <p>Email: victor@themarts.com</p>
                         <p>Phone: +1-555-987-6543</p>
+                        <p>WhatsApp: <a href="https://wa.me/15559876543">+1-555-987-6543</a></p>
                     </div>
                 </div>
             </div>
@@ -650,7 +659,7 @@
         function submitRegistration() {
             const user = {
                 username: document.getElementById('reg-username').value,
-                email: document.getElementById('reg-email').value,
+                phone: document.getElementById('reg-phone').value,
                 password: document.getElementById('reg-password').value
             };
 
