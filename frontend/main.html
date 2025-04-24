@@ -3,168 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TheMarts Automobiles</title>
+    <title>TheMarts - Vehicle Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        /* Sticky Navigation Bar */
+        .navbar {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+            color: white;
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #dbeafe;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        /* Listings Section */
+        .listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .listing-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Image Grid for Vehicle Photos */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-grid img:hover {
+            opacity: 0.9;
+        }
+
+        .listing-card h3 {
+            margin: 10px 0;
+            color: #1e3a8a;
+            font-size: 18px;
+        }
+
+        /* Dropdown for Vehicle Description */
+        .listing-card details {
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .listing-card summary {
+            cursor: pointer;
+            font-weight: bold;
+            color: #555;
+            padding: 5px;
+        }
+
+        .listing-card details p {
+            margin-top: 5px;
+            color: #666;
+            font-size: 14px;
+            padding: 5px;
+        }
+
+        /* Buy Button */
+        .buy-btn {
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: linear-gradient(90deg, #16a34a, #15803d);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-section h2 {
+            color: #1e3a8a;
+        }
+
+        .username {
+            display: inline-flex;
+            align-items: center;
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            margin-left: 5px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Add Listing Form */
+        .add-listing-form {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .add-listing-form label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        .add-listing-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .add-listing-form button {
+            background: linear-gradient(90deg, #3b82f6, #1e3a8a);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .add-listing-form button:hover {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        }
+
+        /* About Us Section */
+        .about-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+
+        .about-section h2 {
+            margin-bottom: 10px;
+            color: #1e3a8a;
+        }
+
+        .about-section p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.3s ease;
+            display: none;
+        }
+
+        .contact-section h2 {
+            color: #1e3a8a;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e3a8a;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                padding: 10px;
+                text-align: center;
+            }
+            .navbar a {
+                margin: 5px 0;
+                display: block;
+            }
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+            .image-grid img {
+                height: 150px;
+            }
+            .container {
+                padding: 10px;
+            }
+            .listing-card {
+                margin: 0 5px;
+            }
+            .username {
+                font-size: 14px;
+            }
+            .verified-badge {
+                width: 16px;
+                height: 16px;
+                font-size: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <nav>
-        <h1 id="homeLink">TheMarts</h1>
-        <div class="nav-links">
-            <a href="#" id="homeNavLink">Home</a>
-            <a href="#" id="profileLink">Profile</a>
-            <a href="#" id="messagesLink">Messages</a>
-            <a href="#" id="notificationsLink">Notifications <span id="notificationCount" style="display: none;">0</span></a>
-            <a href="#" id="aboutLink">About</a>
-            <a href="#" id="contactLink">Contact</a>
-            <a href="#" id="logoutLink">Logout</a>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">TheMarts</div>
+        <div>
+            <a href="#home" onclick="showSection('home')">Home</a>
+            <a href="#listings" onclick="showSection('listings')">Listings</a>
+            <a href="#profile" onclick="showSection('profile')">Profile</a>
+            <a href="#about" onclick="showSection('about')">About Us</a>
+            <a href="#contact" onclick="showSection('contact')">Contact Us</a>
         </div>
-        <input type="text" id="searchBar" placeholder="Search users or posts...">
     </nav>
 
+    <!-- Main Container -->
     <div class="container">
-        <p id="error"></p>
-        <!-- Added loading spinner for better UX -->
-        <div id="loadingSpinner" style="display: none; text-align: center; margin: 20px 0;">
-            <span style="font-size: 16px; color: #3498db;">Loading...</span>
-        </div>
-        <div id="searchResults" style="display: none;" class="search-results"></div>
+        <!-- Profile Section -->
+        <section id="profile" class="profile-section">
+            <h2>Welcome, User!</h2>
+            <p class="username">colince_sibuor_6510 <span class="verified-badge">✔</span></p>
+            <p>Manage your listings and messages here.</p>
+            <button onclick="fetchUserData()">View Profile</button>
+            <button onclick="toggleAddListingForm()">Add Listing</button>
+            <div class="add-listing-form" id="add-listing-form">
+                <h3>Add a New Vehicle Listing</h3>
+                <label for="make">Make:</label>
+                <input type="text" id="make" placeholder="e.g., Chevrolet" required>
+                <label for="model">Model:</label>
+                <input type="text" id="model" placeholder="e.g., Camaro ZL1" required>
+                <label for="year">Year:</label>
+                <input type="number" id="year" placeholder="e.g., 2023" required>
+                <label for="mileage">Mileage (miles):</label>
+                <input type="number" id="mileage" placeholder="e.g., 15000" required>
+                <label for="engine">Engine:</label>
+                <input type="text" id="engine" placeholder="e.g., 6.2L V8 Supercharged" required>
+                <label for="price">Price ($):</label>
+                <input type="number" id="price" placeholder="e.g., 65000" required>
+                <label for="photo1">Photo 1 URL:</label>
+                <input type="url" id="photo1" placeholder="e.g., https://example.com/photo1.jpg" required>
+                <label for="photo2">Photo 2 URL:</label>
+                <input type="url" id="photo2" placeholder="e.g., https://example.com/photo2.jpg" required>
+                <label for="photo3">Photo 3 URL:</label>
+                <input type="url" id="photo3" placeholder="e.g., https://example.com/photo3.jpg" required>
+                <label for="photo4">Photo 4 URL:</label>
+                <input type="url" id="photo4" placeholder="e.g., https://example.com/photo4.jpg" required>
+                <label for="photo5">Photo 5 URL:</label>
+                <input type="url" id="photo5" placeholder="e.g., https://example.com/photo5.jpg" required>
+                <label for="photo6">Photo 6 URL:</label>
+                <input type="url" id="photo6" placeholder="e.g., https://example.com/photo6.jpg" required>
+                <button onclick="submitListing()">Submit Listing</button>
+            </div>
+        </section>
 
-        <div id="loginSection" class="section">
-            <div class="auth-form">
-                <h2>Login</h2>
-                <form id="loginForm">
-                    <input type="text" id="loginPhoneNumber" placeholder="Phone Number" required>
-                    <div class="password-container">
-                        <input type="password" id="loginPassword" placeholder="Password" required>
-                        <span class="toggle-password" onclick="togglePassword('loginPassword')">Show</span>
+        <!-- Listings Section -->
+        <section id="listings">
+            <h2>Featured Vehicles</h2>
+            <div class="spinner" id="spinner"></div>
+            <div class="listings" id="listings-container">
+                <!-- Sample Listing 1 -->
+                <div class="listing-card">
+                    <div class="image-grid">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Front" alt="Chevrolet Camaro Front" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Side" alt="Chevrolet Camaro Side" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Rear" alt="Chevrolet Camaro Rear" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Interior" alt="Chevrolet Camaro Interior" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Engine" alt="Chevrolet Camaro Engine" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Camaro+Wheels" alt="Chevrolet Camaro Wheels" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
                     </div>
-                    <button type="submit">Login</button>
-                </form>
-                <p>Not registered? <a href="#" onclick="showSection('registerSection')">Register here</a></p>
-            </div>
-        </div>
-
-        <div id="registerSection" class="section">
-            <div class="auth-form">
-                <h2>Register</h2>
-                <form id="registerForm">
-                    <input type="text" id="regFirstName" placeholder="First Name" required>
-                    <input type="text" id="regLastName" placeholder="Last Name" required>
-                    <input type="text" id="regPhoneNumber" placeholder="Phone Number" required>
-                    <div class="password-container">
-                        <input type="password" id="regPassword" placeholder="Password" required>
-                        <span class="toggle-password" onclick="togglePassword('regPassword')">Show</span>
+                    <h3>Chevrolet Camaro ZL1</h3>
+                    <details>
+                        <summary>Vehicle Details</summary>
+                        <p>Make: Chevrolet<br>Model: Camaro ZL1<br>Year: 2023<br>Mileage: 15,000 miles<br>Engine: 6.2L V8 Supercharged<br>Price: $65,000</p>
+                    </details>
+                    <button class="buy-btn" onclick="buyNow('Chevrolet Camaro ZL1')">Buy Now</button>
+                </div>
+                <!-- Sample Listing 2 -->
+                <div class="listing-card">
+                    <div class="image-grid">
+                        <img src="https://via.placeholder.com/150?text=Supra+Front" alt="Toyota Supra Front" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Supra+Side" alt="Toyota Supra Side" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Supra+Rear" alt="Toyota Supra Rear" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Supra+Interior" alt="Toyota Supra Interior" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Supra+Engine" alt="Toyota Supra Engine" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <img src="https://via.placeholder.com/150?text=Supra+Wheels" alt="Toyota Supra Wheels" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
                     </div>
-                    <input type="date" id="regDob" required>
-                    <select id="regGender" required>
-                        <option value="" disabled selected>Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <button type="submit">Register</button>
-                </form>
-                <p>Already registered? <a href="#" onclick="showSection('loginSection')">Login here</a></p>
-            </div>
-        </div>
-
-        <div id="homeSection" class="section">
-            <button class="create-post-btn" onclick="showSection('postSection')">Create New Post</button>
-            <div id="carListings"></div>
-        </div>
-
-        <div id="postSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="post-form">
-                <h2>Create Post</h2>
-                <form id="carForm">
-                    <input type="text" id="carTitle" placeholder="Car Title" required>
-                    <input type="text" id="carPrice" placeholder="Price" required>
-                    <textarea id="carDescription" placeholder="Description" required></textarea>
-                    <input type="file" id="carImage" accept="image/*">
-                    <button type="submit">Post</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="profileSection" class="section">
-            <div class="profile">
-                <div class="cover-photo"></div>
-                <div class="profile-header">
-                    <img id="profilePicture" src="https://via.placeholder.com/120" alt="Profile Picture">
-                    <div class="info">
-                        <h2 id="profileUsername"></h2>
-                        <button class="edit-profile-btn" onclick="showEditProfileForm()">Edit Profile</button>
-                    </div>
-                </div>
-                <div class="profile-details">
-                    <p><strong>Name:</strong> <span id="profileName"></span></p>
-                    <p><strong>Gender:</strong> <span id="profileGender"></span></p>
-                    <p><strong>Date of Birth:</strong> <span id="profileDob"></span></p>
-                    <p><strong>Bio:</strong> <span id="profileBio"></span></p>
-                    <p><strong>Followers:</strong> <span id="profileFollowersCount">0</span></p>
-                </div>
-                <div class="followers-list" id="followersList">
-                    <h3>Followers</h3>
-                </div>
-                <form id="editProfileForm" class="edit-profile-form">
-                    <textarea id="editBio" placeholder="Bio"></textarea>
-                    <input type="file" id="editProfilePicture" accept="image/*">
-                    <button type="submit" class="save-profile-btn">Save</button>
-                    <button type="button" class="back-btn" onclick="hideEditProfileForm()">Cancel</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="otherProfileSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="profile">
-                <div class="cover-photo"></div>
-                <div class="profile-header">
-                    <img id="otherProfilePicture" src="https://via.placeholder.com/120" alt="Profile Picture">
-                    <div class="info">
-                        <h2 id="otherProfileUsername"></h2>
-                        <button class="follow-btn" id="otherProfileFollowBtn"></button>
-                        <button class="connect-btn" id="connectBtn">Connect</button>
-                    </div>
-                </div>
-                <div class="profile-details">
-                    <p><strong>Name:</strong> <span id="otherProfileName"></span></p>
-                    <p><strong>Gender:</strong> <span id="otherProfileGender"></span></p>
-                    <p><strong>Date of Birth:</strong> <span id="otherProfileDob"></span></p>
-                    <p><strong>Bio:</strong> <span id="otherProfileBio"></span></p>
-                    <p><strong>Followers:</strong> <span id="otherProfileFollowersCount">0</span></p>
-                </div>
-                <div class="followers-list" id="otherFollowersList">
-                    <h3>Followers</h3>
+                    <h3>Toyota Supra</h3>
+                    <details>
+                        <summary>Vehicle Details</summary>
+                        <p>Make: Toyota<br>Model: Supra<br>Year: 2022<br>Mileage: 20,000 miles<br>Engine: 3.0L Inline-6 Turbo<br>Price: $55,000</p>
+                    </details>
+                    <button class="buy-btn" onclick="buyNow('Toyota Supra')">Buy Now</button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div id="messagesSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="messages">
-                <h2>Messages</h2>
-                <div id="messageThreads"></div>
-                <form id="messageForm" class="message-form">
-                    <input type="text" id="messageReceiver" placeholder="Recipient Username">
-                    <textarea id="messageContent" placeholder="Type your message..."></textarea>
-                    <button type="submit">Send</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="notificationsSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="notifications">
-                <h2>Notifications</h2>
-                <div id="notificationList"></div>
-            </div>
-        </div>
-
-        <div id="aboutSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="about">
-                <h2>About TheMarts</h2>
+        <!-- About Us Section -->
+        <section id="about" class="about-section">
+           <h2>About TheMarts</h2>
                 <p>TheMarts Automobiles is a vibrant community for car enthusiasts, buyers, and sellers. Our platform connects people passionate about automobiles, offering a space to share, discover, and trade cars with ease.</p>
                 <h3>Our Mission</h3>
                 <p>Our mission is to revolutionize the way people buy and sell cars by providing a seamless, transparent, and community-driven platform. We aim to empower users with the tools and connections they need to make informed decisions.</p>
@@ -194,1811 +425,129 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>
 
-        <div id="contactSection" class="section">
-            <button class="back-btn" onclick="showSection('homeSection')">Back to Home</button>
-            <div class="contact">
-                <h2>Contact Us</h2>
-                <p>Have questions or need assistance? Reach out to our team, and we'll get back to you as soon as possible.</p>
-                <form id="contactForm">
-                    <input type="text" id="contactBusinessName" placeholder="Business Name" required>
-                    <input type="text" id="contactPhoneNumber" placeholder="Phone Number" required>
-                    <textarea id="contactMessage" placeholder="Your Message" required></textarea>
-                    <button type="submit">Send Message</button>
-                </form>
-                <p>Email: support@themarts.com | Phone: +1-555-012-3456</p>
-            </div>
-        </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <h2>Contact Us</h2>
+            <p>Email: support@themarts.com</p>
+            <p>Phone: +123-456-7890</p>
+        </section>
     </div>
 
-    <style>
-        .verified-tick {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    margin-left: 5px;
-    vertical-align: middle;
-}
-.verified-tick.blue {
-    background-color: blue;
-    clip-path: polygon(20% 40%, 0% 60%, 40% 100%, 100% 0%, 80% 0%, 40% 80%);
-}
-.verified-tick.black {
-    background-color: black;
-    clip-path: polygon(20% 40%, 0% 60%, 40% 100%, 100% 0%, 80% 0%, 40% 80%);
-}
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #e9ecef;
-            position: relative;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            opacity: 0.1;
-            z-index: -1;
-        }
-
-        nav {
-            background: linear-gradient(90deg, #2c3e50, #3498db);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav h1 {
-            font-size: 28px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        nav h1:hover {
-            color: #ffd700;
-        }
-
-        nav .nav-links {
-            display: flex;
-            gap: 25px;
-            align-items: center;
-        }
-
-        nav .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-            font-weight: 500;
-            transition: transform 0.3s ease, color 0.3s ease;
-        }
-
-        nav .nav-links a:hover {
-            color: #ffd700;
-            transform: scale(1.2);
-        }
-
-        nav input {
-            padding: 10px 15px;
-            width: 350px;
-            border-radius: 25px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            transition: background 0.3s ease;
-        }
-
-        nav input:focus {
-            background: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .section {
-            opacity: 0;
-            visibility: hidden;
-            position: absolute;
-            width: 100%;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .section.active {
-            opacity: 1;
-            visibility: visible;
-            position: relative;
-        }
-
-        .auth-form, .post-form, .car-post, .profile, .about, .contact, .messages, .notifications {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease, box-shadow 0.3s ease;
-        }
-
-        .auth-form:hover, .post-form:hover, .car-post:hover, .profile:hover, .about:hover, .contact:hover, .messages:hover, .notifications:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .auth-form form, .post-form form, .edit-profile-form, .message-form, .contact form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .auth-form .password-container {
-            position: relative;
-        }
-
-        .auth-form .password-container input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        .auth-form .password-container input:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-
-        .auth-form .password-container .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #3498db;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .auth-form input, .post-form input, .post-form textarea, .auth-form select, .edit-profile-form input, .edit-profile-form textarea, .message-form input, .message-form textarea, .contact input, .contact textarea {
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            font-size: 16px;
-            background: #f8f9fa;
-            transition: border-color 0.3s ease, background 0.3s ease;
-        }
-
-        .auth-form input:focus, .post-form input:focus, .post-form textarea:focus, .auth-form select:focus, .edit-profile-form input:focus, .edit-profile-form textarea:focus, .message-form input:focus, .message-form textarea:focus, .contact input:focus, .contact textarea:focus {
-            border-color: #3498db;
-            background: white;
-            outline: none;
-        }
-
-        .auth-form button, .post-form button, .create-post-btn, .back-btn, .edit-profile-btn, .save-profile-btn, .message-form button, .connect-btn, .delete-btn, .contact button {
-            padding: 12px;
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .auth-form button:hover, .post-form button:hover, .create-post-btn:hover, .back-btn:hover, .edit-profile-btn:hover, .save-profile-btn:hover, .message-form button:hover, .connect-btn:hover, .delete-btn:hover, .contact button:hover {
-            background: linear-gradient(45deg, #2980b9, #1f618d);
-            transform: scale(1.02);
-        }
-
-        .delete-btn {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
-        }
-
-        .delete-btn:hover {
-            background: linear-gradient(45deg, #c0392b, #a93226);
-        }
-
-        .car-post {
-            position: relative;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 20px;
-        }
-
-        .car-post img {
-            width: 100%;
-            height: 350px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .car-post img:hover {
-            transform: scale(1.01);
-        }
-
-        .car-post h3 {
-            margin: 15px 0;
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .car-post p {
-            color: #6c757d;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .car-post .post-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
-
-        .car-post .post-header img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-            cursor: pointer;
-            border: 2px solid #3498db;
-        }
-
-        .car-post .post-header .username {
-            font-size: 16px;
-            font-weight: 600;
-            color: #3498db;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .car-post .post-header .username:hover {
-            color: #2980b9;
-        }
-
-        .car-post .post-header .verified-tick {
-            font-size: 16px;
-            margin-left: 6px;
-        }
-
-        .car-post .follow-btn {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-left: auto;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .car-post .follow-btn.following {
-            background: #e9ecef;
-            color: #2c3e50;
-        }
-
-        .car-post .follow-btn:hover {
-            background: linear-gradient(45deg, #2980b9, #1f618d);
-            transform: scale(1.05);
-        }
-
-        .car-post .actions {
-            margin-top: 15px;
-            display: flex;
-            gap: 12px;
-            border-top: 1px solid #dee2e6;
-            padding-top: 12px;
-        }
-
-        .car-post .actions button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            background: none;
-            color: #6c757d;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .car-post .actions button:hover {
-            background: #f1f3f5;
-            border-radius: 6px;
-            color: #2c3e50;
-        }
-
-        .car-post .like-btn.liked {
-            color: #3498db;
-        }
-
-        .comments {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #dee2e6;
-        }
-
-        .comments input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 20px;
-            font-size: 15px;
-            background: #f8f9fa;
-        }
-
-        .comments .comment {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .comments .comment img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .comments .comment div {
-            background: #f1f3f5;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 15px;
-            color: #2c3e50;
-        }
-
-        .comments .comment div strong {
-            font-weight: 600;
-        }
-
-        .comments .comment div .verified-tick {
-            font-size: 14px;
-            margin-left: 6px;
-        }
-
-        .profile {
-            text-align: left;
-        }
-
-        .profile .cover-photo {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(45deg, #3498db, #2c3e50);
-            border-radius: 12px 12px 0 0;
-        }
-
-        .profile .profile-header {
-            position: relative;
-            margin-top: -70px;
-            padding: 0 25px;
-            display: flex;
-            align-items: flex-end;
-            gap: 20px;
-        }
-
-        .profile .profile-header img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            border: 5px solid white;
-            object-fit: cover;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile .profile-header .info {
-            flex: 1;
-            margin-bottom: 15px;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .profile .profile-header h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .profile .profile-header .verified-tick {
-            font-size: 20px;
-            margin-left: 6px;
-        }
-
-        .profile .profile-header .follow-btn, .connect-btn {
-            background: linear-gradient(45deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 15px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .profile .profile-header .follow-btn.following {
-            background: #e9ecef;
-            color: #2c3e50;
-        }
-
-        .profile .profile-header .follow-btn:hover, .connect-btn:hover {
-            background: linear-gradient(45deg, #2980b9, #1f618d);
-            transform: scale(1.05);
-        }
-
-        .profile .profile-details {
-            padding: 25px;
-            border-top: 1px solid #dee2e6;
-        }
-
-        .profile .profile-details p {
-            margin: 10px 0;
-            font-size: 15px;
-            color: #2c3e50;
-        }
-
-        .profile .profile-details p strong {
-            color: #6c757d;
-        }
-
-        .profile .followers-list {
-            margin-top: 25px;
-        }
-
-        .profile .followers-list h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 12px;
-        }
-
-        .profile .followers-list .follower {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .profile .followers-list .follower:hover {
-            background: #f1f3f5;
-        }
-
-        .profile .followers-list .follower img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .profile .followers-list .follower span {
-            font-size: 15px;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .profile .followers-list .follower .verified-tick {
-            font-size: 14px;
-            margin-left: 6px;
-        }
-
-        .search-results {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-results .user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .search-results .user:last-child {
-            border-bottom: none;
-        }
-
-        .search-results .user:hover {
-            background: #f1f3f5;
-        }
-
-        .search-results .user img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .search-results .user span {
-            font-size: 15px;
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .search-results .user .verified-tick {
-            font-size: 14px;
-            margin-left: 6px;
-        }
-
-        .about, .contact {
-            line-height: 1.7;
-            font-size: 15px;
-            color: #2c3e50;
-        }
-
-        .about h2, .about h3, .contact h2 {
-            color: #2c3e50;
-            text-align: center;
-        }
-
-        .about p, .contact p {
-            line-height: 1.6;
-            color: #34495e;
-        }
-
-        .founders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .founder-card {
-            background: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .founder-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .founder-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-        }
-
-        .founder-card h4 {
-            margin: 0;
-            color: #2c3e50;
-            font-size: 1.5em;
-        }
-
-        .founder-title {
-            font-style: italic;
-            color: #7f8c8d;
-            margin: 5px 0;
-        }
-
-        .founder-bio {
-            font-size: 0.9em;
-            color: #34495e;
-            margin-bottom: 15px;
-        }
-
-        .founder-contact p {
-            margin: 5px 0;
-            font-size: 0.9em;
-        }
-
-        .about a, .contact a {
-            color: #3498db;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .about a:hover, .contact a:hover {
-            color: #2980b9;
-        }
-
-        @media (max-width: 600px) {
-            .founders-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        #error {
-            color: #e74c3c;
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        .create-post-btn {
-            margin-bottom: 25px;
-            display: block;
-            width: 100%;
-            text-align: center;
-            background: #f1f3f5;
-            color: #2c3e50;
-            font-weight: 600;
-            padding: 15px;
-            border-radius: 8px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .create-post-btn:hover {
-            background: #e9ecef;
-            transform: scale(1.01);
-        }
-
-        .back-btn {
-            margin-bottom: 15px;
-            display: block;
-            background: #e9ecef;
-            color: #2c3e50;
-            font-weight: 600;
-            padding: 10px;
-            border-radius: 6px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .back-btn:hover {
-            background: #dee2e6;
-            transform: scale(1.02);
-        }
-
-        .edit-profile-form {
-            display: none;
-        }
-
-        .edit-profile-form.active {
-            display: flex;
-        }
-
-        .messages .message-thread {
-            max-height: 450px;
-            overflow-y: auto;
-            margin-bottom: 25px;
-            padding-right: 10px;
-        }
-
-        .messages .message {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .messages .message img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .messages .message div {
-            background: #f1f3f5;
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-size: 15px;
-            color: #2c3e50;
-        }
-
-        .messages .message.sent div {
-            background: #3498db;
-            color: white;
-        }
-
-        .messages .message div .verified-tick {
-            font-size: 14px;
-            margin-left: 6px;
-        }
-
-        .notifications .notification {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-bottom: 1px solid #dee2e6;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .notifications .notification:last-child {
-            border-bottom: none;
-        }
-
-        .notifications .notification.unread {
-            background: #e7f3ff;
-        }
-
-        .notifications .notification:hover {
-            background: #f1f3f5;
-        }
-
-        .notifications .notification img {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .notifications .notification span {
-            font-size: 15px;
-            color: #2c3e50;
-        }
-
-        .notification-count {
-            background: #e74c3c;
-            color: white;
-            border-radius: 50%;
-            padding: 3px 9px;
-            font-size: 13px;
-            position: relative;
-            top: -12px;
-            left: -6px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f3f5;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #3498db;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #2980b9;
-        }
-    </style>
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('homeLink').addEventListener('click', () => showSection('homeSection'));
-    document.getElementById('homeNavLink').addEventListener('click', (e) => { e.preventDefault(); showSection('homeSection'); });
-    document.getElementById('profileLink').addEventListener('click', (e) => { e.preventDefault(); showSection('profileSection'); });
-    document.getElementById('messagesLink').addEventListener('click', (e) => { e.preventDefault(); showSection('messagesSection'); });
-    document.getElementById('notificationsLink').addEventListener('click', (e) => { e.preventDefault(); showSection('notificationsSection'); });
-    document.getElementById('aboutLink').addEventListener('click', (e) => { e.preventDefault(); showSection('aboutSection'); });
-    document.getElementById('contactLink').addEventListener('click', (e) => { e.preventDefault(); showSection('contactSection'); });
-    document.getElementById('logoutLink').addEventListener('click', (e) => { e.preventDefault(); logout(); });
-});
-
-const API_BASE_URL = 'https://themarts-backend-new-c5d1bf7add7f.herokuapp.com';
-let currentUser = null;
-let currentChatUserId = null;
-
-function showSection(sectionId, userId = null) {
-    document.querySelectorAll('.section').forEach(section => {
-        section.classList.remove('active');
-        section.style.opacity = '0';
-        section.style.visibility = 'hidden';
-    });
-    const targetSection = document.getElementById(sectionId);
-    targetSection.classList.add('active');
-    setTimeout(() => {
-        targetSection.style.opacity = '1';
-        targetSection.style.visibility = 'visible';
-    }, 10);
-    document.getElementById('error').textContent = '';
-    document.getElementById('searchBar').value = '';
-
-    if (sectionId === 'homeSection') {
-        fetchPosts();
-        fetchNotifications();
-    } else if (sectionId === 'profileSection') {
-        fetchUserProfile();
-    } else if (sectionId === 'otherProfileSection' && userId) {
-        fetchUserProfile(userId);
-    } else if (sectionId === 'messagesSection') {
-        fetchMessageThreads();
-    } else if (sectionId === 'notificationsSection') {
-        fetchNotifications(true);
-    }
-}
-
-function displayError(message) {
-    document.getElementById('error').textContent = message;
-    document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner on error
-}
-
-function clearError() {
-    document.getElementById('error').textContent = '';
-}
-
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const toggleText = input.nextElementSibling;
-    if (input.type === 'password') {
-        input.type = 'text';
-        toggleText.textContent = 'Hide';
-    } else {
-        input.type = 'password';
-        toggleText.textContent = 'Show';
-    }
-}
-
-function showEditProfileForm() {
-    document.getElementById('editProfileForm').classList.add('active');
-    document.querySelector('.profile-details').style.display = 'none';
-    document.querySelector('.edit-profile-btn').style.display = 'none';
-}
-
-function hideEditProfileForm() {
-    document.getElementById('editProfileForm').classList.remove('active');
-    document.querySelector('.profile-details').style.display = 'block';
-    document.querySelector('.edit-profile-btn').style.display = 'block';
-    fetchUserProfile();
-}
-
-(async function initializeApp() {
-    const token = localStorage.getItem('token');
-    if (token) {
-        try {
-            document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-            const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const user = await response.json();
-            if (response.ok) {
-                currentUser = user;
-                showSection('homeSection');
-                fetchNotifications();
-            } else {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-            }
-        } catch (error) {
-            console.error('Failed to fetch user profile:', error);
-            localStorage.removeItem('token');
-            showSection('loginSection');
-            displayError('Unable to connect to server. Please check your internet connection.');
-        } finally {
-            document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-        }
-    } else {
-        showSection('loginSection');
-    }
-})();
-
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-
-    const phoneNumber = document.getElementById('loginPhoneNumber').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/users/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ phoneNumber, password })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
+        // Show spinner while loading
+        window.onload = function() {
+            const spinner = document.getElementById('spinner');
+            spinner.style.display = 'block';
+            setTimeout(() => {
+                spinner.style.display = 'none';
+            }, 1000);
         }
 
-        localStorage.setItem('token', data.token);
-        currentUser = data.user;
-        showSection('homeSection');
-        fetchPosts();
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-});
+        // Fetch user data (placeholder for backend integration)
+        function fetchUserData() {
+            alert("Fetching user data... (Implement backend API call here)");
+            // Example: fetch('/api/user').then(res => res.json()).then(data => console.log(data));
+        }
 
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
+        // Buy Now function - Redirect to WhatsApp
+        function buyNow(vehicleName) {
+            const message = `Hello, I'm interested in buying the ${vehicleName}. Can we discuss the details?`;
+            const whatsappUrl = `https://wa.me/254704698392?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
 
-    const firstName = document.getElementById('regFirstName').value;
-    const lastName = document.getElementById('regLastName').value;
-    const phoneNumber = document.getElementById('regPhoneNumber').value;
-    const password = document.getElementById('regPassword').value;
-    const dob = document.getElementById('regDob').value;
-    const gender = document.getElementById('regGender').value;
+        // Toggle Add Listing Form
+        function toggleAddListingForm() {
+            const form = document.getElementById('add-listing-form');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName,
-                lastName,
-                phoneNumber,
-                password,
-                dob,
-                gender
+        // Submit Listing (Placeholder for backend integration)
+        function submitListing() {
+            const listing = {
+                make: document.getElementById('make').value,
+                model: document.getElementById('model').value,
+                year: document.getElementById('year').value,
+                mileage: document.getElementById('mileage').value,
+                engine: document.getElementById('engine').value,
+                price: document.getElementById('price').value,
+                photos: [
+                    document.getElementById('photo1').value,
+                    document.getElementById('photo2').value,
+                    document.getElementById('photo3').value,
+                    document.getElementById('photo4').value,
+                    document.getElementById('photo5').value,
+                    document.getElementById('photo6').value
+                ]
+            };
+
+            // Log the listing data (replace with backend API call)
+            console.log('New Listing:', listing);
+            alert('Listing submitted! (Logged to console. Implement backend API call to save this data.)');
+
+            // Example backend API call (uncomment to use):
+            /*
+            fetch('/api/listings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(listing)
             })
-        });
+            .then(res => res.json())
+            .then(data => {
+                console.log('Listing saved:', data);
+                alert('Listing added successfully!');
+            })
+            .catch(err => console.error('Error saving listing:', err));
+            */
 
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || 'Registration failed');
+            // Reset the form and hide it
+            document.getElementById('add-listing-form').reset();
+            toggleAddListingForm();
         }
 
-        localStorage.setItem('token', data.token);
-        currentUser = data.user;
-        showSection('homeSection');
-        fetchPosts();
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-});
-
-document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    const businessName = document.getElementById('contactBusinessName').value;
-    const phoneNumber = document.getElementById('contactPhoneNumber').value;
-    const message = document.getElementById('contactMessage').value;
-    alert(`Contact form submitted:\nBusiness: ${businessName}\nPhone: ${phoneNumber}\nMessage: ${message}`);
-    e.target.reset();
-});
-
-function logout() {
-    localStorage.removeItem('token');
-    currentUser = null;
-    showSection('loginSection');
-}
-
-async function fetchUserProfile(userId = null) {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const url = userId ? `${API_BASE_URL}/api/users/${userId}` : `${API_BASE_URL}/api/users/profile`;
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        const user = await response.json();
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(user.error || 'Failed to fetch profile');
-        }
-
-        const profileDiv = userId ? document.getElementById('otherUserProfile') : document.getElementById('userProfile');
-        const isFollowing = user.followers.includes(currentUser?._id || '');
-
-        if (userId) {
-            document.getElementById('otherProfilePicture').src = user.profilePicture || 'https://via.placeholder.com/120';
-            document.getElementById('otherProfileUsername').innerHTML = `${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}`;
-            document.getElementById('otherProfileName').textContent = `${user.firstName} ${user.lastName}`;
-            document.getElementById('otherProfileGender').textContent = user.gender;
-            document.getElementById('otherProfileDob').textContent = new Date(user.dob).toLocaleDateString();
-            document.getElementById('otherProfileBio').textContent = user.bio || 'Not set';
-            document.getElementById('otherProfileFollowersCount').textContent = user.followers.length;
-
-            const followBtn = document.getElementById('otherProfileFollowBtn');
-            followBtn.textContent = isFollowing ? 'Following' : 'Follow';
-            followBtn.className = `follow-btn ${isFollowing ? 'following' : ''}`;
-            followBtn.dataset.user = user._id;
-
-            const connectBtn = document.getElementById('connectBtn');
-            connectBtn.dataset.user = user._id;
-            connectBtn.onclick = () => {
-                currentChatUserId = user._id;
-                showSection('messagesSection');
-                fetchMessages(user._id);
-            };
-
-            const followersList = document.getElementById('otherFollowersList');
-            followersList.innerHTML = '<h3>Followers</h3>';
-            for (const followerId of user.followers) {
-                const followerResponse = await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-                const follower = await followerResponse.json();
-                const followerDiv = document.createElement('div');
-                followerDiv.classList.add('follower');
-                followerDiv.dataset.user = follower._id;
-                followerDiv.innerHTML = `
-                    <img src="${follower.profilePicture || 'https://via.placeholder.com/40'}" alt="${follower.username || 'Unknown User'}">
-                    <span>${follower.username || 'Unknown User'}${follower.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
-                `;
-                followerDiv.onclick = () => {
-                    showSection('otherProfileSection', follower._id);
-                };
-                followersList.appendChild(followerDiv);
-            }
-        } else {
-            document.getElementById('profilePicture').src = user.profilePicture || 'https://via.placeholder.com/120';
-            document.getElementById('profileUsername').innerHTML = `${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}`;
-            document.getElementById('profileName').textContent = `${user.firstName} ${user.lastName}`;
-            document.getElementById('profileGender').textContent = user.gender;
-            document.getElementById('profileDob').textContent = new Date(user.dob).toLocaleDateString();
-            document.getElementById('profileBio').textContent = user.bio || 'Not set';
-            document.getElementById('profileFollowersCount').textContent = user.followers.length;
-
-            const followersList = document.getElementById('followersList');
-            followersList.innerHTML = '<h3>Followers</h3>';
-            for (const followerId of user.followers) {
-                const followerResponse = await fetch(`${API_BASE_URL}/api/users/${followerId}`, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-                });
-                const follower = await followerResponse.json();
-                const followerDiv = document.createElement('div');
-                followerDiv.classList.add('follower');
-                followerDiv.dataset.user = follower._id;
-                followerDiv.innerHTML = `
-                    <img src="${follower.profilePicture || 'https://via.placeholder.com/40'}" alt="${follower.username || 'Unknown User'}">
-                    <span>${follower.username || 'Unknown User'}${follower.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
-                `;
-                followerDiv.onclick = () => {
-                    showSection('otherProfileSection', follower._id);
-                };
-                followersList.appendChild(followerDiv);
-            }
-        }
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-
-    const bio = document.getElementById('editBio').value;
-    const profilePicture = document.getElementById('editProfilePicture').files[0];
-
-    const formData = new FormData();
-    if (bio) formData.append('bio', bio);
-    if (profilePicture) formData.append('profilePicture', profilePicture);
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: formData
-        });
-
-        const user = await response.json();
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(user.error || 'Failed to update profile');
-        }
-
-        currentUser = user;
-        hideEditProfileForm();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-});
-
-async function fetchPosts(searchTerm = '') {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const url = searchTerm ? `${API_BASE_URL}/api/posts/search/${searchTerm}` : `${API_BASE_URL}/api/posts`;
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        const posts = await response.json();
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(posts.error || 'Failed to fetch posts');
-        }
-
-        displayPosts(posts);
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-async function displayPosts(posts) {
-    const listingsDiv = document.getElementById('carListings');
-    if (!listingsDiv) {
-        console.error('carListings div not found in DOM');
-        return;
-    }
-    listingsDiv.innerHTML = '';
-
-    if (posts.length === 0) {
-        listingsDiv.innerHTML = '<p>No posts available.</p>';
-        return;
-    }
-
-    for (const post of posts) {
-        const user = post.user || { profilePicture: 'https://via.placeholder.com/40', username: 'Unknown User', _id: '', verified: false };
-        const hasLiked = currentUser ? post.likes.includes(currentUser._id) : false;
-        const isOwnPost = currentUser && post.user && post.user._id === currentUser._id;
-        const carDiv = document.createElement('div');
-        carDiv.classList.add('car-post');
-        carDiv.innerHTML = `
-            <div class="post-header">
-                <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}" data-user="${user._id}" />
-                <span class="username" data-user="${user._id}">${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
-                ${user._id && user._id !== currentUser?._id ? `<button class="follow-btn ${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'following' : ''}" data-user="${user._id}">${currentUser && currentUser.following && currentUser.following.includes(user._id) ? 'Following' : 'Follow'}</button>` : ''}
-            </div>
-            <h3>${post.title}</h3>
-            <p><strong>Price:</strong> ${post.price}</p>
-            <p>${post.description}</p>
-            <img src="${post.image || 'https://via.placeholder.com/300'}" alt="${post.title}" />
-            <div class="actions">
-                <button class="like-btn ${hasLiked ? 'liked' : ''}" data-id="${post._id}">
-                    Like (${post.likes.length})
-                </button>
-                <button class="comment-btn" data-id="${post._id}">Comment (${post.comments.length})</button>
-                ${isOwnPost ? `<button class="delete-btn" data-id="${post._id}">Delete</button>` : ''}
-            </div>
-            <div class="comments" id="comments-${post._id}" style="display: none;"></div>
-        `;
-
-        listingsDiv.appendChild(carDiv);
-
-        const commentsDiv = document.getElementById(`comments-${post._id}`);
-        for (const comment of post.comments) {
-            const commenter = comment.user || { profilePicture: 'https://via.placeholder.com/32', username: 'Unknown User', verified: false };
-            const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment');
-            commentDiv.innerHTML = `
-                <img src="${commenter.profilePicture || 'https://via.placeholder.com/32'}" alt="${commenter.username || 'Unknown User'}" />
-                <div>
-                    <strong>${commenter.username || 'Unknown User'}${commenter.verified ? '<span class="verified-tick">✅</span>' : ''}</strong>
-                    <p>${comment.text}</p>
-                </div>
-            `;
-            commentsDiv.appendChild(commentDiv);
-        }
-
-        const commentInput = document.createElement('div');
-        commentInput.className = 'comment-input-container';
-        commentInput.innerHTML = `
-            <input type="text" class="comment-input" placeholder="Write a comment..." data-id="${post._id}">
-            <button class="comment-submit-btn" data-id="${post._id}">Post</button>
-        `;
-        commentsDiv.appendChild(commentInput);
-    }
-
-    attachEventListeners();
-}
-
-function attachEventListeners() {
-    const carListings = document.getElementById('carListings');
-    if (!carListings) return;
-
-    carListings.onclick = async (e) => {
-        if (e.target.classList.contains('like-btn')) {
-            const postId = e.target.dataset.id;
-            if (!postId) {
-                displayError('Invalid post ID');
-                return;
-            }
-            await handleLike(postId);
-        } else if (e.target.classList.contains('comment-btn')) {
-            const postId = e.target.dataset.id;
-            toggleComments(postId);
-        } else if (e.target.classList.contains('delete-btn')) {
-            const postId = e.target.dataset.id;
-            if (confirm('Are you sure you want to delete this post?')) {
-                await handleDelete(postId);
-            }
-        } else if (e.target.classList.contains('follow-btn')) {
-            const userId = e.target.dataset.user;
-            await handleFollow(userId);
-        } else if (e.target.classList.contains('username') || (e.target.tagName === 'IMG' && e.target.parentElement.classList.contains('post-header'))) {
-            const userId = e.target.dataset.user;
-            if (userId && userId !== currentUser?._id) {
-                showSection('otherProfileSection', userId);
-            }
-        } else if (e.target.classList.contains('comment-submit-btn')) {
-            const postId = e.target.dataset.id;
-            const input = document.querySelector(`.comment-input[data-id="${postId}"]`);
-            await handleComment(postId, input);
-        }
-    };
-
-    carListings.onkeypress = async (e) => {
-        if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
-            const postId = e.target.dataset.id;
-            await handleComment(postId, e.target);
-        }
-    };
-
-    const otherProfileFollowBtn = document.getElementById('otherProfileFollowBtn');
-    if (otherProfileFollowBtn) {
-        otherProfileFollowBtn.onclick = async () => {
-            const userId = otherProfileFollowBtn.dataset.user;
-            await handleFollow(userId);
-        };
-    }
-}
-
-document.getElementById('carForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    clearError();
-    document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-
-    const title = document.getElementById('carTitle').value;
-    const price = document.getElementById('carPrice').value;
-    const description = document.getElementById('carDescription').value;
-    const image = document.getElementById('carImage').files[0];
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('price', price);
-    formData.append('description', description);
-    if (image) {
-        formData.append('image', image);
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/posts`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: formData
-        });
-
-        const post = await response.json();
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(post.error || 'Failed to create post');
-        }
-
-        showSection('homeSection');
-        fetchPosts();
-        e.target.reset();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-});
-
-async function handleLike(postId) {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('Please log in to like posts.');
-        }
-        if (!postId || typeof postId !== 'string' || postId.length !== 24) {
-            throw new Error('Invalid post ID');
-        }
-        console.log('Liking post:', postId); // Debug
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const errorData = await response.json();
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Post not found. It may have been deleted.');
-            } else if (response.status === 400) {
-                throw new Error('Invalid request. Please try again.');
-            }
-            throw new Error(errorData.error || 'Failed to like/unlike post');
-        }
-        fetchPosts();
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-// Removed duplicate handleLike function (there was a second one in your code)
-
-async function handleDelete(postId) {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to delete post');
-        }
-
-        fetchPosts();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-function toggleComments(postId) {
-    const commentsDiv = document.getElementById(`comments-${postId}`);
-    commentsDiv.style.display = commentsDiv.style.display === 'none' ? 'block' : 'none';
-}
-
-async function handleComment(postId, input) {
-    const text = input.value.trim();
-    if (!text) return;
-
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('Please log in to comment.');
-        }
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-
-        const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ text })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(errorData.error || 'Failed to comment');
-        }
-
-        input.value = '';
-        fetchPosts();
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-async function handleFollow(userId) {
-    if (!userId || userId.length !== 24) {
-        displayError('Cannot follow: Invalid user ID.');
-        return;
-    }
-    if (userId === currentUser?._id) {
-        displayError('You cannot follow yourself.');
-        return;
-    }
-
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const response = await fetch(`${API_BASE_URL}/api/users/${userId}/follow`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(errorData.error || 'Failed to follow/unfollow user');
-        }
-
-        const userResponse = await fetch(`${API_BASE_URL}/api/users/profile`, {
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        if (!userResponse.ok) {
-            throw new Error('Failed to refresh user data');
-        }
-        currentUser = await userResponse.json();
-
-        if (document.getElementById('homeSection').classList.contains('active')) {
-            fetchPosts();
-        } else if (document.getElementById('profileSection').classList.contains('active')) {
-            fetchUserProfile();
-        } else if (document.getElementById('otherProfileSection').classList.contains('active')) {
-            fetchUserProfile(userId);
-        }
-        fetchNotifications();
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-document.getElementById('searchBar').addEventListener('input', async (e) => {
-    const query = e.target.value.trim().toLowerCase();
-
-    if (query.includes('about')) {
-        showSection('aboutSection');
-        return;
-    }
-    if (query.includes('contact')) {
-        showSection('contactSection');
-        return;
-    }
-
-    if (!query) {
-        document.getElementById('searchResults').style.display = 'none';
-        fetchPosts();
-        return;
-    }
-
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const userResponse = await fetch(`${API_BASE_URL}/api/users/search/${encodeURIComponent(query)}`, { // Added encodeURIComponent for safety
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        const users = await userResponse.json();
-
-        if (!userResponse.ok) {
-            if (userResponse.status === 401 || userResponse.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error(users.error || 'Failed to search users');
-        }
-
-        const searchResults = document.getElementById('searchResults');
-        searchResults.style.display = 'block';
-        searchResults.innerHTML = users.map(user => `
-            <div class="user" data-user="${user._id}">
-                <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}">
-                <span>${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''}</span>
-            </div>
-        `).join('');
-
-        document.querySelectorAll('.user').forEach(userDiv => {
-            userDiv.onclick = () => {
-                showSection('otherProfileSection', userDiv.dataset.user);
-            };
-        });
-
-        fetchPosts(query);
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-});
-
-async function fetchMessageThreads() {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        // Changed endpoint to /api/users to avoid 400 error on /api/users/search/
-        const response = await fetch(`${API_BASE_URL}/api/users`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error('Failed to fetch users for message threads');
-        }
-
-        const users = await response.json();
-
-        const threads = new Map();
-        for (const user of users) {
-            if (user._id === currentUser._id) continue;
-            const messagesResponse = await fetch(`${API_BASE_URL}/api/messages/${user._id}`, {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-            });
-
-            if (!messagesResponse.ok) {
-                if (messagesResponse.status === 401 || messagesResponse.status === 403) {
-                    localStorage.removeItem('token');
-                    showSection('loginSection');
-                    throw new Error('Session expired. Please log in again.');
+        // Toggle section visibility
+        function showSection(sectionId) {
+            const profileSection = document.getElementById('profile');
+            const listingsSection = document.getElementById('listings');
+            const aboutSection = document.getElementById('about');
+            const contactSection = document.getElementById('contact');
+
+            // Default state: show profile and listings, hide about and contact
+            if (sectionId === 'home' || sectionId === 'profile' || sectionId === 'listings') {
+                profileSection.style.display = 'block';
+                listingsSection.style.display = 'block';
+                aboutSection.style.display = 'none';
+                contactSection.style.display = 'none';
+            } else if (sectionId === 'about') {
+                // Toggle About Us
+                if (aboutSection.style.display === 'block') {
+                    aboutSection.style.display = 'none';
+                    profileSection.style.display = 'block';
+                    listingsSection.style.display = 'block';
+                } else {
+                    aboutSection.style.display = 'block';
+                    profileSection.style.display = 'none';
+                    listingsSection.style.display = 'none';
+                    contactSection.style.display = 'none';
                 }
-                continue;
-            }
-
-            const messages = await messagesResponse.json();
-            if (messages.length > 0) {
-                threads.set(user._id, { user, lastMessage: messages[messages.length - 1] });
-            }
-        }
-
-        const threadsDiv = document.getElementById('messageThreads');
-        threadsDiv.innerHTML = '';
-        for (const [userId, thread] of threads) {
-            const threadDiv = document.createElement('div');
-            threadDiv.classList.add('user');
-            threadDiv.dataset.user = userId;
-            threadDiv.innerHTML = `
-                <img src="${thread.user.profilePicture || 'https://via.placeholder.com/40'}" alt="${thread.user.username || 'Unknown User'}">
-                <span>${thread.user.username || 'Unknown User'}${thread.user.verified ? '<span class="verified-tick">✅</span>' : ''}: ${thread.lastMessage.content}</span>
-            `;
-            threadDiv.onclick = () => {
-                currentChatUserId = userId;
-                fetchMessages(userId);
-            };
-            threadsDiv.appendChild(threadDiv);
-        }
-
-        if (currentChatUserId) {
-            fetchMessages(currentChatUserId);
-        }
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-async function fetchMessages(userId) {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const response = await fetch(`${API_BASE_URL}/api/messages/${userId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            throw new Error('Failed to fetch messages');
-        }
-
-        const messages = await response.json();
-        const threadsDiv = document.getElementById('messageThreads');
-        const chatUser = messages.length > 0 ? (messages[0].receiver._id === userId ? messages[0].receiver : messages[0].sender) : { username: 'Unknown User', verified: false };
-        threadsDiv.innerHTML = `<h3>Conversation with ${chatUser.username || 'Unknown User'}${chatUser.verified ? '<span class="verified-tick">✅</span>' : ''}</h3>`;
-        const messageThread = document.createElement('div');
-        messageThread.classList.add('message-thread');
-        messages.forEach(message => {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', message.sender._id === currentUser._id ? 'sent' : 'received');
-            messageDiv.innerHTML = `
-                <img src="${message.sender.profilePicture || 'https://via.placeholder.com/32'}" alt="${message.sender.username || 'Unknown User'}">
-                <div>
-                    <strong>${message.sender.username || 'Unknown User'}${message.sender.verified ? '<span class="verified-tick">✅</span>' : ''}</strong>
-                    <p>${message.content}</p>
-                </div>
-            `;
-            messageThread.appendChild(messageDiv);
-        });
-        threadsDiv.appendChild(messageThread);
-        messageThread.scrollTop = messageThread.scrollHeight;
-
-                const messageForm = document.getElementById('messageForm');
-        messageForm.onsubmit = async (e) => {
-            e.preventDefault();
-            clearError();
-            document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-
-            const content = document.getElementById('messageContent').value.trim();
-            if (!content) {
-                displayError('Message cannot be empty.');
-                document.getElementById('loadingSpinner').style.display = 'none';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/messages`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({
-                        receiver: userId,
-                        content
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    if (response.status === 401 || response.status === 403) {
-                        localStorage.removeItem('token');
-                        showSection('loginSection');
-                        throw new Error('Session expired. Please log in again.');
-                    }
-                    throw new Error(errorData.error || 'Failed to send message');
+            } else if (sectionId === 'contact') {
+                // Toggle Contact Us
+                if (contactSection.style.display === 'block') {
+                    contactSection.style.display = 'none';
+                    profileSection.style.display = 'block';
+                    listingsSection.style.display = 'block';
+                } else {
+                    contactSection.style.display = 'block';
+                    profileSection.style.display = 'none';
+                    listingsSection.style.display = 'none';
+                    aboutSection.style.display = 'none';
                 }
-
-                document.getElementById('messageContent').value = '';
-                fetchMessages(userId);
-                fetchNotifications();
-            } catch (error) {
-                displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-            } finally {
-                document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-            }
-        };
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
-
-async function fetchNotifications(displayAll = false) {
-    try {
-        document.getElementById('loadingSpinner').style.display = 'block'; // Show spinner
-        const response = await fetch(`${API_BASE_URL}/api/notifications`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (!response.ok) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('token');
-                showSection('loginSection');
-                throw new Error('Session expired. Please log in again.');
-            }
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to fetch notifications');
-        }
-
-        const notifications = await response.json();
-        const unreadCount = notifications.filter(n => !n.read).length;
-        const notificationCountSpan = document.getElementById('notificationCount');
-        notificationCountSpan.textContent = unreadCount;
-        notificationCountSpan.style.display = unreadCount > 0 ? 'inline' : 'none';
-
-        if (displayAll) {
-            const notificationList = document.getElementById('notificationList');
-            notificationList.innerHTML = '';
-
-            if (notifications.length === 0) {
-                notificationList.innerHTML = '<p>No notifications available.</p>';
-                return;
-            }
-
-            for (const notification of notifications) {
-                const notificationDiv = document.createElement('div');
-                notificationDiv.classList.add('notification', notification.read ? '' : 'unread');
-                const user = notification.sender || { profilePicture: 'https://via.placeholder.com/40', username: 'Unknown User', _id: '', verified: false };
-                notificationDiv.innerHTML = `
-                    <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" alt="${user.username || 'Unknown User'}">
-                    <span>${user.username || 'Unknown User'}${user.verified ? '<span class="verified-tick">✅</span>' : ''} ${notification.message}</span>
-                `;
-                notificationDiv.dataset.id = notification._id;
-                notificationDiv.dataset.user = user._id;
-                notificationDiv.onclick = async () => {
-                    try {
-                        const markReadResponse = await fetch(`${API_BASE_URL}/api/notifications/${notification._id}/read`, {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': `Bearer ${localStorage.getItem('token')}`
-                            }
-                        });
-
-                        if (!markReadResponse.ok) {
-                            throw new Error('Failed to mark notification as read');
-                        }
-
-                        fetchNotifications(true);
-                        if (notification.type === 'message') {
-                            currentChatUserId = user._id;
-                            showSection('messagesSection');
-                            fetchMessages(user._id);
-                        } else {
-                            showSection('otherProfileSection', user._id);
-                        }
-                    } catch (error) {
-                        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-                    }
-                };
-                notificationList.appendChild(notificationDiv);
             }
         }
-    } catch (error) {
-        displayError(error.message.includes('Failed to fetch') ? 'Unable to connect to server. Please check your internet connection.' : error.message);
-    } finally {
-        document.getElementById('loadingSpinner').style.display = 'none'; // Hide spinner
-    }
-}
     </script>
 </body>
 </html>
