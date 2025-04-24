@@ -50,6 +50,60 @@
             padding: 20px;
         }
 
+        /* Registration Section */
+        .register-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.3s ease;
+        }
+
+        .register-section h2 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+
+        .register-form {
+            display: none;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .register-form label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+
+        .register-form input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .register-form button {
+            background: linear-gradient(90deg, #3b82f6, #1e3a8a);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .register-form button:hover {
+            background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+        }
+
         /* Listings Section */
         .listings {
             display: grid;
@@ -225,13 +279,63 @@
         }
 
         .about-section h2 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #1e3a8a;
+        }
+
+        .about-section h3 {
+            margin: 15px 0 10px;
             color: #1e3a8a;
         }
 
         .about-section p {
             color: #666;
             line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .founders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .founder-card {
+            text-align: center;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .founder-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .founder-card h4 {
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .founder-title {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .founder-bio {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .founder-contact p {
+            color: #666;
+            font-size: 14px;
         }
 
         /* Contact Section */
@@ -296,6 +400,10 @@
                 height: 16px;
                 font-size: 10px;
             }
+            .founder-image {
+                width: 100px;
+                height: 100px;
+            }
         }
     </style>
 </head>
@@ -307,6 +415,7 @@
             <a href="#home" onclick="showSection('home')">Home</a>
             <a href="#listings" onclick="showSection('listings')">Listings</a>
             <a href="#profile" onclick="showSection('profile')">Profile</a>
+            <a href="#register" onclick="showSection('register')">Register</a>
             <a href="#about" onclick="showSection('about')">About Us</a>
             <a href="#contact" onclick="showSection('contact')">Contact Us</a>
         </div>
@@ -314,6 +423,21 @@
 
     <!-- Main Container -->
     <div class="container">
+        <!-- Registration Section -->
+        <section id="register" class="register-section">
+            <h2>Register</h2>
+            <div class="register-form" id="register-form">
+                <h3>Create an Account</h3>
+                <label for="reg-username">Username:</label>
+                <input type="text" id="reg-username" placeholder="e.g., johndoe123" required>
+                <label for="reg-email">Email:</label>
+                <input type="email" id="reg-email" placeholder="e.g., johndoe@example.com" required>
+                <label for="reg-password">Password:</label>
+                <input type="password" id="reg-password" placeholder="Enter your password" required>
+                <button onclick="submitRegistration()">Register</button>
+            </div>
+        </section>
+
         <!-- Profile Section -->
         <section id="profile" class="profile-section">
             <h2>Welcome, User!</h2>
@@ -335,19 +459,19 @@
                 <input type="text" id="engine" placeholder="e.g., 6.2L V8 Supercharged" required>
                 <label for="price">Price ($):</label>
                 <input type="number" id="price" placeholder="e.g., 65000" required>
-                <label for="photo1">Photo 1 URL:</label>
-                <input type="url" id="photo1" placeholder="e.g., https://example.com/photo1.jpg" required>
-                <label for="photo2">Photo 2 URL:</label>
-                <input type="url" id="photo2" placeholder="e.g., https://example.com/photo2.jpg" required>
-                <label for="photo3">Photo 3 URL:</label>
-                <input type="url" id="photo3" placeholder="e.g., https://example.com/photo3.jpg" required>
-                <label for="photo4">Photo 4 URL:</label>
-                <input type="url" id="photo4" placeholder="e.g., https://example.com/photo4.jpg" required>
-                <label for="photo5">Photo 5 URL:</label>
-                <input type="url" id="photo5" placeholder="e.g., https://example.com/photo5.jpg" required>
-                <label for="photo6">Photo 6 URL:</label>
-                <input type="url" id="photo6" placeholder="e.g., https://example.com/photo6.jpg" required>
-                <button onclick="submitListing()">Submit Listing</button>
+                <label for="photo1">Photo 1:</label>
+                <input type="file" id="photo1" accept="image/*" required>
+                <label for="photo2">Photo 2:</label>
+                <input type="file" id="photo2" accept="image/*" required>
+                <label for="photo3">Photo 3:</label>
+                <input type="file" id="photo3" accept="image/*" required>
+                <label for="photo4">Photo 4:</label>
+                <input type="file" id="photo4" accept="image/*" required>
+                <label for="photo5">Photo 5:</label>
+                <input type="file" id="photo5" accept="image/*" required>
+                <label for="photo6">Photo 6:</label>
+                <input type="file" id="photo6" accept="image/*" required>
+                <button onclick="submitListing()">Submit Нижний Новгород</button>
             </div>
         </section>
 
@@ -395,38 +519,35 @@
 
         <!-- About Us Section -->
         <section id="about" class="about-section">
-           <h2>About TheMarts</h2>
-                <p>TheMarts Automobiles is a vibrant community for car enthusiasts, buyers, and sellers. Our platform connects people passionate about automobiles, offering a space to share, discover, and trade cars with ease.</p>
-                <h3>Our Mission</h3>
-                <p>Our mission is to revolutionize the way people buy and sell cars by providing a seamless, transparent, and community-driven platform. We aim to empower users with the tools and connections they need to make informed decisions.</p>
-                <h3>Our Founders</h3>
-                <div class="founders-grid">
-                    <div class="founder-card">
-                        <!-- Replaced local image with Cloudinary placeholder (upload actual image to Cloudinary) -->
-                        <img class="founder-image" src="colince.jpg" alt="Colince">
-                        <h4>Colince Lupin</h4>
-                        <p class="founder-title">CEO & Founder</p>
-                        <p class="founder-bio">Colince is a visionary leader with a passion for automobiles and technology. With over 15 years in the automotive industry, he founded TheMarts to bridge the gap between car enthusiasts and the digital world.</p>
-                        <div class="founder-contact">
-                            <p>Email: colincesibuor122@gmail.com</p>
-                            <p>Phone: +245799582173</p>
-                        </div>
+            <h2>About TheMarts</h2>
+            <p>TheMarts Automobiles is more than just a marketplace—it’s a thriving community for car enthusiasts, buyers, and sellers. We provide a trusted platform where you can explore, share, and trade vehicles with confidence and ease.</p>
+            <h3>Our Vision</h3>
+            <p>We envision a world where buying and selling vehicles is as simple as a few clicks. Our goal is to create a seamless, transparent, and user-friendly experience that empowers car lovers to connect and transact without barriers.</p>
+            <h3>Our Values</h3>
+            <p>At TheMarts, we are driven by integrity, innovation, and community. We prioritize transparency in every transaction, leverage technology to simplify the process, and foster a supportive network for all automotive enthusiasts.</p>
+            <h3>Meet Our Founders</h3>
+            <div class="founders-grid">
+                <div class="founder-card">
+                    <img class="founder-image" src="https://via.placeholder.com/120?text=Colince" alt="Colince Lupin" onerror="this.src='https://via.placeholder.com/120?text=Image+Not+Found'">
+                    <h4>Colince Lupin</h4>
+                    <p class="founder-title">CEO & Founder</p>
+                    <p class="founder-bio">Colince is the driving force behind TheMarts, blending his deep love for automobiles with a vision for digital innovation. With over 15 years in the automotive industry, he’s dedicated to making vehicle trading accessible to everyone.</p>
+                    <div class="founder-contact">
+                        <p>Email: colincesibuor122@gmail.com</p>
+                        <p>Phone: +245799582173</p>
                     </div>
-                    <div class="founder-card">
-                        <!-- Replaced local image with Cloudinary placeholder (upload actual image to Cloudinary) -->
-                        <img class="founder-image" src="victor.jpg" alt="Victor Martin">
-                        <h4>Victor Martin</h4>
-                        <p class="founder-title">COO & Co-Founder</p>
-                        <p class="founder-bio">Martin brings operational excellence to TheMarts. His expertise in logistics and customer experience ensures our platform runs smoothly, delivering value to every user.</p>
-                        <div class="founder-contact">
-                            <p>Email: themarts.com</p>
-                            <p>Phone: +1-555-987-6543</p>
-                        </div>
+                </div>
+                <div class="founder-card">
+                    <img class="founder-image" src="https://via.placeholder.com/120?text=Victor" alt="Victor Martin" onerror="this.src='https://via.placeholder.com/120?text=Image+Not+Found'">
+                    <h4>Victor Martin</h4>
+                    <p class="founder-title">COO & Co-Founder</p>
+                    <p class="founder-bio">Victor ensures TheMarts operates with precision and care. His expertise in logistics and user experience guarantees that every interaction on our platform is smooth and rewarding.</p>
+                    <div class="founder-contact">
+                        <p>Email: victor@themarts.com</p>
+                        <p>Phone: +1-555-987-6543</p>
                     </div>
                 </div>
             </div>
-        </div>
-
         </section>
 
         <!-- Contact Section -->
@@ -476,25 +597,35 @@
                 engine: document.getElementById('engine').value,
                 price: document.getElementById('price').value,
                 photos: [
-                    document.getElementById('photo1').value,
-                    document.getElementById('photo2').value,
-                    document.getElementById('photo3').value,
-                    document.getElementById('photo4').value,
-                    document.getElementById('photo5').value,
-                    document.getElementById('photo6').value
+                    document.getElementById('photo1').files[0],
+                    document.getElementById('photo2').files[0],
+                    document.getElementById('photo3').files[0],
+                    document.getElementById('photo4').files[0],
+                    document.getElementById('photo5').files[0],
+                    document.getElementById('photo6').files[0]
                 ]
             };
 
             // Log the listing data (replace with backend API call)
             console.log('New Listing:', listing);
-            alert('Listing submitted! (Logged to console. Implement backend API call to save this data.)');
+            alert('Listing submitted! (Logged to console. Implement backend API call to save this data, including file uploads.)');
 
-            // Example backend API call (uncomment to use):
+            // Example backend API call for file uploads (uncomment to use with a backend):
             /*
+            const formData = new FormData();
+            formData.append('make', listing.make);
+            formData.append('model', listing.model);
+            formData.append('year', listing.year);
+            formData.append('mileage', listing.mileage);
+            formData.append('engine', listing.engine);
+            formData.append('price', listing.price);
+            listing.photos.forEach((photo, index) => {
+                formData.append(`photo${index + 1}`, photo);
+            });
+
             fetch('/api/listings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(listing)
+                body: formData
             })
             .then(res => res.json())
             .then(data => {
@@ -509,27 +640,77 @@
             toggleAddListingForm();
         }
 
+        // Toggle Register Form
+        function toggleRegisterForm() {
+            const form = document.getElementById('register-form');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Submit Registration (Placeholder for backend integration)
+        function submitRegistration() {
+            const user = {
+                username: document.getElementById('reg-username').value,
+                email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value
+            };
+
+            // Log the user data (replace with backend API call)
+            console.log('New User:', user);
+            alert('Registration submitted! (Logged to console. Implement backend API call to save this data.)');
+
+            // Example backend API call (uncomment to use):
+            /*
+            fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log('User registered:', data);
+                alert('Registration successful!');
+            })
+            .catch(err => console.error('Error registering user:', err));
+            */
+
+            // Reset the form and hide it
+            document.getElementById('register-form').reset();
+            toggleRegisterForm();
+        }
+
         // Toggle section visibility
         function showSection(sectionId) {
+            const registerSection = document.getElementById('register');
             const profileSection = document.getElementById('profile');
             const listingsSection = document.getElementById('listings');
             const aboutSection = document.getElementById('about');
             const contactSection = document.getElementById('contact');
 
-            // Default state: show profile and listings, hide about and contact
+            // Default state: show profile and listings, hide others
             if (sectionId === 'home' || sectionId === 'profile' || sectionId === 'listings') {
+                registerSection.style.display = 'block';
                 profileSection.style.display = 'block';
                 listingsSection.style.display = 'block';
+                aboutSection.style.display = 'none';
+                contactSection.style.display = 'none';
+            } else if (sectionId === 'register') {
+                // Toggle Register
+                toggleRegisterForm();
+                registerSection.style.display = 'block';
+                profileSection.style.display = 'none';
+                listingsSection.style.display = 'none';
                 aboutSection.style.display = 'none';
                 contactSection.style.display = 'none';
             } else if (sectionId === 'about') {
                 // Toggle About Us
                 if (aboutSection.style.display === 'block') {
                     aboutSection.style.display = 'none';
+                    registerSection.style.display = 'block';
                     profileSection.style.display = 'block';
                     listingsSection.style.display = 'block';
                 } else {
                     aboutSection.style.display = 'block';
+                    registerSection.style.display = 'none';
                     profileSection.style.display = 'none';
                     listingsSection.style.display = 'none';
                     contactSection.style.display = 'none';
@@ -538,10 +719,12 @@
                 // Toggle Contact Us
                 if (contactSection.style.display === 'block') {
                     contactSection.style.display = 'none';
+                    registerSection.style.display = 'block';
                     profileSection.style.display = 'block';
                     listingsSection.style.display = 'block';
                 } else {
                     contactSection.style.display = 'block';
+                    registerSection.style.display = 'none';
                     profileSection.style.display = 'none';
                     listingsSection.style.display = 'none';
                     aboutSection.style.display = 'none';
